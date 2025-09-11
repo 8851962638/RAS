@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Painting{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-box">
+    <h1>Welcome Back 🎨</h1>
+    <p class="subtitle">Login to continue exploring amazing artists</p>
+    
+    <!-- Display messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+      {% csrf_token %}
+      <div class="input-group">
+        <label for="{{ form.username.id_for_label }}">Email</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="error">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+      
+      <div class="input-group">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="error">{{ form.password.errors.0 }}</div>
+        {% endif %}
+      </div>
+      
+      {% if form.non_field_errors %}
+        <div class="error">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+      
+      <button type="submit" class="btn">Login</button>
+      <p class="switch-text">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}
