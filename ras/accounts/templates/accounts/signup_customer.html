@@ -1,4 +1,4 @@
-{% comment %} {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Customer Signup - Painting{% endblock %}
@@ -12,138 +12,61 @@
     <form id="customerSignupForm" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <!-- Full Name -->
-      <div class="input-group">
-        <label for="full_name">Full Name of Customer</label>
-        <input type="text" id="full_name" name="full_name" required>
-      </div>
+       <!-- Full Name -->
+  <div class="input-group">
+    <label for="customer_full_name">Full Name of Customer</label>
+    <input type="text" id="customer_full_name" name="customer_full_name" required>
+  </div>
 
-      <!-- Mobile -->
-      <div class="input-group">
-        <label for="mobile">Mobile Number</label>
-        <input type="text" id="mobile" name="mobile" required>
-      </div>
+  <!-- Mobile -->
+  <div class="input-group">
+    <label for="mobile">Mobile Number</label>
+    <input type="text" id="mobile" name="mobile" required>
+  </div>
 
-      <!-- Email -->
-      <div class="input-group">
-        <label for="email">Email Address (if any)</label>
-        <input type="email" id="email" name="email">
-      </div>
+  <!-- Email -->
+  <div class="input-group">
+    <label for="email">Email Address (if any)</label>
+    <input type="text" id="email" name="email">
+  </div>
 
-      <!-- Address -->
-      <div class="input-group">
-        <label for="house_no">House No / Flat No</label>
-        <input type="text" id="house_no" name="house_no" required>
-      </div>
+  <!-- Password -->
+  <div class="input-group">
+    <label for="customer_password">Create Password</label>
+    <input type="password" id="customer_password" name="customer_password" required>
+  </div>
 
-      <div class="input-group">
-        <label for="street">Street / Area</label>
-        <input type="text" id="street" name="street" required>
-      </div>
-
-      <div class="input-group">
-        <label for="city">City</label>
-        <input type="text" id="city" name="city" required>
-      </div>
-
-      <div class="input-group">
-        <label for="state">State</label>
-        <input type="text" id="state" name="state" required>
-      </div>
-
-      <div class="input-group">
-        <label for="pincode">Pincode</label>
-        <input type="text" id="pincode" name="pincode" required>
-      </div>
-
-      <!-- Type of Property -->
-      <div class="input-group">
-        <label>Type of Property</label>
-        <div>
-          <input type="radio" id="property_residential" name="property_type" value="Residential" required>
-          <label for="property_residential">Residential</label>
-        </div>
-        <div>
-          <input type="radio" id="property_commercial" name="property_type" value="Commercial">
-          <label for="property_commercial">Commercial</label>
-        </div>
-        <div>
-          <input type="radio" id="property_other" name="property_type" value="Other">
-          <label for="property_other">Other</label>
-        </div>
-      </div>
-
-      <!-- Type of Service -->
-      <div class="input-group">
-        <label>Type of Painting Service Required (Domestic)</label>
-        <div>
-          <input type="checkbox" id="service_interior" name="painting_service" value="Interior">
-          <label for="service_interior">Interior</label>
-        </div>
-        <div>
-          <input type="checkbox" id="service_exterior" name="painting_service" value="Exterior">
-          <label for="service_exterior">Exterior</label>
-        </div>
-        <div>
-          <input type="checkbox" id="service_texture" name="painting_service" value="Texture">
-          <label for="service_texture">Texture</label>
-        </div>
-        <div>
-          <input type="checkbox" id="service_waterproof" name="painting_service" value="Waterproofing">
-          <label for="service_waterproof">Waterproofing</label>
-        </div>
-        <div>
-          <input type="checkbox" id="service_other" name="painting_service" value="Other">
-          <label for="service_other">Other</label>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label>For Commercial Service</label>
-        <textarea id="advertisement_service" name="advertisement_service" placeholder="Advertisement service details (State/Area/Demo/Sqft)"></textarea>
-      </div>
-
-      <!-- Approx Area -->
-      <div class="input-group">
-        <label for="approx_area">Approximate Area to be Art Work (sq.ft)</label>
-        <input type="number" id="approx_area" name="approx_area" min="0" required>
-      </div>
-
-      <!-- Preferred Date -->
-      <div class="input-group">
-        <label for="preferred_date">Preferred Date for Painting Work Start</label>
-        <input type="date" id="preferred_date" name="preferred_date" required>
-      </div>
-
-      <!-- Upload Photos -->
-      <div class="input-group">
-        <label for="photos">Upload Photos (if any)</label>
-        <input type="file" id="photos" name="photos" multiple>
-      </div>
-
-      <!-- Preferred Painter -->
-      <div class="input-group">
-        <label for="preferred_painter">Preferred Painter (if any)</label>
-        <input type="text" id="preferred_painter" name="preferred_painter">
-      </div>
-
-      <!-- Notes -->
-      <div class="input-group">
-        <label for="notes">Additional Notes / Requirements</label>
-        <textarea id="notes" name="notes"></textarea>
-      </div>
-
-      <button type="submit" id="submitButton" class="btn" onclick="onClickCustomerSignUp()">Register</button>
-      <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
-    </form>
+  <button type="button" id="submitButton" class="btn" onclick="onClickCustomerSignUp()">Register</button>
+  <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+</form>
   </div>
 </div>
+
+<!-- OTP Modal -->
+<div id="otpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.6); justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:20px; border-radius:10px; width:300px; text-align:center;">
+    <h3>Email Verification</h3>
+    <p>Please enter the OTP sent to your email</p>
+    <input type="text" id="otpInput" maxlength="6" placeholder="Enter OTP">
+    <br><br>
+    <button type="button" onclick="verifyOTP()">Verify</button>
+    <button type="button" onclick="closeOtpModal()">Cancel</button>
+  </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
   function onClickCustomerSignUp() {
     var form = $('#customerSignupForm')[0];
     var formData = new FormData(form);
+    var email = $('#email').val();
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // basic validation
+    if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address (must contain @ and domain)");
+        return; // stop submission
+    }
 
     $.ajax({
         url: '/accounts/save_customer_signup/',  // add this endpoint in urls.py + views.py
@@ -154,6 +77,11 @@
         success: function(response) {
             if(response.success) {
                 alert(response.message);
+                $('#customer_full_name').val('');
+                $('#mobile').val('');
+                $('#email').val('');
+                $('#customer_password').val('');
+
                 window.location.href = '/accounts/login/';
             } else {
                 alert('Error: ' + response.error);
@@ -166,4 +94,70 @@
     });
 }
 </script>
-{% endblock %} {% endcomment %}
+
+
+
+<script>
+    {% comment %} email verification otp  {% endcomment %}
+    var currentCustomerId = null;
+
+function onClickCustomerSignUp() {
+    var form = $('#customerSignupForm')[0];
+    var formData = new FormData(form);
+    var email = $('#email').val();
+
+    if (email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("Please enter a valid email address (must contain @ and domain)");
+            return;
+        }
+    }
+
+    $.ajax({
+        url: '/accounts/save_customer_signup/',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if(response.success) {
+                alert(response.message);
+                currentCustomerId = response.customer_id;
+                $('#otpModal').css("display", "flex"); // ✅ show modal
+            } else {
+                alert('Error: ' + response.error);
+            }
+        },
+        error: function(xhr) {
+            console.error('Error:', xhr.responseText);
+            alert('Something went wrong!');
+        }
+    });
+}
+
+function verifyOTP() {
+    var otp = $('#otpInput').val();
+
+    $.ajax({
+        url: '/accounts/verify_customer_otp/',
+        type: 'POST',
+        data: {customer_id: currentCustomerId, otp: otp},
+        success: function(response) {
+            if(response.success) {
+                alert(response.message);
+                closeOtpModal(); // ✅ hide modal
+                window.location.href = '/accounts/login/';
+            } else {
+                alert('Error: ' + response.error);
+            }
+        }
+    });
+}
+
+function closeOtpModal() {
+    $('#otpModal').hide();
+}
+
+</script>
+{% endblock %}

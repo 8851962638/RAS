@@ -1,7 +1,23 @@
 from django.db import models
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    full_name = models.CharField(max_length=200)
+    email_id = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
+    is_verified = models.BooleanField(default=False)
+    role = models.CharField(max_length=50)  
+
+    class Meta:
+        db_table = "user"
+
+    def __str__(self):
+        return f"{self.full_name} ({self.role})"
+
+
 
 class Employee(models.Model):
     id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="employees",null=True, blank=True)
     full_name = models.CharField(max_length=150, null=True, blank=True)
     fathers_name = models.CharField(max_length=150, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
@@ -40,3 +56,23 @@ class Employee(models.Model):
     
     def __str__(self):
         return self.full_name or "Unnamed Person"
+
+class Customer(models.Model):
+    id = models.AutoField(primary_key=True)   
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customers",null=True, blank=True)
+    customer_full_name = models.CharField(max_length=200)
+    mobile = models.CharField(max_length=15)
+    email = models.EmailField(blank=True, null=True)
+    customer_password = models.CharField(max_length=128)
+    customer_photo = models.ImageField(upload_to='customer_photos/', blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+
+
+    class Meta:
+        db_table = "customer"
+    def __str__(self):
+        return self.customer_full_name 
+
+
+
+

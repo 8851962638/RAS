@@ -9,6 +9,16 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Employee
+import re, random
+import json
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import User  
+
+
+
+
+from .models import Customer  # import your Customer model
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm
@@ -110,3 +120,118 @@ def save_signup(request):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def customer_signup(request):
+    return render(request, "accounts/signup_customer.html")
+@csrf_exempt
+def save_customer_signup(request):
+    if request.method == 'POST':
+        try:
+            # Get signup data
+            full_name = request.POST.get('customer_full_name')
+            mobile = request.POST.get('mobile')
+            email = request.POST.get('email')
+            create_password = request.POST.get('customer_password')
+
+            # Validate email
+            email_regex = r'^[^@\s]+@[^@\s]+\.[^@\s]+$'
+            if not re.match(email_regex, email):
+                return JsonResponse({'success': False, 'error': 'Invalid email format'})
+
+            # Generate OTP
+            otp = str(random.randint(100000, 999999))
+
+            # Store data in session temporarily
+            request.session['signup_data'] = {
+                'customer_full_name': full_name,
+                'mobile': mobile,
+                'email': email,
+                'customer_password': create_password,
+            }
+            request.session['otp'] = otp
+
+            # Send OTP email
+            send_mail(
+                subject="Your Painting App Verification OTP",
+                message=f"Hello {full_name},\n\nYour OTP is: {otp}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+
+            return JsonResponse({'success': True, 'message': 'OTP sent to email!'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+@csrf_exempt
+def verify_customer_otp(request):
+    if request.method == "POST":
+        otp_entered = request.POST.get('otp')
+
+        # Retrieve stored data & OTP
+        otp_saved = request.session.get('otp')
+        signup_data = request.session.get('signup_data')
+
+        if otp_saved and signup_data and otp_entered == otp_saved:
+        
+        
+        # Create User in DB after OTP verification
+            qs=User.objects.create(
+                full_name=signup_data['customer_full_name'],
+                email_id=signup_data['email'],
+                password=signup_data['customer_password'],
+                is_verified=True,
+                role='customer'
+            )
+            # Create customer in DB after OTP verification
+            customer = Customer.objects.create(
+                customer_full_name=signup_data['customer_full_name'],
+                user_id_id=qs.id,
+                mobile=signup_data['mobile'],
+                email=signup_data['email'],
+                customer_password=signup_data['customer_password'],
+                is_verified=True
+            )
+
+            # Clear session
+            del request.session['otp']
+            del request.session['signup_data']
+
+            return JsonResponse({'success': True, 'message': 'Email verified & customer registered!', 'customer_id': customer.id})
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid OTP'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+@csrf_exempt
+def login_view(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)  # Parse AJAX JSON
+            email = data.get("email")
+            password = data.get("password")
+
+            user = User.objects.get(email_id=email, password=password)  # ⚠️ Use hashed passwords in production
+
+            # Save session
+            request.session['user_id'] = user.id
+            request.session['role'] = user.role
+            request.session['is_verified'] = user.is_verified
+
+            return JsonResponse({"success": True})
+
+        except User.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Invalid email or password"})
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    # For GET request, just render login page
+    return render(request, 'home/home.html')

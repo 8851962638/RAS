@@ -7,39 +7,63 @@
   <div class="auth-box">
     <h1>Welcome Back 🎨</h1>
     <p class="subtitle">Login to continue exploring amazing artists</p>
-    
-    <!-- Display messages -->
-    {% if messages %}
-      {% for message in messages %}
-        <div class="message {{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-    
-    <form method="post">
+
+    <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
       {% csrf_token %}
+
+      <!-- Email -->
       <div class="input-group">
-        <label for="{{ form.username.id_for_label }}">Email</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-          <div class="error">{{ form.username.errors.0 }}</div>
-        {% endif %}
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" placeholder="Enter your email" required>
       </div>
-      
+
+      <!-- Password -->
       <div class="input-group">
-        <label for="{{ form.password.id_for_label }}">Password</label>
-        {{ form.password }}
-        {% if form.password.errors %}
-          <div class="error">{{ form.password.errors.0 }}</div>
-        {% endif %}
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="Enter your password" required>
       </div>
-      
-      {% if form.non_field_errors %}
-        <div class="error">{{ form.non_field_errors.0 }}</div>
+
+      <!-- Display error message -->
+      {% if error %}
+        <div class="error" style="color:red">{{ error }}</div>
       {% endif %}
-      
-      <button type="submit" class="btn">Login</button>
+
+      <a href="{% url 'login'%}"><button class="btn" >Login</button></a>
       <p class="switch-text">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
     </form>
   </div>
 </div>
 {% endblock %}
+
+
+
+{% comment %} <script>
+function loginUser() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch("{% url 'login' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify({ email: email, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to home
+            window.location.href = "{% url 'home' %}";
+        } else {
+            // Show error
+            document.getElementById("error").innerText = data.error;
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("error").innerText = "Something went wrong!";
+    });
+}
+</script> {% endcomment %}
