@@ -5,12 +5,28 @@
 
 {% block content %}
 <div class="booking-container">
-  <form class="booking-form">
+  <form class="booking-form" id="bookingForm">
     <h2>Book {{ service_name }}</h2>
 
     <!-- Service Name (readonly) -->
     <label>Service</label>
     <input type="text" value="{{ service_name }}" readonly>
+
+    <!-- Contact + Email Row -->
+    <div class="contact-row">
+      <div class="contact-field">
+        <label>Contact Number</label>
+        <input type="text" placeholder="Enter Contact Number" required>
+      </div>
+      <div class="contact-field">
+        <label>Email</label>
+        <input type="email" placeholder="Enter Email" required>
+      </div>
+    </div>
+
+    <!-- Full Address -->
+    <label>Address</label>
+    <textarea placeholder="Enter Full Address" required></textarea>
 
     <!-- Address row: Pin Code, State, City -->
     <div class="address-row">
@@ -28,9 +44,9 @@
       </div>
     </div>
 
-    <!-- Full Address -->
-    <label>Address</label>
-    <textarea placeholder="Enter Full Address" required></textarea>
+    <!-- Total Walls -->
+    <label>Total Walls</label>
+    <input type="number" placeholder="Enter Total Number of Walls" required>
 
     <!-- Square Ft (Width x Height) -->
     <label>Square Ft</label>
@@ -39,15 +55,21 @@
       <span>*</span>
       <input type="number" id="height" placeholder="Height" required>
       <span>=</span>
-      <input type="number" id="total" placeholder="Total" readonly>
+      <input type="number" id="total" placeholder="Total sq ft" readonly>
     </div>
-
-    <!-- Contact Number -->
-    <label>Contact Number</label>
-    <input type="text" placeholder="Enter Contact Number" required>
 
     <button type="submit">Submit</button>
   </form>
+</div>
+
+<!-- Popup Modal -->
+<div id="popup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>Booking Successful 🎉</h3>
+    <p>Your booking for <strong>{{ service_name }}</strong> is successful! <br>
+    Our team will get in touch with you within 24 hours.</p>
+    <button onclick="goHome()">Okay</button>
+  </div>
 </div>
 
 <style>
@@ -65,7 +87,7 @@
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.2);
   width: 100%;
-  max-width: 800px; /* increased width */
+  max-width: 800px;
 }
 
 .booking-form h2 {
@@ -97,13 +119,21 @@
   resize: vertical;
 }
 
-/* Horizontal address row */
+.contact-row {
+  display: flex;
+  gap: 1rem;
+}
+.contact-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .address-row {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
 }
-
 .address-field {
   flex: 1;
   display: flex;
@@ -116,9 +146,8 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
-
 .square-ft input {
-  width: 60px;
+  width: 114px;
   text-align: center;
 }
 
@@ -135,13 +164,49 @@
   cursor: pointer;
   transition: 0.3s;
 }
-
 .booking-form button:hover {
   opacity: 0.9;
 }
 
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.popup-box {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.popup-box h3 {
+  margin-bottom: 1rem;
+  color: #28a745;
+}
+.popup-box button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.popup-box button:hover {
+  opacity: 0.9;
+}
+
 @media (max-width: 768px) {
-  .address-row {
+  .address-row,
+  .contact-row {
     flex-direction: column;
   }
 }
@@ -158,8 +223,20 @@ function calculateTotal() {
     const h = parseFloat(heightInput.value) || 0;
     totalInput.value = w * h;
 }
-
 widthInput.addEventListener('input', calculateTotal);
 heightInput.addEventListener('input', calculateTotal);
+
+// Popup handling
+const form = document.getElementById('bookingForm');
+const popup = document.getElementById('popup');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault(); 
+  popup.style.display = 'flex'; 
+});
+
+function goHome() {
+  window.location.href = "{% url 'home' %}";
+}
 </script>
 {% endblock %}
