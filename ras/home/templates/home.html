@@ -1,0 +1,91 @@
+{% extends "base1.html" %}
+{% load static %}
+{% block title %}Home - RColourcraft{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+  <div class="hero-overlay">
+    <div class="hero-text glass-card">
+      <h1>Bring Colors to Life 🎨</h1>
+      <p>At RColourcraft, we specialize in stunning murals, creative paintings, and artistic designs that transform your space.</p>
+      <button>Explore Services</button>
+    </div>
+    <div class="hero-img">
+      <img src="{% static 'gallery/frog.png' %}" alt="Hero Image">
+    </div>
+  </div>
+</div>
+
+<!-- Services Section -->
+<section>
+  <h1>Our Services</h1>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/three.png' %}" alt="3D Art"></div>
+      <h3>3D Art</h3>
+      <p>Immersive 3D painting experiences.</p>
+      <div class="card-buttons">
+        <button class="book-btn">Book this Service</button>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/mural.png' %}" alt="Mural Art"></div>
+      <h3>Mural Art</h3>
+      <p>Creative 2D artworks tailored for you.</p>
+      <div class="card-buttons">
+        <button class="book-btn">Book this Service</button>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
+      <h3>Normal Painting</h3>
+      <p>High-quality indoor & outdoor painting.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' '3d-art' %}">
+          <button class="book-btn">Book this Service</button>
+        </a>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/three.png' %}" alt="3D Art"></div>
+      <h3>3D Art</h3>
+      <p>Immersive 3D painting experiences.</p>
+      <div class="card-buttons">
+        <button class="book-btn">Book this Service</button>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/mural.png' %}" alt="Mural Art"></div>
+      <h3>Mural Art</h3>
+      <p>Creative 2D artworks tailored for you.</p>
+      <div class="card-buttons">
+        <button class="book-btn">Book this Service</button>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
+      <h3>Normal Painting</h3>
+      <p>High-quality indoor & outdoor painting.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' '3d-art' %}">
+          <button class="book-btn">Book this Service</button>
+        </a>
+        <button class="explore-btn">Explore</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}

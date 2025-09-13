@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RColourcraft{% endblock %}</title>
+  
+  <!-- CSS link -->
+  <link rel="stylesheet" href="{% static 'css/common.css' %}">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+  <div class="bubble-container"></div>
+
+  <div class="left-group">
+    <div class="logo">
+      <img src="{% static 'gallery/logo.jpg' %}" alt="RColourcraft Logo">
+    </div>
+
+    <nav class="nav-left">
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Our Services</a></li>
+        <li><a href="#">Gallery</a></li>
+      </ul>
+    </nav>
+  </div>
+
+<nav class="nav-right">
+  <ul>
+    <li>
+      <a href="{% url 'contact' %}">
+        <img src="{% static 'gallery/user.png' %}" alt="Contact" class="nav-icon">
+      </a>
+    </li>
+  </ul>
+</nav>
+
+</header>
+
+
+
+  <!-- Main Content -->
+  {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 RColourcraft. All Rights Reserved.</p>
+  </footer>
+
+  <!-- JS file -->
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
