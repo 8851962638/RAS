@@ -24,10 +24,10 @@
     <div class="service-card">
       <div class="circle"><img src="{% static 'gallery/three.png' %}" alt="3D Art"></div>
       <h3>3D Art</h3>
-      <p>Immersive 3D painting experiences.</p>
+      <p>We create immersive 3D painting experiences that bring your walls and spaces to life, offering custom designs with vibrant colors and realistic depth for a truly captivating visual impact.</p>
       <div class="card-buttons">
-        <button class="book-btn">Book this Service</button>
-        <button class="explore-btn">Explore</button>
+<a href="{% url 'book_service' '3d-art' %}" class="book-btn">Book this Service</a>
+<a href="{% url 'explore_service' '3d-art' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 
@@ -36,20 +36,20 @@
       <h3>Mural Art</h3>
       <p>Creative 2D artworks tailored for you.</p>
       <div class="card-buttons">
-        <button class="book-btn">Book this Service</button>
-        <button class="explore-btn">Explore</button>
+<a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
+<a href="{% url 'explore_service' 'mural' %}" class="explore-btn">Explore</a>
       </div>
     </div>
-
+  
     <div class="service-card">
       <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
       <h3>Normal Painting</h3>
       <p>High-quality indoor & outdoor painting.</p>
       <div class="card-buttons">
         <a href="{% url 'book_service' '3d-art' %}">
-          <button class="book-btn">Book this Service</button>
+<a href="{% url 'book_service' 'normal-paint' %}" class="book-btn">Book this Service</a>
         </a>
-        <button class="explore-btn">Explore</button>
+<a href="{% url 'explore_service' 'normal-paint' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 

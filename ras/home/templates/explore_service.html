@@ -1,0 +1,101 @@
+{% extends 'base1.html' %}
+
+{% load static %}
+
+{% block title %}{{ heading }} - RColourcraft{% endblock %}
+
+{% block content %}
+<section class="explore-section">
+  <h1>{{ heading }}</h1>
+  <div class="image-grid">
+    {% for img in images %}
+      <div class="img-card">
+        <img src="{% static img %}" alt="Artwork {{ forloop.counter }}">
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<a href="{% url 'book_service' 'normal-paint' %}" class="floating-book">
+  Book Now
+</a>
+ 
+<style>
+.explore-section {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.explore-section h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, #7b2ff7, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: auto;
+  max-width: 1200px;
+}
+
+.img-card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+.img-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.img-card:hover {
+  transform: scale(1.05);
+}
+
+.floating-book {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 100px;      /* increased from 80px */
+  height: 100px;     /* increased from 80px */
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;   /* slightly bigger font */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 1000;
+  animation: jiggle 1s infinite alternate;
+  text-align: center;
+  padding: 5px;
+}
+
+@keyframes jiggle {
+  0% { transform: rotate(-5deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.floating-book:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+
+</style>
+{% endblock %}
