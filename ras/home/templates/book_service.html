@@ -1,11 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Service</title>
-</head>
-<body>
-    <h1>Book {{ service_name|title }} Service</h1>
-</body>
-</html>
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}Book {{ service_name }}{% endblock %}
+
+{% block content %}
+<div class="booking-container">
+  <form class="booking-form">
+    <h2>Book {{ service_name }}</h2>
+
+    <!-- Service Name (readonly) -->
+    <label>Service</label>
+    <input type="text" value="{{ service_name }}" readonly>
+
+    <!-- Address row: Pin Code, State, City -->
+    <div class="address-row">
+      <div class="address-field">
+        <label>Pin Code</label>
+        <input type="text" placeholder="Pin Code" required>
+      </div>
+      <div class="address-field">
+        <label>State</label>
+        <input type="text" placeholder="State" required>
+      </div>
+      <div class="address-field">
+        <label>City</label>
+        <input type="text" placeholder="City" required>
+      </div>
+    </div>
+
+    <!-- Full Address -->
+    <label>Address</label>
+    <textarea placeholder="Enter Full Address" required></textarea>
+
+    <!-- Square Ft (Width x Height) -->
+    <label>Square Ft</label>
+    <div class="square-ft">
+      <input type="number" id="width" placeholder="Width" required>
+      <span>*</span>
+      <input type="number" id="height" placeholder="Height" required>
+      <span>=</span>
+      <input type="number" id="total" placeholder="Total" readonly>
+    </div>
+
+    <!-- Contact Number -->
+    <label>Contact Number</label>
+    <input type="text" placeholder="Enter Contact Number" required>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<style>
+.booking-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
+}
+
+.booking-form {
+  background: #f9f9f9;
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 800px; /* increased width */
+}
+
+.booking-form h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, #7b2ff7, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.booking-form label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.booking-form input, 
+.booking-form textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.booking-form textarea {
+  resize: vertical;
+}
+
+/* Horizontal address row */
+.address-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.address-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.square-ft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.square-ft input {
+  width: 60px;
+  text-align: center;
+}
+
+.booking-form button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.booking-form button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .address-row {
+    flex-direction: column;
+  }
+}
+</style>
+
+<script>
+// Auto-calculate total square feet
+const widthInput = document.getElementById('width');
+const heightInput = document.getElementById('height');
+const totalInput = document.getElementById('total');
+
+function calculateTotal() {
+    const w = parseFloat(widthInput.value) || 0;
+    const h = parseFloat(heightInput.value) || 0;
+    totalInput.value = w * h;
+}
+
+widthInput.addEventListener('input', calculateTotal);
+heightInput.addEventListener('input', calculateTotal);
+</script>
+{% endblock %}
