@@ -27,6 +27,7 @@
       {% if error %}
         <div class="error" style="color:red">{{ error }}</div>
       {% endif %}
+      
 
       <a href="{% url 'login'%}"><button class="btn" >Login</button></a>
       <p class="switch-text">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
