@@ -9,38 +9,35 @@
     <h1>Customer Registration 🏠</h1>
     <p class="subtitle">Register and book painting services</p>
 
-    <form id="customerSignupForm" method="POST" enctype="multipart/form-data">
+    <form id="customerSignupForm" method="POST">
       {% csrf_token %}
 
-       <!-- Full Name -->
-  <div class="input-group">
-    <label for="customer_full_name">Full Name of Customer</label>
-    <input type="text" id="customer_full_name" name="customer_full_name" required>
-  </div>
+      <div class="input-group">
+        <label for="customer_full_name">Full Name of Customer</label>
+        <input type="text" id="customer_full_name" name="customer_full_name" required>
+      </div>
 
-  <!-- Mobile -->
-  <div class="input-group">
-    <label for="mobile">Mobile Number</label>
-    <input type="text" id="mobile" name="mobile" required>
-  </div>
+      <div class="input-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="text" id="mobile" name="mobile" required>
+      </div>
 
-  <!-- Email -->
-  <div class="input-group">
-    <label for="email">Email Address (if any)</label>
-    <input type="text" id="email" name="email">
-  </div>
+      <div class="input-group">
+        <label for="email">Email Address (if any)</label>
+        <input type="text" id="email" name="email">
+      </div>
 
-  <!-- Password -->
-  <div class="input-group">
-    <label for="customer_password">Create Password</label>
-    <input type="password" id="customer_password" name="customer_password" required>
-  </div>
+      <div class="input-group">
+        <label for="customer_password">Create Password</label>
+        <input type="password" id="customer_password" name="customer_password" required>
+      </div>
 
-  <button type="button" id="submitButton" class="btn" onclick="onClickCustomerSignUp()">Register</button>
-  <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
-</form>
+      <button type="button" class="btn" onclick="sendOTP()">Register</button>
+      <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+    </form>
   </div>
 </div>
+
 <!-- OTP Modal -->
 <div id="otpModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -132,61 +129,19 @@
 }
 </style>
 
-
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
-  function onClickCustomerSignUp() {
-    var form = $('#customerSignupForm')[0];
-    var formData = new FormData(form);
-    var email = $('#email').val();
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // basic validation
-    if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address (must contain @ and domain)");
-        return; // stop submission
-    }
+let currentCustomerId = null;
 
-    $.ajax({
-        url: '/accounts/save_customer_signup/',  // add this endpoint in urls.py + views.py
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if(response.success) {
-                alert(response.message);
-                $('#customer_full_name').val('');
-                $('#mobile').val('');
-                $('#email').val('');
-                $('#customer_password').val('');
+function sendOTP() {
+    const form = $('#customerSignupForm')[0];
+    const formData = new FormData(form);
+    const email = $('#email').val();
 
-                window.location.href = '/accounts/login/';
-            } else {
-                alert('Error: ' + response.error);
-            }
-        },
-        error: function(xhr) {
-            console.error('Error:', xhr.responseText);
-            alert('Something went wrong!');
-        }
-    });
-}
-</script>
-
-
-
-<script>
-    {% comment %} email verification otp  {% endcomment %}
-    var currentCustomerId = null;
-
-function onClickCustomerSignUp() {
-    var form = $('#customerSignupForm')[0];
-    var formData = new FormData(form);
-    var email = $('#email').val();
-
-    if (email) {
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert("Please enter a valid email address (must contain @ and domain)");
+    if(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailRegex.test(email)) {
+            alert("Please enter a valid email");
             return;
         }
     }
@@ -200,34 +155,36 @@ function onClickCustomerSignUp() {
         success: function(response) {
             if(response.success) {
                 alert(response.message);
-                currentCustomerId = response.customer_id;
-                $('#otpModal').css("display", "flex"); // ✅ show modal
+                currentCustomerId = response.customer_id; // optional, can remove if not needed
+                $('#otpModal').css("display", "flex");
             } else {
                 alert('Error: ' + response.error);
             }
         },
         error: function(xhr) {
-            console.error('Error:', xhr.responseText);
             alert('Something went wrong!');
         }
     });
 }
 
 function verifyOTP() {
-    var otp = $('#otpInput').val();
+    const otp = $('#otpInput').val();
 
     $.ajax({
         url: '/accounts/verify_customer_otp/',
         type: 'POST',
-        data: {customer_id: currentCustomerId, otp: otp},
+        data: {otp: otp},
         success: function(response) {
             if(response.success) {
                 alert(response.message);
-                closeOtpModal(); // ✅ hide modal
+                closeOtpModal();
                 window.location.href = '/accounts/login/';
             } else {
-                alert('Error: ' + response.error);
+                alert('Invalid OTP. Please try again.');
             }
+        },
+        error: function(xhr) {
+            alert('Something went wrong!');
         }
     });
 }
@@ -235,6 +192,5 @@ function verifyOTP() {
 function closeOtpModal() {
     $('#otpModal').hide();
 }
-
 </script>
 {% endblock %}
