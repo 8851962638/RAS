@@ -8,7 +8,7 @@
     <h1>Welcome Back 🎨</h1>
     <p class="subtitle">Login to continue exploring amazing artists</p>
 
-    <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+    <form id="loginForm">
       {% csrf_token %}
 
       <!-- Email -->
@@ -23,48 +23,50 @@
         <input type="password" name="password" id="password" placeholder="Enter your password" required>
       </div>
 
-      <!-- Display error message -->
-      {% if error %}
-        <div class="error" style="color:red">{{ error }}</div>
-      {% endif %}
-      
+      <!-- Error message -->
+      <div id="loginError" style="color:red;"></div>
 
-      <a href="{% url 'login'%}"><button class="btn" >Login</button></a>
-      <p class="switch-text">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
+      <!-- Submit button -->
+      <button type="button" class="btn" onclick="loginUser()">Login</button>
+
+      <p class="switch-text">
+        Don't have an account? 
+        <a href="{% url 'accounts:signup' %}">Sign Up</a>
+      </p>
     </form>
   </div>
 </div>
-{% endblock %}
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
 
-
-{% comment %} <script>
 function loginUser() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const email = $('#email').val();
+    const password = $('#password').val();
+    const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 
-    fetch("{% url 'login' %}", {
-        method: "POST",
+    $.ajax({
+        url: "{% url 'accounts:loginauth' %}",   // AJAX posts to loginauth
+        type: "POST",
         headers: {
-            "Content-Type": "application/json",
             "X-CSRFToken": csrfToken
         },
-        body: JSON.stringify({ email: email, password: password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Redirect to home
-            window.location.href = "{% url 'home' %}";
-        } else {
-            // Show error
-            document.getElementById("error").innerText = data.error;
+        data: {
+            email: email,
+            password: password
+        },
+        success: function(response) {
+            if (response.success) {
+                window.location.href = "{% url 'home' %}";  // redirect after login
+            } else {
+                $('#loginError').text(response.error);
+            }
+        },
+        error: function(xhr) {
+            $('#loginError').text("Something went wrong! Please try again.");
+            console.error(xhr.responseText);
         }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        document.getElementById("error").innerText = "Something went wrong!";
     });
 }
-</script> {% endcomment %}
+</script>
+{% endblock %}

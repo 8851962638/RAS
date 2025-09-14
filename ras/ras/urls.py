@@ -25,6 +25,6 @@ urlpatterns = [
     # path('u/', include('user.urls')),
     # path('emp/', include('employee.urls')),
     # path('panel/', include('myadmin.urls')),
-    path("accounts/", include("accounts.urls", namespace="accounts")),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
