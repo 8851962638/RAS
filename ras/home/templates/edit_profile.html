@@ -1,0 +1,177 @@
+{% extends "base1.html" %}
+{% load static %}
+{% block title %}Edit Profile - RColourcraft{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    margin-top: 0px;
+    padding: 0px;
+    background-color: #f7f7f7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  main.edit-profile-page {
+    padding: 50px;
+    text-align: center;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+  }
+
+  .edit-profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    gap: 40px;
+  }
+
+  .profile-details {
+    flex: 1;
+    min-width: 300px;
+    text-align: left;
+  }
+
+  .profile-details label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  .profile-details input[readonly] {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 14px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .checkbox-group {
+    margin-top: 10px;
+  }
+
+  .checkbox-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+  }
+
+  .profile-picture {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-picture img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #007bff;
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.25);
+    transition: transform 0.3s ease;
+  }
+
+  .profile-picture img:hover {
+    transform: scale(1.04);
+  }
+
+  .edit-pic-link {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  .edit-button {
+    margin-top: 30px;
+  }
+
+  .edit-button button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .edit-button button:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .profile-picture img {
+      width: 180px;
+      height: 180px;
+    }
+
+    .edit-profile-container {
+      padding: 20px;
+    }
+
+    .edit-button {
+      margin-top: 20px;
+    }
+    
+  }
+</style>
+
+<main class="edit-profile-page">
+  <h1 style="margin-top: 40px;">Edit Profile</h1>
+
+  <form class="edit-profile-container">
+    <!-- Left: Profile Info -->
+    <div class="profile-details">
+      <label for="name">Name</label>
+      <input type="text" id="name" value="John Doe" readonly>
+
+      <label for="email">Gmail</label>
+      <input type="email" id="email" value="johndoe@gmail.com" readonly>
+
+      <label for="contact">Contact</label>
+      <input type="text" id="contact" value="+91 9876543210" readonly>
+
+      <label for="experience">Experience</label>
+      <input type="text" id="experience" value="5 years" readonly>
+
+      <div class="checkbox-group">
+        <label><input type="checkbox" checked disabled> 3D Mural</label>
+        <label><input type="checkbox" disabled> Normal Paint</label>
+        <label><input type="checkbox" checked disabled> Advertisement</label>
+      </div>
+    </div>
+
+    <!-- Right: Profile Picture -->
+    <div class="profile-picture">
+      <img src="{% static 'images/default-profile.jpg' %}" alt="Profile Picture">
+      <div class="edit-pic-link">Edit Profile Picture</div>
+    </div>
+  </form>
+
+  <!-- Button at the bottom (not hidden now) -->
+  <div class="edit-button">
+    <button type="button">Edit Profile</button>
+  </div>
+</main>
+{% endblock %}

@@ -3,8 +3,8 @@ from django.shortcuts import render
 def home_view(request):
     return render(request, 'home.html')
 
-def contact(request):
-    return render(request, "contact.html")
+def edit_profile(request):
+    return render(request, "edit_profile.html")
 
 
 def book_service(request, service_name):
@@ -62,3 +62,13 @@ def book_service(request, service_type):
         pass
 
     return render(request, 'book_service.html', {'service_name': service_name})
+
+
+
+def home(request):
+    return render(request, 'home.html')
+
+from django.shortcuts import render
+
+def reviews(request):
+    return render(request, 'reviews.html')

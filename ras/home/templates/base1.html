@@ -21,9 +21,10 @@
 
     <nav class="nav-left">
       <ul>
-        <li><a href="#" class="active">Home</a></li>
+         <li><a href="{% url 'home' %}" class="active">Home</a></li>
         <li><a href="#">Our Services</a></li>
         <li><a href="#">Gallery</a></li>
+        <li><a href="{% url 'reviews' %}">Reviews & Feedback</a></li>
       </ul>
     </nav>
   </div>
@@ -31,7 +32,7 @@
 <nav class="nav-right">
   <ul>
     <li>
-      <a href="{% url 'contact' %}">
+      <a href="{% url 'edit_profile' %}">
         <img src="{% static 'gallery/user.png' %}" alt="Contact" class="nav-icon">
       </a>
     </li>
