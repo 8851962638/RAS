@@ -144,13 +144,13 @@
     <!-- Left: Profile Info -->
     <div class="profile-details">
       <label for="name">Name</label>
-      <input type="text" id="name" value="John Doe" readonly>
+      <input type="text" id="name" value="{{ name }}" readonly>
 
       <label for="email">Gmail</label>
-      <input type="email" id="email" value="johndoe@gmail.com" readonly>
+      <input type="email" id="email" value="{{ email }}" readonly>
 
       <label for="contact">Contact</label>
-      <input type="text" id="contact" value="+91 9876543210" readonly>
+      <input type="text" id="contact" value="{{ contact }}" readonly>
 
       <label for="experience">Experience</label>
       <input type="text" id="experience" value="5 years" readonly>
@@ -164,9 +164,9 @@
 
     <!-- Right: Profile Picture -->
     <div class="profile-picture">
-      <img src="{% static 'images/default-profile.jpg' %}" alt="Profile Picture">
-      <div class="edit-pic-link">Edit Profile Picture</div>
-    </div>
+    <img src="{% if profile_pic %}{{ profile_pic }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+    <div class="edit-pic-link">Edit Profile Picture</div>
+</div>                                          
   </form>
 
   <!-- Button at the bottom (not hidden now) -->

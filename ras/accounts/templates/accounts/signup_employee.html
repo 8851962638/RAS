@@ -162,11 +162,28 @@
         <input type="text" id="ifsc_code" name="ifsc_code" required>
       </div>
 
-      <button type="submit" id="submitButton" class="btn" onclick="onClickSignUp()">Sign Up</button>
+<button type="button" class="btn" onclick="sendEmployeeOTP()">Sign Up</button>
       <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
     </form>
   </div>
 </div>
+
+<!-- OTP Modal -->
+<div id="employeeOtpModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <span class="close-btn" onclick="closeEmployeeOtpModal()">&times;</span>
+    <h3>Email Verification</h3>
+    <p>Please enter the OTP sent to your email</p>
+    <input type="text" id="employeeOtpInput" maxlength="6" placeholder="Enter OTP" class="otp-input">
+    <div class="modal-actions">
+      <button type="button" class="btn btn-success" onclick="verifyEmployeeOTP()">Verify ✅</button>
+      <button type="button" class="btn btn-danger" onclick="closeEmployeeOtpModal()">Cancel ❌</button>
+    </div>
+  </div>
+</div>
+
+
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
 
@@ -189,32 +206,90 @@
 
 
    
-  function onClickSignUp() {
-    var form = $('#signupForm')[0]; // Your form ID
-    var formData = new FormData(form);
+  function sendEmployeeOTP() {
+    const form = $('#signupForm')[0];
+    const formData = new FormData(form);
 
     $.ajax({
-        url: '/accounts/save_signup/',  // URL mapped in urls.py
+        url: '/accounts/save_employee_signup/',
         type: 'POST',
         data: formData,
-        processData: false, // important for FormData
-        contentType: false, // important for FormData
+        processData: false,
+        contentType: false,
         success: function(response) {
             if(response.success) {
                 alert(response.message);
-                window.location.href = '/accounts/login/';
+                $('#employeeOtpModal').css("display", "flex");
             } else {
                 alert('Error: ' + response.error);
             }
         },
         error: function(xhr) {
-            console.error('Error:', xhr.responseText);
             alert('Something went wrong!');
         }
     });
 }
 
+function verifyEmployeeOTP() {
+    const otp = $('#employeeOtpInput').val();
+
+    $.ajax({
+        url: '/accounts/verify_employee_otp/',
+        type: 'POST',
+        data: {otp: otp},
+        success: function(response) {
+            if(response.success) {
+                alert(response.message);
+                closeEmployeeOtpModal();
+                window.location.href = '/accounts/login/';
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        },
+        error: function(xhr) {
+            alert('Something went wrong!');
+        }
+    });
+}
+
+function closeEmployeeOtpModal() {
+    $('#employeeOtpModal').hide();
+}
+
+
 
 </script>
+<style>
+  /* Employee OTP Modal */
+#employeeOtpModal {
+  display: none;              /* 🔹 Hidden by default */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6); /* overlay */
+  justify-content: center;
+  align-items: center;
+}
 
+#employeeOtpModal .custom-modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#employeeOtpModal .close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+</style>
 {% endblock %}
