@@ -289,3 +289,37 @@ body {
     border: 2px solid #fff;
   }
 }
+
+
+
+
+/* Employee OTP Modal */
+#employeeOtpModal {
+  display: none;              /* 🔹 Hidden by default */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6); /* overlay */
+  justify-content: center;
+  align-items: center;
+}
+
+#employeeOtpModal .custom-modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#employeeOtpModal .close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}

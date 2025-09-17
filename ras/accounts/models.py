@@ -1,23 +1,48 @@
 from django.db import models
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    full_name = models.CharField(max_length=200)
-    email_id = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
-    is_verified = models.BooleanField(default=False)
-    role = models.CharField(max_length=50)  
+from django.conf import settings
 
-    class Meta:
-        db_table = "user"
+
+# accounts/models.py
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db import models
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Email is required")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)  # hash password
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
+
+class CustomUser(AbstractUser):
+    username = None
+    email = models.EmailField(unique=True)
+
+    full_name = models.CharField(max_length=200, blank=True, null=True)
+    role = models.CharField(max_length=50, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.full_name} ({self.role})"
+        return f"{self.email} ({self.role})"
 
 
 
 class Employee(models.Model):
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="employees",null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="employees", null=True, blank=True)
     full_name = models.CharField(max_length=150, null=True, blank=True)
     fathers_name = models.CharField(max_length=150, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
@@ -58,8 +83,8 @@ class Employee(models.Model):
         return self.full_name or "Unnamed Person"
 
 class Customer(models.Model):
-    id = models.AutoField(primary_key=True)   
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customers",null=True, blank=True)
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="customers", null=True, blank=True)
     customer_full_name = models.CharField(max_length=200)
     mobile = models.CharField(max_length=15)
     email = models.EmailField(blank=True, null=True)

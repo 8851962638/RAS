@@ -87,9 +87,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',   
         'NAME': 'rasdb',                           
         'USER': 'postgres',                              
-        'PASSWORD': '88888888',                          
+        'PASSWORD': '12345678',                          
         'HOST': 'localhost',                        
-        'PORT': '5433',                             
+        'PORT': '5432',                             
     }
 }
 # DATABASES = {
@@ -116,6 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 # Internationalization
