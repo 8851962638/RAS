@@ -4,6 +4,8 @@
 {% block title %}Book {{ service_name }}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <div class="booking-container">
   <form class="booking-form" id="bookingForm">
     <h2>Book {{ service_name }}</h2>
@@ -49,14 +51,26 @@
     <input type="number" placeholder="Enter Total Number of Walls" required>
 
     <!-- Square Ft (Width x Height) -->
+    <!-- Square Ft (Width x Height) + Appointment Date -->
+<div class="square-appointment-row">
+  <div class="square-ft">
     <label>Square Ft</label>
-    <div class="square-ft">
+    <div class="square-ft-inputs">
       <input type="number" id="width" placeholder="Width" required>
       <span>*</span>
       <input type="number" id="height" placeholder="Height" required>
       <span>=</span>
       <input type="number" id="total" placeholder="Total sq ft" readonly>
     </div>
+  </div>
+
+
+
+</div>
+<div class="appointment-date">
+  <label for="appointment_date">Appointment Date</label>
+  <input type="text" class="colorful-input date-input" id="appointment_date" name="appointment_date" required placeholder="Select Date">
+</div>
 
     <button type="submit">Submit</button>
   </form>
@@ -168,6 +182,51 @@
   opacity: 0.9;
 }
 
+.square-appointment-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.square-ft {
+  flex: 1;
+}
+
+.square-ft-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.square-ft-inputs input {
+  width: 106px;
+  text-align: center;
+}
+
+.appointment-date {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-input {
+  border: 2px solid #7b2ff7;
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 1rem;
+  background: #f9f9ff;
+  transition: all 0.3s ease;
+}
+
+.date-input:focus {
+  border-color: #00c6ff;
+  box-shadow: 0 0 10px rgba(0, 198, 255, 0.6);
+  background: #ffffff;
+}
+
+
+
 /* Popup styles */
 .popup-overlay {
   position: fixed;
@@ -210,8 +269,11 @@
     flex-direction: column;
   }
 }
+
 </style>
 
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 // Auto-calculate total square feet
 const widthInput = document.getElementById('width');
@@ -238,5 +300,12 @@ form.addEventListener('submit', function(e) {
 function goHome() {
   window.location.href = "{% url 'home' %}";
 }
+
+
+flatpickr("#appointment_date", {
+  dateFormat: "d-m-Y",
+  minDate: "today",  // disable past dates
+  theme: "material_blue", // you can use "airbnb", "dark", "material_green", etc.
+});
 </script>
 {% endblock %}

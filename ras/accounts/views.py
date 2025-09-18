@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
+import shutil
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -13,9 +14,18 @@ import json
 from django.core.mail import send_mail
 from django.conf import settings
 # from .models import User  
+from django.contrib.auth.hashers import make_password
+import os
+import random
+import re
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+from django.db import transaction
 
-
-
+from .models import Employee
 
 from .models import Customer  
 
@@ -29,6 +39,8 @@ import json, random, re
 
 CustomUser = get_user_model()  # This points to accounts.CustomUser
 
+TEMP_DIR = os.path.join(settings.MEDIA_ROOT, "temp")
+os.makedirs(TEMP_DIR, exist_ok=True)
 
 @csrf_exempt
 def save_customer_signup(request):
@@ -205,8 +217,6 @@ def save_employee_signup(request):
         try:
             email = request.POST.get('email_address')
             full_name = request.POST.get('full_name')
-            mobile = request.POST.get('mobile')
-            password = request.POST.get('password')
 
             if email:
                 email_regex = r'^[^@\s]+@[^\s@]+\.[^@\s]+$'
@@ -216,18 +226,24 @@ def save_employee_signup(request):
             # Generate OTP
             otp = str(random.randint(100000, 999999))
 
-            # Save form data + files temporarily in session
+            # Save form fields in session
             signup_data = request.POST.dict()
-            file_data = {k: v.name for k, v in request.FILES.items()}  # store only names in session
-
             request.session['employee_signup_data'] = signup_data
-            request.session['employee_file_data'] = file_data
             request.session['employee_otp'] = otp
 
-            # Store files temporarily in request.FILES (you’ll re-upload later)
-            request.session['has_files'] = True
+            # Save uploaded files to temp folder
+            file_paths = {}
+            fs = FileSystemStorage(location=TEMP_DIR)
 
-            # Send OTP
+            for field_name in ['aadhar_card_image_front', 'aadhar_card_image_back', 'passport_photo']:
+                if field_name in request.FILES:
+                    file_obj = request.FILES[field_name]
+                    filename = fs.save(file_obj.name, file_obj)
+                    file_paths[field_name] = os.path.join("temp", filename)
+
+            request.session['employee_file_data'] = file_paths
+
+            # Send OTP via email
             send_mail(
                 subject="Your Painting Employee Signup OTP",
                 message=f"Hello {full_name},\n\nYour OTP is: {otp}",
@@ -242,50 +258,91 @@ def save_employee_signup(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
+
 @csrf_exempt
 def verify_employee_otp(request):
     if request.method == 'POST':
-        otp_entered = request.POST.get('otp')
-        otp_saved = request.session.get('employee_otp')
-        signup_data = request.session.get('employee_signup_data')
+        try:
+            otp_entered = request.POST.get('otp')
+            otp_saved = request.session.get('employee_otp')
+            signup_data = request.session.get('employee_signup_data')
+            file_data = request.session.get('employee_file_data')
 
-        if otp_saved and signup_data and otp_entered == otp_saved:
+            print("OTP Entered:", otp_entered)
+            print("OTP Saved in Session:", otp_saved)
+            print("Session Keys:", list(request.session.keys()))
+
+            # ✅ OTP validation
+            if not (otp_entered and otp_saved and otp_entered.strip() == str(otp_saved).strip()):
+                return JsonResponse({'success': False, 'error': 'Invalid OTP'})
+
+            if not signup_data:
+                return JsonResponse({'success': False, 'error': 'Signup data missing in session'})
+
             try:
-                # Create Employee record
-                employee = Employee.objects.create(
-                    full_name=signup_data.get('full_name'),
-                    fathers_name=signup_data.get('fathers_name'),
-                    dob=signup_data.get('dob'),
-                    gender=signup_data.get('gender'),
-                    mobile=signup_data.get('mobile'),
-                    email_address=signup_data.get('email_address'),
-                    password=signup_data.get('password'),
-                    house_no=signup_data.get('house_no'),
-                    village=signup_data.get('village'),
-                    city=signup_data.get('city'),
-                    state=signup_data.get('state'),
-                    pincode=signup_data.get('pincode'),
-                    aadhar_card_no=signup_data.get('aadhar_card_no'),
-                    experience=signup_data.get('experience'),
-                    type_of_work=", ".join(request.POST.getlist('type_of_work')),
-                    preferred_work_location=signup_data.get('preferred_work_location'),
-                    bank_account_holder_name=signup_data.get('bank_account_holder_name'),
-                    account_no=signup_data.get('account_no'),
-                    ifsc_code=signup_data.get('ifsc_code'),
-                    aadhar_card_image_front=request.FILES.get('aadhar_card_image_front'),
-                    aadhar_card_image_back=request.FILES.get('aadhar_card_image_back'),
-                    passport_photo=request.FILES.get('passport_photo')
-                )
+                final_paths = {}
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
-                # Clear session
-                del request.session['employee_otp']
-                del request.session['employee_signup_data']
+                # ✅ Process uploaded files
+                for field_name, temp_rel_path in (file_data or {}).items():
+                    temp_abs_path = os.path.join(settings.MEDIA_ROOT, temp_rel_path)
+                    if os.path.exists(temp_abs_path):
+                        final_path = os.path.join(settings.MEDIA_ROOT, os.path.basename(temp_abs_path))
+                        shutil.move(temp_abs_path, final_path)  # move instead of saving again
+                        final_paths[field_name] = os.path.basename(final_path)
+
+                # ✅ Database ops inside transaction
+                with transaction.atomic():
+                    # Check duplicate email
+                    if CustomUser.objects.filter(email=signup_data['email_address']).exists():
+                        return JsonResponse({'success': False, 'error': 'Email already registered'})
+
+                    # 1. Create CustomUser
+                    user = CustomUser.objects.create_user(
+                        email=signup_data['email_address'],
+                        password=signup_data['password'],
+                        full_name=signup_data['full_name'],
+                        role="employee",
+                        is_verified=True
+                    )
+
+                    # 2. Create Employee profile
+                    employee = Employee.objects.create(
+                        user=user,
+                        full_name=signup_data.get('full_name'),
+                        fathers_name=signup_data.get('fathers_name'),
+                        dob=signup_data.get('dob'),
+                        gender=signup_data.get('gender'),
+                        mobile=signup_data.get('mobile'),
+                        email_address=signup_data.get('email_address'),
+                        house_no=signup_data.get('house_no'),
+                        village=signup_data.get('village'),
+                        city=signup_data.get('city'),
+                        state=signup_data.get('state'),
+                        pincode=signup_data.get('pincode'),
+                        aadhar_card_no=signup_data.get('aadhar_card_no'),
+                        experience=signup_data.get('experience'),
+                        type_of_work=signup_data.get('type_of_work', ''),
+                        preferred_work_location=signup_data.get('preferred_work_location'),
+                        bank_account_holder_name=signup_data.get('bank_account_holder_name'),
+                        account_no=signup_data.get('account_no'),
+                        ifsc_code=signup_data.get('ifsc_code'),
+                        aadhar_card_image_front=final_paths.get('aadhar_card_image_front'),
+                        aadhar_card_image_back=final_paths.get('aadhar_card_image_back'),
+                        passport_photo=final_paths.get('passport_photo'),
+                    )
+
+                # ✅ Clear only after success
+                for key in ['employee_otp', 'employee_signup_data', 'employee_file_data']:
+                    request.session.pop(key, None)
 
                 return JsonResponse({'success': True, 'message': 'Employee registered successfully!'})
+
             except Exception as e:
-                return JsonResponse({'success': False, 'error': str(e)})
-        else:
-            return JsonResponse({'success': False, 'error': 'Invalid OTP'})
+                return JsonResponse({'success': False, 'error': f'Error during signup: {str(e)}'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': f'Server error: {str(e)}'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 

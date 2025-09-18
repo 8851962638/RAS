@@ -209,6 +209,7 @@
   function sendEmployeeOTP() {
     const form = $('#signupForm')[0];
     const formData = new FormData(form);
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     $.ajax({
         url: '/accounts/save_employee_signup/',
@@ -216,6 +217,8 @@
         data: formData,
         processData: false,
         contentType: false,
+        headers: { "X-CSRFToken": csrftoken },
+        xhrFields: { withCredentials: true },   // 👈 important
         success: function(response) {
             if(response.success) {
                 alert(response.message);
@@ -232,18 +235,22 @@
 
 function verifyEmployeeOTP() {
     const otp = $('#employeeOtpInput').val();
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     $.ajax({
         url: '/accounts/verify_employee_otp/',
         type: 'POST',
-        data: {otp: otp},
+        data: { otp: otp },
+        headers: { "X-CSRFToken": csrftoken },
+        xhrFields: { withCredentials: true },
         success: function(response) {
             if(response.success) {
                 alert(response.message);
                 closeEmployeeOtpModal();
                 window.location.href = '/accounts/login/';
             } else {
-                alert('Invalid OTP. Please try again.');
+
+                alert('Error: ' + response.error);
             }
         },
         error: function(xhr) {
@@ -251,6 +258,9 @@ function verifyEmployeeOTP() {
         }
     });
 }
+
+
+
 
 function closeEmployeeOtpModal() {
     $('#employeeOtpModal').hide();
