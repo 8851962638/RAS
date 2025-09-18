@@ -8,40 +8,67 @@
   
   <!-- CSS link -->
   <link rel="stylesheet" href="{% static 'css/common.css' %}">
+  <style>
+    /* Popup box */
+    .popup-menu {
+      display: none;
+      position: absolute;
+      top: 60px;   /* icon ke niche */
+      right: 20px;
+      background-color: #2C61C0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 0;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+      flex-direction: column;
+      min-width: 160px;
+    }
+
+    .popup-menu a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ffffffff;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
   <header>
-  <div class="bubble-container"></div>
+    <div class="bubble-container"></div>
 
-  <div class="left-group">
-    <div class="logo">
-      <img src="{% static 'gallery/logo.jpg' %}" alt="RColourcraft Logo">
+    <div class="left-group">
+      <div class="logo">
+        <img src="{% static 'gallery/logo.jpg' %}" alt="RColourcraft Logo">
+      </div>
+
+      <nav class="nav-left">
+        <ul>
+          <li><a href="{% url 'home' %}" class="active">Home</a></li>
+          <li><a href="#">Our Services</a></li>
+          <li><a href="#">Gallery</a></li>
+          <li><a href="{% url 'reviews' %}">Reviews & Feedback</a></li>
+        </ul>
+      </nav>
     </div>
 
-    <nav class="nav-left">
+    <nav class="nav-right">
       <ul>
-         <li><a href="{% url 'home' %}" class="active">Home</a></li>
-        <li><a href="#">Our Services</a></li>
-        <li><a href="#">Gallery</a></li>
-        <li><a href="{% url 'reviews' %}">Reviews & Feedback</a></li>
+        <li>
+          <a href="javascript:void(0)" onclick="togglePopup()">
+            <img src="{% static 'gallery/user.png' %}" alt="Contact" class="nav-icon">
+          </a>
+          <!-- Popup menu -->
+          <div id="myPopup" class="popup-menu">
+            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+            <a href="{% url 'logout' %}">Logout</a>
+          </div>
+        </li>
       </ul>
     </nav>
-  </div>
-
-<nav class="nav-right">
-  <ul>
-    <li>
-      <a href="{% url 'edit_profile' %}">
-        <img src="{% static 'gallery/user.png' %}" alt="Contact" class="nav-icon">
-      </a>
-    </li>
-  </ul>
-</nav>
-
-</header>
-
-
+  </header>
 
   <!-- Main Content -->
   {% block content %}{% endblock %}
@@ -53,5 +80,20 @@
 
   <!-- JS file -->
   <script src="{% static 'js/script.js' %}"></script>
+  <script>
+    function togglePopup() {
+      const popup = document.getElementById("myPopup");
+      popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
+    }
+
+    // Close popup if clicked outside
+    document.addEventListener("click", function(event) {
+      const popup = document.getElementById("myPopup");
+      const icon = document.querySelector(".nav-icon");
+      if (popup && !popup.contains(event.target) && !icon.contains(event.target)) {
+        popup.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>

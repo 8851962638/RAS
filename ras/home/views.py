@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout
+
 
 def home_view(request):
     return render(request, 'home.html')
@@ -72,3 +74,12 @@ from django.shortcuts import render
 
 def reviews(request):
     return render(request, 'reviews.html')
+
+
+
+from django.contrib.auth import logout
+from django.shortcuts import render, redirect
+
+def logout_view(request):
+    logout(request)
+    return render(request, "accounts/login.html")

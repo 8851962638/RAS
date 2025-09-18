@@ -38,6 +38,9 @@
   </div>
 </div>
 
+<div id="customAlert" class="custom-alert"></div>
+
+
 <!-- OTP Modal -->
 <div id="otpModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -46,8 +49,8 @@
     <p>Please enter the OTP sent to your email</p>
     <input type="text" id="otpInput" maxlength="6" placeholder="Enter OTP" class="otp-input">
     <div class="modal-actions">
-      <button type="button" class="btn btn-success" onclick="verifyOTP()">Verify ✅</button>
-      <button type="button" class="btn btn-danger" onclick="closeOtpModal()">Cancel ❌</button>
+      <button type="button" class="btn btn-success" onclick="verifyOTP()">Verify </button>
+      <button type="button" class="btn btn-danger" onclick="closeOtpModal()">Cancel </button>
     </div>
   </div>
 </div>
@@ -127,6 +130,39 @@
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+{% comment %} neww {% endcomment %}
+/* Alert Styles */
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 20px;                  /* stays at the top */
+  left: 38%;                  /* move to middle */
+  transform: translateX(-50%); /* adjust to be exactly centered */
+  min-width: 300px;
+  max-width: 90%;              /* responsive */
+  text-align: center;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  z-index: 9999;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  animation: fadeInOut 4s ease forwards;
+}
+
+/* Alert Variants */
+.custom-alert.success { background: #28a745; }  /* Green */
+.custom-alert.error   { background: #dc3545; }  /* Red */
+.custom-alert.warning { background: #ffc107; color: #000; }  /* Yellow */
+.custom-alert.info    { background: #ff6b6b; }  /* Blue */
+
+/* Animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
 </style>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -141,7 +177,7 @@ function sendOTP() {
     if(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!emailRegex.test(email)) {
-            alert("Please enter a valid email");
+            showAlert("Please enter a valid email");
             return;
         }
     }
@@ -154,18 +190,19 @@ function sendOTP() {
         contentType: false,
         success: function(response) {
             if(response.success) {
-                alert(response.message);
+                showAlert(response.message);
                 currentCustomerId = response.customer_id; // optional, can remove if not needed
                 $('#otpModal').css("display", "flex");
             } else {
-                alert('Error: ' + response.error);
+                showAlert('Error: ' + response.error);
             }
         },
         error: function(xhr) {
-            alert('Something went wrong!');
+            showAlert('Something went wrong!');
         }
     });
 }
+
 
 function verifyOTP() {
     const otp = $('#otpInput').val();
@@ -176,15 +213,14 @@ function verifyOTP() {
         data: {otp: otp},
         success: function(response) {
             if(response.success) {
-                alert(response.message);
                 closeOtpModal();
                 window.location.href = '/accounts/login/';
             } else {
-                alert('Invalid OTP. Please try again.');
+                showAlert('Invalid OTP. Please try again.');
             }
         },
         error: function(xhr) {
-            alert('Something went wrong!');
+            showAlert('Something went wrong!');
         }
     });
 }
@@ -192,5 +228,17 @@ function verifyOTP() {
 function closeOtpModal() {
     $('#otpModal').hide();
 }
+
+{% comment %} alrert ui better  {% endcomment %}
+function showAlert(message, type="info") {
+    const alertBox = $("#customAlert");
+    alertBox.removeClass().addClass("custom-alert " + type);
+    alertBox.text(message).fadeIn();
+
+    setTimeout(() => {
+        alertBox.fadeOut();
+    }, 3500);
+}
+
 </script>
 {% endblock %}
