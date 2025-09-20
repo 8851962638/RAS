@@ -7,8 +7,8 @@ from django.views.decorators.http import require_POST
 def home_view(request):
     return render(request, 'home.html')
 
-def edit_profile(request):
-    return render(request, "edit_profile.html")
+# def edit_profile(request):
+#     return render(request, "edit_profile.html")
 
 
 def book_service(request, service_name):
@@ -231,3 +231,18 @@ def save_booking(request):
             return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
 
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def edit_profile_view(request):
+    user = request.user
+
+    if user.role == "employee":
+        return render(request, "edit_profile.html", {"user": user})
+
+    elif user.role == "customer":
+        return render(request, "edit_customers_profile.html", {"user": user})
+
+    # fallback (optional)
+    return render(request, "edit_profile.html", {"user": user})

@@ -7,7 +7,22 @@
 <div class="hero">
   <div class="hero-overlay">
     <div class="hero-text glass-card">
-      <h1>Bring Colors to Life 🎨</h1>
+  <h1>
+  {% if request.user.is_authenticated %}
+    {% if request.user.is_superuser %}
+      Welcome Neeraj
+    {% elif request.user.role == "customer" %}
+      Welcome {{ request.user.customers.first.customer_full_name }}
+    {% elif request.user.role == "employee" %}
+      Welcome {{ request.user.employees.first.full_name }}
+    {% else %}
+      Welcome {{ request.user.full_name }}
+    {% endif %}
+  {% else %}
+    Welcome Back
+  {% endif %}
+</h1>
+
       <p>At RColourcraft, we specialize in stunning murals, creative paintings, and artistic designs that transform your space.</p>
       <button>Explore Services</button>
     </div>
