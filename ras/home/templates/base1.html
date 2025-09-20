@@ -7,9 +7,15 @@
   <title>{% block title %}RColourcraft{% endblock %}</title>
   
   <!-- CSS link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
   <link rel="stylesheet" href="{% static 'css/common.css' %}">
-  <style>
-    /* Popup box */
+  <link rel="stylesheet" href="{% static 'css/review_page.css' %}">
+  
+<style>
+ /* Popup box */
+  /* Popup box */
     .popup-menu {
       display: none;
       position: absolute;
@@ -32,7 +38,8 @@
       color: #ffffffff;
       font-weight: 500;
     }
-  </style>
+  
+</style>
 </head>
 <body>
   <!-- Header -->
@@ -46,10 +53,11 @@
 
       <nav class="nav-left">
         <ul>
-          <li><a href="{% url 'home' %}" class="active">Home</a></li>
-          <li><a href="{% url 'bookings' %}">Bookings</a></li>
-          <!-- <li><a href="{% url 'artists' %}">Artists</a></li> -->
-          <li><a href="{% url 'reviews' %}">Reviews & Feedback</a></li>
+          <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+<li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
+<li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
+<li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
+
         </ul>
       </nav>
     </div>
@@ -62,9 +70,9 @@
           </a>
           <!-- Popup menu -->
           <div id="myPopup" class="popup-menu">
-            <a href="{% url 'edit_profile' %}">Edit Profile</a>
-            <a href="{% url 'logout' %}">Logout</a>
-          </div>
+          <a href="{% url 'edit_profile' %}">Edit Profile</a>
+          <a href="{% url 'logout' %}">Logout</a>
+        </div>
         </li>
       </ul>
     </nav>
