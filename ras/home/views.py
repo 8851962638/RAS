@@ -165,3 +165,69 @@ def save_review(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+
+
+from .models import Booking
+
+def bookings(request):
+    all_bookings = Booking.objects.all().order_by('-created_at')  
+    return render(request, 'bookings.html', {'bookings': all_bookings})
+
+
+from django.http import JsonResponse
+from .models import Booking
+from accounts.models import Customer
+from datetime import datetime
+import uuid
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+@login_required
+@csrf_exempt
+def save_booking(request):
+    if request.method == 'POST':
+        try:
+            print("Logged-in user:", request.user, request.user.id)
+
+            # Get the Customer record
+            customer_qs = request.user.customers.all()
+            if not customer_qs.exists():
+                return JsonResponse({'success': False, 'message': 'This option is only available for customers.'})
+
+            customer = customer_qs.first()  # the single Customer object
+
+            booking_id = str(uuid.uuid4())[:8]
+
+            appointment_date = None
+            appointment_date_str = request.POST.get('appointment_date')
+            if appointment_date_str:
+                appointment_date = datetime.strptime(appointment_date_str, "%d-%m-%Y").date()
+
+            booking = Booking.objects.create(
+                booking_id=booking_id,
+                customer_name=customer.customer_full_name,
+                customer_user_id=customer.id,
+                service_name=request.POST.get('service_name'),
+                contact_number=request.POST.get('contact_number'),
+                email=request.POST.get('email'),
+                address=request.POST.get('address'),
+                pin_code=request.POST.get('pin_code'),
+                state=request.POST.get('state'),
+                city=request.POST.get('city'),
+                total_walls=int(request.POST.get('total_walls', 0)),
+                width=float(request.POST.get('width', 0)),
+                height=float(request.POST.get('height', 0)),
+                total_sqft=float(request.POST.get('total_sqft', 0)),
+                appointment_date=appointment_date,
+                payment_option="pending",
+                payment_amount=0.00,
+                is_paid=False
+            )
+
+            return JsonResponse({'success': True, 'message': 'Booking saved successfully!'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
+
+

@@ -7,72 +7,65 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div class="booking-container">
-  <form class="booking-form" id="bookingForm">
+  <form class="booking-form" id="bookingForm" method="POST">
+    {% csrf_token %}
     <h2>Book {{ service_name }}</h2>
 
-    <!-- Service Name (readonly) -->
     <label>Service</label>
-    <input type="text" value="{{ service_name }}" readonly>
+    <input type="text" name="service_name" value="{{ service_name }}" readonly>
 
-    <!-- Contact + Email Row -->
     <div class="contact-row">
       <div class="contact-field">
         <label>Contact Number</label>
-        <input type="text" placeholder="Enter Contact Number" required>
+        <input type="text" name="contact_number" placeholder="Enter Contact Number" required>
       </div>
       <div class="contact-field">
         <label>Email</label>
-        <input type="email" placeholder="Enter Email" required>
+        <input type="email" name="email" placeholder="Enter Email" required>
       </div>
     </div>
 
-    <!-- Full Address -->
     <label>Address</label>
-    <textarea placeholder="Enter Full Address" required></textarea>
+    <textarea name="address" placeholder="Enter Full Address" required></textarea>
 
-    <!-- Address row: Pin Code, State, City -->
     <div class="address-row">
       <div class="address-field">
         <label>Pin Code</label>
-        <input type="text" placeholder="Pin Code" required>
+        <input type="text" name="pin_code" placeholder="Pin Code" required>
       </div>
       <div class="address-field">
         <label>State</label>
-        <input type="text" placeholder="State" required>
+        <input type="text" name="state" placeholder="State" required>
       </div>
       <div class="address-field">
         <label>City</label>
-        <input type="text" placeholder="City" required>
+        <input type="text" name="city" placeholder="City" required>
       </div>
     </div>
 
-    <!-- Total Walls -->
     <label>Total Walls</label>
-    <input type="number" placeholder="Enter Total Number of Walls" required>
+    <input type="number" name="total_walls" placeholder="Enter Total Number of Walls" required>
 
-    <!-- Square Ft (Width x Height) -->
-    <!-- Square Ft (Width x Height) + Appointment Date -->
-<div class="square-appointment-row">
-  <div class="square-ft">
-    <label>Square Ft</label>
-    <div class="square-ft-inputs">
-      <input type="number" id="width" placeholder="Width" required>
-      <span>*</span>
-      <input type="number" id="height" placeholder="Height" required>
-      <span>=</span>
-      <input type="number" id="total" placeholder="Total sq ft" readonly>
+    <div class="square-appointment-row">
+      <div class="square-ft">
+        <label>Square Ft</label>
+        <div class="square-ft-inputs">
+          <input type="number" id="width" name="width" placeholder="Width" required>
+          <span>*</span>
+          <input type="number" id="height" name="height" placeholder="Height" required>
+          <span>=</span>
+          <input type="number" id="total_sqft" name="total_sqft" placeholder="Total sq ft" readonly>
+        </div>
+      </div>
     </div>
-  </div>
 
+    <div class="appointment-date">
+      <label for="appointment_date">Appointment Date</label>
+      <input type="date" class="colorful-input date-input" id="appointment_date" name="appointment_date" required>
+    </div>
 
+    <button type="button" onclick="saveBooking()">Submit</button>
 
-</div>
-<div class="appointment-date">
-  <label for="appointment_date">Appointment Date</label>
-  <input type="text" class="colorful-input date-input" id="appointment_date" name="appointment_date" required placeholder="Select Date">
-</div>
-
-    <button type="submit">Submit</button>
   </form>
 </div>
 
@@ -274,11 +267,13 @@
 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 // Auto-calculate total square feet
 const widthInput = document.getElementById('width');
 const heightInput = document.getElementById('height');
-const totalInput = document.getElementById('total');
+const totalInput = document.getElementById('total_sqft');
 
 function calculateTotal() {
     const w = parseFloat(widthInput.value) || 0;
@@ -289,17 +284,19 @@ widthInput.addEventListener('input', calculateTotal);
 heightInput.addEventListener('input', calculateTotal);
 
 // Popup handling
-const form = document.getElementById('bookingForm');
-const popup = document.getElementById('popup');
+// const form = document.getElementById('bookingForm');
+// const popup = document.getElementById('popup');
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault(); 
-  popup.style.display = 'flex'; 
-});
+// form.addEventListener('submit', function(e) {
+//   e.preventDefault(); 
+//   popup.style.display = 'flex'; 
+// });
 
 function goHome() {
   window.location.href = "{% url 'home' %}";
 }
+
+
 
 
 flatpickr("#appointment_date", {
@@ -307,5 +304,39 @@ flatpickr("#appointment_date", {
   minDate: "today",  // disable past dates
   theme: "material_blue", // you can use "airbnb", "dark", "material_green", etc.
 });
+
+
+//for saving data of booking
+
+function saveBooking() {
+    // auto-calc total sqft before saving
+    alert("s")
+    let width = parseFloat($('#width').val()) || 0;
+    let height = parseFloat($('#height').val()) || 0;
+    $('#total_sqft').val(width * height);
+
+    const form = $('#bookingForm')[0];
+    const formData = new FormData(form);
+
+    $.ajax({
+        url: '/home/save_bookings/',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: { "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val() },
+        success: function(response) {
+            if(response.success) {
+                $('#popup').fadeIn();
+                $('#bookingForm')[0].reset();
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function(xhr) {
+            alert('Something went wrong: ' + xhr.responseText);
+        }
+    });
+}
 </script>
 {% endblock %}

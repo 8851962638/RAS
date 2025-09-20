@@ -130,7 +130,7 @@
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
-{% comment %} neww {% endcomment %}
+/* {% comment %} neww {% endcomment %} */
 /* Alert Styles */
 .custom-alert {
   display: none;
@@ -229,7 +229,7 @@ function closeOtpModal() {
     $('#otpModal').hide();
 }
 
-{% comment %} alrert ui better  {% endcomment %}
+// {% comment %} alrert ui better  {% endcomment %}
 function showAlert(message, type="info") {
     const alertBox = $("#customAlert");
     alertBox.removeClass().addClass("custom-alert " + type);

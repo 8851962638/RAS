@@ -13,5 +13,8 @@ urlpatterns = [
     path("save-review/", views.save_review, name="save_review"),
     path('logout/', views.logout_view, name='logout'),
     path("artists/", views.artists, name="artists"),
+    path('bookings/', views.bookings, name='bookings'),
+    path('home/save_bookings/', views.save_booking, name='save_booking'),  
+
 
 ]
