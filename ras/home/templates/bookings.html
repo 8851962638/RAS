@@ -1,0 +1,126 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block title %}Bookings - Painting{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <h1 class="page-title">All Bookings 📋</h1>
+
+  <div class="booking-list">
+    {% if bookings %}
+      {% for booking in bookings %}
+        <div class="booking-card">
+          <div class="booking-header">
+            <span class="service-name">{{ booking.service_name }}</span>
+            <span class="booking-id">{{ booking.booking_id }}</span>
+          </div>
+
+          <div class="row">
+            <p><strong>Customer Name:</strong> {{ booking.customer_name }}</p>
+            <p><strong>Contact:</strong> {{ booking.contact_number }} | {{ booking.email }}</p>
+          </div>
+
+          <div class="row">
+            <p><strong>Address:</strong> {{ booking.address }}, {{ booking.city }}, {{ booking.state }} - {{ booking.pin_code }}</p>
+          </div>
+
+          <div class="row">
+            <p><strong>Total Walls:</strong> {{ booking.total_walls }}</p>
+            <p><strong>Square Ft:</strong> {{ booking.width }} × {{ booking.height }} = {{ booking.total_sqft }}</p>
+          </div>
+
+          <div class="row">
+            <p><strong>Appointment Date:</strong> {{ booking.appointment_date }}</p>
+            <p class="timestamp">📅 Booked on {{ booking.created_at|date:"d M Y, H:i A" }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-data">No bookings found.</p>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.page-container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+  background: linear-gradient(to right, #c1f0f6, #d9f7e9);
+  min-height: 90vh;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.booking-list {
+  max-height: 70vh; /* Scroll when too many bookings */
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.booking-card {
+  background: linear-gradient(to right, #a8e6cf, #dcedc1); /* soft green to soft mint */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* slightly softer shadow */
+  transition: transform 0.2s ease-in-out;
+  width: 100%;
+}
+.booking-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2); /* hover lift effect */
+}
+
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.booking-header .service-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.booking-header .booking-id {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2980b9;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.booking-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.timestamp {
+  font-size: 14px;
+  color: #555;
+}
+
+.no-data {
+  text-align: center;
+  color: #777;
+  font-weight: bold;
+  font-size: 18px;
+}
+</style>
+{% endblock %}
