@@ -1,12 +1,11 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reviews & Feedback - RColourcraft</title>
-   <!-- Bootstrap + FontAwesome -->
+  <!-- Bootstrap + FontAwesome -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -106,81 +105,9 @@
       content: '\f006';
       font-family: FontAwesome;
     }
-  </style>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
 
-    /* Hero Section */
-    .hero {
-      background: linear-gradient(to right, #ff416c, #ff4b2b);
-      color: #fff; text-align: center;
-      padding: 60px 20px;
-    }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-    .hero p { font-size: 1.2rem; }
-
-    /* Reviews */
-    .reviews-section { padding: 50px 20px; text-align: center; }
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px; margin-top: 30px;
-    }
-    .review-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: flex; align-items: flex-start;
-      gap: 15px; text-align: left;
-    }
-    .review-card img {
-      width: 60px; height: 60px;
-      border-radius: 50%; object-fit: cover;
-      flex-shrink: 0;
-    }
     .review-content h3 { margin: 0; font-size: 1rem; }
     .review-content p { font-size: 0.95rem; margin-top: 5px; }
-    .stars { color: gold; font-size: 0.9rem; }
-
-    /* Gallery */
-    .gallery-section { padding: 50px 20px; background: #fafafa; text-align: center; }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px; margin-top: 30px;
-    }
-    .gallery-grid img {
-      width: 100%; border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
-    .gallery-grid img:hover { transform: scale(1.05); }
-
-    /* Review Form */
-    .review-form {
-      margin-top: 40px;
-      max-width: 500px; margin-left: auto; margin-right: auto;
-      text-align: left;
-      background: #fff; padding: 25px;
-      border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .review-form h3 { margin-bottom: 15px; }
-    .review-form input, .review-form textarea, .review-form select {
-      width: 100%; padding: 12px; margin: 8px 0;
-      border: 1px solid #ccc; border-radius: 8px;
-    }
-    .review-form input[type="file"] {
-      padding: 5px; border: none;
-    }
-    .review-form button {
-      background: #ff416c; color: #fff;
-      padding: 12px 20px; border: none;
-      border-radius: 8px; cursor: pointer;
-      transition: background 0.3s;
-    }
-    .review-form button:hover { background: #e63e5a; }
-
   </style>
 </head>
 <body>
@@ -194,7 +121,11 @@
   <!-- Reviews -->
   <section class="reviews-section">
     <h2>Customer Reviews</h2>
-    <div class="reviews-grid">
+
+    <!-- reviews grid: keep the original static cards and also render DB reviews below them -->
+    <div class="reviews-grid" id="reviewsGrid">
+
+      <!-- STATIC sample reviews you had originally -->
       <div class="review-card">
         <img src="{% static 'gallery/john.jpg' %}" alt="John D">
         <div class="review-content">
@@ -202,6 +133,7 @@
           <p>"Amazing wall art! Totally transformed my living room."</p>
         </div>
       </div>
+
       <div class="review-card">
         <img src="{% static 'gallery/rohit.jpg' %}" alt="Rohit">
         <div class="review-content">
@@ -209,6 +141,7 @@
           <p>"The 3D painting is stunning, it feels alive!"</p>
         </div>
       </div>
+
       <div class="review-card">
         <img src="{% static 'gallery/rahul.jpg' %}" alt="Rahul S">
         <div class="review-content">
@@ -216,30 +149,51 @@
           <p>"Very professional team, highly recommended."</p>
         </div>
       </div>
+
+      <!-- DYNAMIC reviews from DB (if any) -->
+      {% for r in reviews %}
+        <div class="review-card">
+          {% if r.review_image %}
+    <img src="{{ r.review_image.url }}" alt="{{ r.customer_name }}">
+{% else %}
+    <img src="{% static 'gallery/default-user.png' %}" alt="User">
+{% endif %}
+<div class="review-content">
+    <h3>{{ r.customer_name }}
+        <span class="stars">
+            {% for i in "12345"|make_list %}
+                {% if forloop.counter <= r.rating %}
+                    ⭐
+                {% else %}
+                    ☆
+                {% endif %}
+            {% endfor %}
+        </span>
+    </h3>
+    <p>"{{ r.customer_review }}"</p>
+</div>
+
+        </div>
+      {% empty %}
+        <!-- nothing to show; static samples remain -->
+      {% endfor %}
+
     </div>
   </section>
 
-  <!-- Gallery -->
-  <section class="gallery-section">
-    <h2>Artist Works Showcase</h2>
-    <div class="gallery-grid">
-      <img src="{% static 'gallery/art1.jpg' %}" alt="Artwork 1">
-      <img src="{% static 'gallery/art2.jpg' %}" alt="Artwork 2">
-      <img src="{% static 'gallery/art3.jpg' %}" alt="Artwork 3">
-      <img src="{% static 'gallery/art4.jpg' %}" alt="Artwork 4">
-    </div>
-
-    <!-- Review Form -->
+  <!-- Review Form -->
   <section class="gallery-section">
     <div class="review-form">
       <h3>Leave a Review</h3>
-      <form method="POST" enctype="multipart/form-data">
+
+      <!-- NOTE: form contains the CSRF hidden input so FormData will include it -->
+      <form id="reviewForm" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <input type="text" name="name" placeholder="Your Name" required>
         <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="review" rows="4" placeholder="Your Review"></textarea>
+        <textarea name="customaer_review" rows="4" placeholder="Your Review"></textarea>
 
-        <!-- Star Rating -->
+        <!-- Star Rating (keeps your original star radio buttons) -->
         <label>Your Rating:</label>
         <div class="star-rating">
           <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
@@ -259,19 +213,90 @@
         </div>
 
         <!-- Upload Image -->
-<div class="form-group text-center">
-  <label for="image" class="d-block mb-2">Upload your picture (optional):</label>
-  <input type="file" name="image" id="image" class="d-inline-block">
-</div>
+        <div class="form-group text-center">
+          <label for="image" class="d-block mb-2">Upload your picture (optional):</label>
+          <input type="file" name="image" id="image" class="d-inline-block">
+        </div>
 
-<div class="form-group text-center">
-  <button type="submit">Submit Review</button>
-</div>      </form>
+        <div class="form-group text-center">
+          <button type="submit">Submit Review</button>
+        </div>
+      </form>
+
+      <div id="response" style="margin-top:12px"></div>
     </div>
   </section>
 
+  <!-- AJAX: submit form (uses FormData which includes hidden csrfmiddlewaretoken) -->
+  <script>
+    (function(){
+      const form = document.getElementById('reviewForm');
+      const responseDiv = document.getElementById('response');
+      const reviewsGrid = document.getElementById('reviewsGrid');
+      const defaultImage = "{% static 'gallery/default-user.png' %}";
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        responseDiv.innerHTML = "";
+
+        const fd = new FormData(form);
+
+        fetch("{% url 'save_review' %}", {
+          method: "POST",
+          body: fd,
+          // default credentials are fine for same-origin; FormData includes csrf token input
+        })
+        .then(async res => {
+          const json = await res.json().catch(()=>({success:false, error: 'Invalid JSON'}));
+          if (!res.ok) throw json;
+          return json;
+        })
+        .then(data => {
+          if (data.success) {
+            responseDiv.innerHTML = "<div style='color:green; margin-bottom:8px'>" + data.message + "</div>";
+
+            // Build new review card HTML (same structure & classes)
+            const imgSrc = data.data.image ? data.data.image : defaultImage;
+            const stars = '⭐'.repeat(Number(data.data.rating || 0));
+            const reviewText = data.data.customaer_review ? data.data.customaer_review : "";
+
+            const newCard = `
+              <div class="review-card">
+                <img src="${imgSrc}" alt="${data.data.name}">
+                <div class="review-content">
+                  <h3>${data.data.name} <span class="stars">${stars}</span></h3>
+                  <p>"${reviewText}"</p>
+                </div>
+              </div>
+            `;
+
+            // insert on top
+            reviewsGrid.insertAdjacentHTML('afterbegin', newCard);
+
+            form.reset();
+            // Optionally uncheck any radio (reset may already do it)
+          } else {
+            // show errors
+            if (data.errors) {
+              let html = "<ul style='color:red; text-align:left; display:inline-block;'>";
+              for (const k in data.errors) {
+                html += `<li>${k}: ${data.errors[k].join(', ')}</li>`;
+              }
+              html += "</ul>";
+              responseDiv.innerHTML = html;
+            } else {
+              responseDiv.innerHTML = "<div style='color:red'>"+(data.error||'Submission failed')+"</div>";
+            }
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          const msg = (err && err.error) ? err.error : "Something went wrong. Check console.";
+          responseDiv.innerHTML = "<div style='color:red'>" + msg + "</div>";
+        });
+      });
+    })();
+  </script>
+
 </body>
 </html>
-
-
-

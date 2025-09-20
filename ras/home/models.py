@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)   # Primary key
@@ -30,3 +31,24 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.booking_id} - {self.service_name}"
+    
+
+
+
+class Review(models.Model):
+    id = models.BigAutoField(primary_key=True)   # Explicit primary key
+    customer_id = models.CharField(max_length=50, unique=True)  # Custom customer id
+
+    customer_name = models.CharField(max_length=100)
+    customer_email = models.EmailField()
+    customer_review = models.TextField(blank=True, null=True)
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    review_image = models.ImageField(upload_to='reviews/', blank=True, null=True)
+    review_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "review"
+
+    def __str__(self):
+        return f"{self.customer_name} - Review"
+
