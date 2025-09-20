@@ -1,0 +1,31 @@
+{% extends 'base1.html' %}
+
+{% block content %}
+<div class="search-container">
+  <h2>Find an Artist</h2>
+  <form method="get">
+    <input type="text" name="name" placeholder="Artist Name" value="{{ request.GET.name }}">
+    <input type="text" name="pin_code" placeholder="Pin Code" value="{{ request.GET.pin_code }}">
+    <input type="text" name="address" placeholder="Address" value="{{ request.GET.address }}">
+    <input type="text" name="work_type" placeholder="Type of Work" value="{{ request.GET.work_type }}">
+    <input type="number" name="experience_years" placeholder="Min Experience (Years)" value="{{ request.GET.experience_years }}">
+    <button type="submit">Search</button>
+  </form>
+
+  <hr>
+
+  <h3>Artists</h3>
+  <ul>
+  {% for artist in artists %}
+    <li>
+      <strong>{{ artist.full_name }}</strong> – {{ artist.type_of_work }}  
+      <br>Address: {{ artist.house_no }}, {{ artist.village }}, {{ artist.city }}, {{ artist.state }}  
+      <br>Pin: {{ artist.pincode }}  
+      <br>Experience: {{ artist.experience }} years
+    </li>
+  {% empty %}
+    <p>No artists found.</p>
+  {% endfor %}
+</ul>
+</div>
+{% endblock %}
