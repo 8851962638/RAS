@@ -1,0 +1,91 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}Shop - RColourcraft{% endblock %}
+
+{% block content %}
+<style>
+    .shop-container {
+  padding: 50px 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.section-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #2C61C0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 15px;
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2C61C0;
+  margin: 5px 0 15px;
+}
+
+.btn-buy {
+  padding: 8px 15px;
+  background: #2C61C0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-buy:hover {
+  background: #1d4293;
+}
+
+</style>
+<div class="shop-container">
+  <h2 class="section-title">🎨 Shop Products</h2>
+
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <img src="{% static product.image %}" alt="{{ product.name }}">
+      <h3>{{ product.name }}</h3>
+      <p class="price">₹ {{ product.price }}</p>
+      <button class="btn-buy">Add to Cart</button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

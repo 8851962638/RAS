@@ -86,11 +86,9 @@ def logout_view(request):
     logout(request)
     return render(request, "accounts/login.html")
 
-
 from django.shortcuts import render
 from django.db.models import Q 
 from accounts.models import Employee
-
 
 def artists(request):
     query = Employee.objects.all()
@@ -102,21 +100,28 @@ def artists(request):
     work_type = request.GET.get("work_type")
     experience_years = request.GET.get("experience_years")
 
-    # Apply filters with correct field names
+    # Apply filters with Q objects
     if name:
         query = query.filter(full_name__icontains=name)
     if pin_code:
         query = query.filter(pincode__icontains=pin_code)
     if address:
         query = query.filter(
-            village__icontains=address
-        ) | query.filter(city__icontains=address) | query.filter(state__icontains=address)
+            Q(village__icontains=address) |
+            Q(city__icontains=address) |
+            Q(state__icontains=address)
+        )
     if work_type:
         query = query.filter(type_of_work__icontains=work_type)
     if experience_years:
-        query = query.filter(experience__gte=experience_years)
+        try:
+            experience_years = int(experience_years)
+            query = query.filter(experience__gte=experience_years)
+        except ValueError:
+            pass  # ignore invalid input
 
     return render(request, "artist.html", {"artists": query})
+
 
 
 
@@ -246,3 +251,18 @@ def edit_profile_view(request):
 
     # fallback (optional)
     return render(request, "edit_profile.html", {"user": user})
+
+
+
+def shop(request):
+    # Example products
+    products = [
+        {"id": 1, "name": "Acrylic Paint Set", "price": 599, "image": "gallery/paint_set.jpg"},
+        {"id": 2, "name": "Canvas Board", "price": 299, "image": "gallery/canvas.jpg"},
+        {"id": 3, "name": "Brush Kit", "price": 399, "image": "gallery/brush_kit.jpg"},
+        {"id": 4, "name": "Oil Pastels", "price": 199, "image": "gallery/pastels.jpg"},
+    ]
+    return render(request, "shop.html", {"products": products})
+
+
+
