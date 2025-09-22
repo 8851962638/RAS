@@ -29,11 +29,27 @@
       <!-- Submit button -->
       <button type="button" class="btn" onclick="loginUser()">Login</button>
 
-      <p class="switch-text">
-        Don't have an account? 
-        <a href="{% url 'accounts:signup' %}">Sign Up</a>
-      </p>
+<p class="switch-text">
+  Don't have an account? 
+  <a href="javascript:void(0)" onclick="openSignupModal()">Sign Up</a>
+</p>
+
     </form>
+  </div>
+</div>
+
+<div class="bubbles">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+<!-- Signup Choice Modal -->
+<!-- Signup Choice Modal -->
+<div id="signupChoiceModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeSignupModal()">&times;</span>
+    <h2>Choose Signup Type</h2>
+    <a href="{% url 'accounts:signup_employee' %}" class="signup-option">Sign Up as Employee</a>
+<a href="{% url 'accounts:signup_customer' %}" class="signup-option">Sign Up as Customer</a>
+
   </div>
 </div>
 
@@ -69,5 +85,23 @@ function loginUser() {
         }
     });
 }
+
+
+
+function openSignupModal() {
+  document.getElementById("signupChoiceModal").style.display = "flex";
+}
+function closeSignupModal() {
+  document.getElementById("signupChoiceModal").style.display = "none";
+}
+
+// Close modal if clicked outside
+window.onclick = function(event) {
+  let modal = document.getElementById("signupChoiceModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+}
+
 </script>
 {% endblock %}

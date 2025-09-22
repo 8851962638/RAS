@@ -347,6 +347,10 @@ def verify_employee_otp(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-def customer_signup(request):
+def signup_customer(request):
     return render(request, "accounts/signup_customer.html")
+
+
+def signup_employee(request):
+    return render(request, "accounts/signup_employee.html")
 

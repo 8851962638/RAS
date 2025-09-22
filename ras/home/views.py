@@ -24,31 +24,52 @@ def explore_service(request, service_type):
     """
     if service_type == '3d-art':
         images = [
-            'gallery/art1.jpg', 'gallery/3d2.jpg', 'gallery/3d3.jpg',
+            'gallery/3d15.jpg', 'gallery/3d2.jpg', 'gallery/3d3.jpg',
             'gallery/3d4.jpg', 'gallery/3d5.jpg', 'gallery/3d6.jpg',
             'gallery/3d7.jpg', 'gallery/3d8.jpg', 'gallery/3d9.jpg',
+            'gallery/3d10.jpg', 'gallery/3d11.jpg', 'gallery/3d12.jpg',
+            'gallery/3d13.jpg', 'gallery/3d14.jpg', 'gallery/3d15.jpg',
+            'gallery/3d18.jpg', 'gallery/3d19.jpg', 'gallery/3d20.jpg',
+            'gallery/3d16.jpg', 'gallery/3d17.jpg', 'gallery/3d21.jpg',
+            'gallery/3d22.jpg', 'gallery/3d23.jpg', 'gallery/3d24.jpg',
+            'gallery/3d25.jpg', 'gallery/3d26.jpg', 'gallery/3d27.jpg',
+            'gallery/3d28.jpg', 'gallery/3d29.jpg', 'gallery/3d30.jpg',
+            'gallery/3d31.jpg', 'gallery/3d32.jpg', 'gallery/3d33.jpg',
         ]
         heading = "Our 3D Artworks"
     elif service_type == 'mural':
         images = [
-            'gallery/mural1.jpg', 'gallery/mural2.jpg', 'gallery/mural3.jpg',
+            'gallery/mural2.jpg', 'gallery/mural3.jpg',
             'gallery/mural4.jpg', 'gallery/mural5.jpg', 'gallery/mural6.jpg',
+            'gallery/mural20.jpg', 'gallery/mural8.jpg', 'gallery/mural9.jpg',
+            'gallery/mural10.jpg', 'gallery/mural11.jpg', 'gallery/mural12.jpg',
+            'gallery/mural13.jpg', 'gallery/mural14.jpg', 'gallery/mural15.jpg',
+            'gallery/mural18.jpg', 'gallery/mural19.jpg', 'gallery/mural20.jpg',
+            'gallery/mural16.jpg', 'gallery/mural17.jpg', 'gallery/mural18.jpg',
+            'gallery/mural19.jpg', 'gallery/mural20.jpg', 'gallery/mural21.jpg',
+            'gallery/mural22.jpg', 'gallery/mural23.jpg', 'gallery/mural24.jpg',
+            'gallery/mural25.jpg', 'gallery/mural26.jpg', 'gallery/mural27.jpg',
+            'gallery/mural28.jpg', 'gallery/mural29.jpg', 'gallery/mural30.jpg',
+            'gallery/mural31.jpg', 'gallery/mural32.jpg', 'gallery/mural33.jpg',    
         ]
         heading = "Our Mural Artworks"
     else:  # normal painting
         images = [
             'gallery/paint1.jpg', 'gallery/paint2.jpg', 'gallery/paint3.jpg',
             'gallery/paint4.jpg', 'gallery/paint5.jpg', 'gallery/paint6.jpg',
+            'gallery/paint7.jpg', 'gallery/paint8.jpg', 'gallery/paint9.jpg',
+            'gallery/paint10.jpg', 'gallery/paint11.jpg', 'gallery/paint12.jpg',
+            'gallery/paint15.jpg', 'gallery/paint14.jpg', 'gallery/paint13.jpg',
+            'gallery/paint16.jpg','gallery/paint17.jpg', 'gallery/paint18.jpg',
+            'gallery/paint19.jpg', 
         ]
-        heading = "Our Normal Paintings"
+        heading = "Advertisement Paintings"
 
     context = {
         'images': images,
         'heading': heading,
     }
     return render(request, 'explore_service.html', context)
-
-
 
 def book_service(request, service_type):
     """
@@ -239,17 +260,42 @@ def save_booking(request):
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from accounts.models import Customer, Employee  # assuming you have Employee model
+
 @login_required
 def edit_profile_view(request):
     user = request.user
 
     if user.role == "employee":
-        return render(request, "edit_profile.html", {"user": user})
+        # Assuming you have an Employee model linked to user
+        employee = get_object_or_404(Employee, user=user)
+
+        context = {
+            "name": employee.full_name,
+            "email_address": employee.email_address,
+            "contact": employee.mobile,
+            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
+            "experience": employee.experience or "Not specified",
+            "type_of_work": employee.type_of_work,
+            "type_of_work": employee.type_of_work,
+            "type_of_work": employee.type_of_work,
+        }
+        return render(request, "edit_profile.html", context)
 
     elif user.role == "customer":
-        return render(request, "edit_customers_profile.html", {"user": user})
+        customer = get_object_or_404(Customer, user=user)
 
-    # fallback (optional)
+        context = {
+            "name": customer.customer_full_name,
+            "email": customer.email,
+            "contact": customer.mobile,
+            "profile_pic": customer.customer_photo.url if customer.customer_photo else None,
+        }
+        return render(request, "edit_customers_profile.html", context)
+
+    # fallback
     return render(request, "edit_profile.html", {"user": user})
 
 

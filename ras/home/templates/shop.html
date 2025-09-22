@@ -5,87 +5,382 @@
 
 {% block content %}
 <style>
-    .shop-container {
-  padding: 50px 20px;
-  text-align: center;
-  font-family: "Poppins", sans-serif;
+/* --- General Styles --- */
+.shop-container {
+    padding: 60px 20px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #f7f9fc, #eef4f9);
 }
 
 .section-title {
-  font-size: 28px;
-  margin-bottom: 30px;
-  color: #2C61C0;
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
 }
 
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: #007bff;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* --- Product Grid & Cards --- */
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 0 5%;
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .product-card {
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 15px;
-  width: 240px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease-in-out;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
 .product-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
+    width: 100%;
+    height: 200px;
+    /* This is the key change to prevent images from being cut off */
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 15px;
 }
 
 .product-card h3 {
-  font-size: 18px;
-  margin: 10px 0;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 10px 0 5px;
+    color: #444;
 }
 
-.price {
-  font-size: 16px;
-  font-weight: bold;
-  color: #2C61C0;
-  margin: 5px 0 15px;
+.product-card p.description {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+    text-align: left;
+    flex-grow: 1;
 }
 
-.btn-buy {
-  padding: 8px 15px;
-  background: #2C61C0;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
+.product-card .price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #007bff;
+    margin-top: auto;
+    margin-bottom: 15px;
 }
 
-.btn-buy:hover {
-  background: #1d4293;
+.card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
 }
 
+.btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    background: #007bff;
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+.btn-secondary {
+    padding: 10px 20px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    background: transparent;
+    color: #007bff;
+    transition: background 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #e6f2ff;
+}
+
+/* --- Pop-up Modal --- */
+.book-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.modal-content form input,
+.modal-content form textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.modal-content form input:focus,
+.modal-content form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.modal-content form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content form button:hover {
+    background-color: #0056b3;
+}
 </style>
-<div class="shop-container">
-  <h2 class="section-title">🎨 Shop Products</h2>
 
-  <div class="product-grid">
-    {% for product in products %}
-    <div class="product-card">
-      <img src="{% static product.image %}" alt="{{ product.name }}">
-      <h3>{{ product.name }}</h3>
-      <p class="price">₹ {{ product.price }}</p>
-      <button class="btn-buy">Add to Cart</button>
+<div class="shop-container">
+    <h2 class="section-title">Masterpieces</h2>
+
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="{% static 'gallery/ganeshmurtii.png' %}" alt="Lord Ganesha Stone Murti">
+            <h3>Stone Ganesha Murti</h3>
+            <p class="description">A handcrafted Lord Ganesha idol carved from a single piece of natural stone, perfect for your home shrine or as a decorative piece.</p>
+            <p class="price">₹ 4,500</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'gallery/zep800.jpg' %}" alt="Marble Ganesha Murti">
+            <h3>Marble Durga Murti</h3>
+            <p class="description">This large, elegant marble statue of Lord Ganesha is hand-carved with intricate details, bringing a divine and artistic touch to any space.</p>
+            <p class="price">₹ 1,800</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'gallery/ambedkarji.jpg' %}" alt="Dr. B. R. Ambedkar Statue">
+            <h3>Dr. B. R. Ambedkar Statue</h3>
+            <p class="description">A beautiful and detailed sculpture honoring Dr. B. R. Ambedkar. This statue is a powerful symbol of knowledge and justice.</p>
+            <p class="price">₹ 5,999</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-  </div>
+
+    <h2 class="section-title" style="margin-top: 60px;">Art Supplies</h2>
+
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="{% static 'gallery/king.png' %}" alt="Canvas Board Set">
+            <h3>Canvas Portrait</h3>
+            <p class="description">Capturing the serene and wild essence of nature on canvas.</p>
+            <p class="price">₹ 299</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'gallery/portrait1.png' %}" alt="Brush Kit">
+            <h3>Brushing portrait</h3>
+            <p class="description">Beauty and strength, artfully rendered..</p>
+            <p class="price">₹ 399</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'gallery/child.png' %}" alt="Oil Pastels">
+            <h3>Oil Pastels</h3>
+            <p class="description">Set of 24 rich and creamy oil pastels for bold, expressive artworks. Easy to blend and perfect for artists of all ages.</p>
+            <p class="price">₹ 199</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'images/pottery-wheel.jpg' %}" alt="Mini Pottery Wheel">
+            <h3>Mini Pottery Wheel</h3>
+            <p class="description">A compact and portable pottery wheel, great for aspiring potters and hobbyists. Includes tools and a guide to get you started.</p>
+            <p class="price">₹ 2,500</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+        
+        <div class="product-card">
+            <img src="{% static 'images/stone-carving-set.jpg' %}" alt="Stone Carving Tools">
+            <h3>Stone Carving Set</h3>
+            <p class="description">Professional-grade 8-piece stone carving tool kit, forged from high-quality steel for precision work on soft stones.</p>
+            <p class="price">₹ 1,200</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'images/art-easel.jpg' %}" alt="Wooden Art Easel">
+            <h3>Wooden Art Easel</h3>
+            <p class="description">A sturdy and adjustable wooden art easel, perfect for holding your canvas. Folds flat for easy storage and portability.</p>
+            <p class="price">₹ 1,500</p>
+            <div class="card-actions">
+                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div id="book-modal" class="book-modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeBookModal()">&times;</span>
+        <h2>Book Your Product</h2>
+        <form id="booking-form">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="phone">Your Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="address">Your Full Address:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+
+            <label for="details">Booking Details (e.g., desired size, style, etc.):</label>
+            <textarea id="details" name="details" rows="3" required></textarea>
+
+            <button type="submit">Submit Booking Request</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openBookModal() {
+        document.getElementById('book-modal').style.display = 'flex';
+    }
+
+    function closeBookModal() {
+        document.getElementById('book-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('book-modal');
+        if (event.target === modal) {
+            closeBookModal();
+        }
+    }
+
+    document.getElementById('booking-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        alert('Your booking for the product is successful. Our team will contact you soon.');
+        
+        setTimeout(() => {
+            this.reset();
+            closeBookModal();
+        }, 500);
+    });
+</script>
 {% endblock %}
