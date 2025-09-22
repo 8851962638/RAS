@@ -147,24 +147,24 @@
       <input type="text" id="name" value="{{ name }}" readonly>
 
       <label for="email">Gmail</label>
-      <input type="email" id="email" value="{{ email }}" readonly>
+      <input type="email" id="email" value="{{ email_address }}" readonly>
 
       <label for="contact">Contact</label>
       <input type="text" id="contact" value="{{ contact }}" readonly>
 
       <label for="experience">Experience</label>
-      <input type="text" id="experience" value="5 years" readonly>
+<input type="text" id="experience" value="{{ experience }}" readonly>
 
-      <div class="checkbox-group">
-        <label><input type="checkbox" checked disabled> 3D Mural</label>
-        <label><input type="checkbox" disabled> Normal Paint</label>
-        <label><input type="checkbox" checked disabled> Advertisement</label>
-      </div>
+<div class="checkbox-group">
+  <label><input type="checkbox" {% if service_3d_mural %}checked{% endif %} disabled> 3D Mural</label>
+  <label><input type="checkbox" {% if service_normal_paint %}checked{% endif %} disabled> Normal Paint</label>
+  <label><input type="checkbox" {% if service_advertisement %}checked{% endif %} disabled> Advertisement</label>
+</div>
     </div>
 
     <!-- Right: Profile Picture -->
     <div class="profile-picture">
-    <img src="{% if profile_pic %}{{ profile_pic }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+    <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
     <div class="edit-pic-link">Edit Profile Picture</div>
 </div>                                          
   </form>

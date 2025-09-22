@@ -137,75 +137,34 @@
   }
 </style>
 
-
 <main class="edit-profile-page">
-  <h1 style="margin-top: 40px;">Edit Customer Profile</h1>
+  <h1 style="margin-top: 40px;">Edit Profile</h1>
 
-  <form id="editForm" class="edit-profile-container" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <!-- Left: Customer Info -->
+  <form class="edit-profile-container">
+    <!-- Left: Profile Info -->
     <div class="profile-details">
-      <label for="customer_full_name">Name</label>
-      <input type="text" name="customer_full_name" id="customer_full_name"
-             value="{{ customer.customer_full_name }}" required>
+      <label for="name">Name</label>
+      <input type="text" id="name" value="{{ name }}" readonly>
 
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email" value="{{ customer.email }}">
+      <label for="email">Gmail</label>
+      <input type="email" id="email" value="{{ email }}" readonly>
 
-      <label for="mobile">Mobile</label>
-      <input type="text" name="mobile" id="mobile" value="{{ customer.mobile }}" required>
+      <label for="contact">Contact</label>
+      <input type="text" id="contact" value="{{ contact }}" readonly>
+
+      
     </div>
 
-    <!-- Right: Customer Picture -->
+    <!-- Right: Profile Picture -->
     <div class="profile-picture">
-      {% if customer.customer_photo %}
-        <img src="{{ customer.customer_photo.url }}" alt="Customer Photo">
-      {% else %}
-        <img src="{% static 'images/default-profile.jpg' %}" alt="Customer Photo">
-      {% endif %}
-      <input type="file" name="customer_photo" accept="image/*" style="margin-top:15px;">
-    </div>
-
-    <!-- Save Button -->
-    <div class="edit-button">
-      <button type="submit">Save Changes</button>
-    </div>
+    <img src="{% if profile_pic %}{{ profile_pic }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+    <div class="edit-pic-link">Edit Profile Picture</div>
+</div>                                          
   </form>
 
-  <!-- Success/Error Message -->
-  <div id="responseMessage" style="margin-top:20px;"></div>
+  <!-- Button at the bottom (not hidden now) -->
+  <div class="edit-button">
+    <button type="button">Edit Profile</button>
+  </div>
 </main>
-
-<!-- AJAX Script -->
-<script>
-document.getElementById("editForm").addEventListener("submit", function(e) {
-    e.preventDefault();  // stop default form submit
-
-    let form = document.getElementById("editForm");
-    let formData = new FormData(form);
-
-    fetch("", {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-Requested-With": "XMLHttpRequest"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        let msgDiv = document.getElementById("responseMessage");
-        if (data.success) {
-            msgDiv.innerHTML = `<p style="color:green;">${data.message}</p>`;
-        } else {
-            msgDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
-});
-</script>
-
-
 {% endblock %}
