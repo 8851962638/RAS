@@ -354,3 +354,59 @@ def signup_customer(request):
 def signup_employee(request):
     return render(request, "accounts/signup_employee.html")
 
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+
+@csrf_exempt
+def password_reset_ajax(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        try:
+            user = CustomUser.objects.get(email=email)   # ✅ use CustomUser here
+        except CustomUser.DoesNotExist:
+            return JsonResponse({"success": False, "error": "No account found with this email."})
+
+        # Generate reset token & link
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_link = request.build_absolute_uri(f"/accounts/reset/{uid}/{token}/")
+
+        # Send email
+        send_mail(
+            subject="Password Reset Request",
+            message=f"Click the link below to reset your password:\n\n{reset_link}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})
+
+
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+
+def password_reset_confirm(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            new_password = request.POST.get("password")
+            user.set_password(new_password)
+            user.save()
+            return JsonResponse({"success": True, "message": "Password reset successful!"})
+
+        # Valid link → show form
+        return render(request, "password_reset.html", {"validlink": True, "uidb64": uidb64, "token": token})
+    else:
+        # Invalid link → show error
+        return render(request, "password_reset.html", {"validlink": False})

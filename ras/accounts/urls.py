@@ -16,6 +16,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('signup_employee/', views.signup_employee, name='signup_employee'),
     path('login_auth/', views.login_auth, name='loginauth'),  
+    path("password-reset-ajax/", views.password_reset_ajax, name="password_reset_ajax"),
+    path('reset/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
 
 
 
