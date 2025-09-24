@@ -45,8 +45,8 @@
     color: #444;
   }
 
-  .profile-details input[readonly] {
-    background-color: #f0f0f0;
+  .profile-details input,
+  .profile-details select {
     border: 1px solid #ccc;
     padding: 10px 14px;
     width: 100%;
@@ -125,53 +125,139 @@
       width: 180px;
       height: 180px;
     }
-
     .edit-profile-container {
       padding: 20px;
     }
-
     .edit-button {
       margin-top: 20px;
     }
-    
   }
 </style>
 
 <main class="edit-profile-page">
   <h1 style="margin-top: 40px;">Edit Profile</h1>
 
-  <form class="edit-profile-container">
-    <!-- Left: Profile Info -->
-    <div class="profile-details">
-      <label for="name">Name</label>
-      <input type="text" id="name" value="{{ name }}" readonly>
+<form class="edit-profile-container" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
 
-      <label for="email">Gmail</label>
-      <input type="email" id="email" value="{{ email_address }}" readonly>
+  <!-- Left: Profile Info -->
+  <div class="profile-details">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="full_name" value="{{ name }}" readonly>
 
-      <label for="contact">Contact</label>
-      <input type="text" id="contact" value="{{ contact }}" readonly>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email_address" value="{{ email_address }}" readonly>
 
-      <label for="experience">Experience</label>
-<input type="text" id="experience" value="{{ experience }}" readonly>
+    <label for="contact">Mobile</label>
+    <input type="text" id="contact" name="mobile" value="{{ contact }}" readonly>
 
-<div class="checkbox-group">
-  <label><input type="checkbox" {% if service_3d_mural %}checked{% endif %} disabled> 3D Mural</label>
-  <label><input type="checkbox" {% if service_normal_paint %}checked{% endif %} disabled> Normal Paint</label>
-  <label><input type="checkbox" {% if service_advertisement %}checked{% endif %} disabled> Advertisement</label>
-</div>
+    <label for="fathers_name">Father's Name</label>
+    <input type="text" id="fathers_name" name="fathers_name" value="{{ fathers_name|default_if_none:'' }}">
+
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" name="dob" value="{{ dob|date:'Y-m-d' }}">
+
+    <label for="gender">Gender</label>
+    <input type="text" id="gender" name="gender" value="{{ gender|default_if_none:'' }}">
+
+    <label for="house_no">House No</label>
+    <input type="text" id="house_no" name="house_no" value="{{ house_no|default_if_none:'' }}">
+
+    <label for="village">Village</label>
+    <input type="text" id="village" name="village" value="{{ village|default_if_none:'' }}">
+
+    <label for="city">City</label>
+    <input type="text" id="city" name="city" value="{{ city|default_if_none:'' }}">
+
+    <label for="state">State</label>
+    <input type="text" id="state" name="state" value="{{ state|default_if_none:'' }}">
+
+    <label for="pincode">Pincode</label>
+    <input type="text" id="pincode" name="pincode" value="{{ pincode|default_if_none:'' }}">
+
+    <label for="aadhar_card_no">Aadhar Card No</label>
+    <input type="text" id="aadhar_card_no" name="aadhar_card_no" value="{{ aadhar_card_no|default_if_none:'' }}">
+
+    <label for="aadhar_card_image_front">Aadhar Card (Front)</label>
+    <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front">
+
+    <label for="aadhar_card_image_back">Aadhar Card (Back)</label>
+    <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back">
+
+    <label for="experience">Experience (years)</label>
+    <input type="number" id="experience" name="experience" value="{{ experience|default_if_none:'' }}">
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="type_of_work" value="3D Art" {% if '3D Art' in type_of_work %}checked{% endif %}> 3D Art</label>
+      <label><input type="checkbox" name="type_of_work" value="Mural Art" {% if 'Mural Art' in type_of_work %}checked{% endif %}> Mural Art</label>
+      <label><input type="checkbox" name="type_of_work" value="Normal Paint" {% if 'Normal Paint' in type_of_work %}checked{% endif %}> Normal Paint</label>
+      <label><input type="checkbox" name="type_of_work" value="2D Art" {% if '2D Art' in type_of_work %}checked{% endif %}> 2D Art</label>
+      <label><input type="checkbox" name="type_of_work" value="Digital Art" {% if 'Digital Art' in type_of_work %}checked{% endif %}> Digital Art</label>
     </div>
 
-    <!-- Right: Profile Picture -->
-    <div class="profile-picture">
-    <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
-    <div class="edit-pic-link">Edit Profile Picture</div>
-</div>                                          
-  </form>
+    <label for="preferred_work_location">Preferred Work Location</label>
+    <input type="text" id="preferred_work_location" name="preferred_work_location" value="{{ preferred_work_location|default_if_none:'' }}">
 
-  <!-- Button at the bottom (not hidden now) -->
-  <div class="edit-button">
-    <button type="button">Edit Profile</button>
+    <label for="bank_account_holder_name">Bank Account Holder Name</label>
+    <input type="text" id="bank_account_holder_name" name="bank_account_holder_name" value="{{ bank_account_holder_name|default_if_none:'' }}">
+
+    <label for="account_no">Account No</label>
+    <input type="text" id="account_no" name="account_no" value="{{ account_no|default_if_none:'' }}">
+
+    <label for="ifsc_code">IFSC Code</label>
+    <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ifsc_code|default_if_none:'' }}">
   </div>
+
+  <!-- Right: Profile Picture -->
+  <div class="profile-picture">
+    <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+    <input type="file" id="passport_photo" name="passport_photo">
+  </div>
+  
+  <!-- Save button inside form -->
+  <div class="edit-button">
+    <button type="submit">Save Changes</button>
+  </div>
+</form>
+
+
+
+
 </main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.edit-profile-container').on('submit', function(e) {
+        e.preventDefault(); // prevent normal form submission
+
+        var form = $(this)[0];
+        var formData = new FormData(form);
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+
+        $.ajax({
+            url: "{% url 'edit_profile' %}", // Django URL for your view
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: { "X-CSRFToken": csrftoken },
+            success: function(response) {
+                // Assuming your view returns a redirect, or you can change to JSON response
+                if (response.success) {
+                    alert(response.message || "Profile updated successfully!");
+                } else {
+                    alert(response.error || "Something went wrong!");
+                }
+            },
+            error: function(xhr) {
+                alert("An error occurred. Please try again.");
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}
