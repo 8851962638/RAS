@@ -1,0 +1,99 @@
+{% extends "base1.html" %}
+{% block title %}My Orders - RColourcraft{% endblock %}
+
+{% block content %}
+
+<style>
+    /* General Body and Page Container */
+body {
+    /* Use a darker, more vibrant gradient for the background */
+    background: linear-gradient(to bottom right, #2c3e50, #4a69bd);
+    color: #ecf0f1; /* Lighter text color for better contrast */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Glassmorphism Effect for Cards */
+.glass-card {
+    /* Apply a distinct, semi-transparent background */
+    background: rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(10px); 
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: transform 0.3s ease-in-out;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* Grid Layout for Orders */
+.orders-list {
+    display: grid;
+    /* Create a responsive grid with a minimum card width of 350px */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+/* Card Content Styling */
+.order-card h3 {
+    color: #fff;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.order-card p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.order-card strong {
+    color: #c4e1ff;
+}
+</style>
+<div class="page-container">
+  <h1>My Previous Orders</h1>
+
+  {% if bookings %}
+    <div class="orders-list">
+      {% for booking in bookings %}
+        <div class="order-card glass-card">
+          <h3>{{ booking.service_name }}</h3>
+          <p><strong>Booking ID:</strong> {{ booking.booking_id }}</p>
+          <p><strong>Date:</strong> {{ booking.created_at|date:"d M Y, H:i" }}</p>
+          <p><strong>Appointment:</strong> {{ booking.appointment_date }}</p>
+          <p><strong>Status:</strong> 
+            {% if booking.is_paid %}
+              Paid (₹{{ booking.payment_amount }})
+            {% else %}
+              Not Paid
+            {% endif %}
+          </p>
+          <p><strong>Address:</strong> {{ booking.address }}, {{ booking.city }}, {{ booking.state }} - {{ booking.pin_code }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>You haven’t booked any services yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

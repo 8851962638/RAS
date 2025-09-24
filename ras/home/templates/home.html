@@ -102,5 +102,33 @@
   </div>
 </section>
 
+<section class="reviews-section">
+    <h1>Customer Reviews</h1>
+    <div class="reviews-container">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-header">
+                {% if review.review_image %}
+                    <img src="{{ review.review_image.url }}" alt="{{ review.customer_name }}'s review photo" class="review-photo">
+                {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" alt="Avatar" class="review-photo">
+                {% endif %}
 
+                <div class="review-meta">
+                    <h3>{{ review.customer_name }}</h3>
+                    <div class="stars">
+                        {% for i in "12345"|slice:":review.rating" %}
+                            <i class="fas fa-star filled"></i>
+                        {% endfor %}
+                        {% for i in "12345"|slice:":5"|slice:"review.rating:" %}
+                            <i class="far fa-star"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <p>{{ review.customer_review }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

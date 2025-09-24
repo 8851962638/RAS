@@ -1,5 +1,4 @@
 {% extends 'base1.html' %}
-
 {% load static %}
 
 {% block title %}{{ heading }} - RColourcraft{% endblock %}
@@ -10,92 +9,121 @@
   <div class="image-grid">
     {% for img in images %}
       <div class="img-card">
-        <img src="{% static img %}" alt="Artwork {{ forloop.counter }}">
+        <img src="{% static img %}" alt="Artwork {{ forloop.counter }}" class="gallery-img" data-index="{{ forloop.counter0 }}">
       </div>
     {% endfor %}
   </div>
 </section>
 
+<!-- Floating Book Button -->
 <a href="{% url 'book_service' 'normal-paint' %}" class="floating-book">
   Book Now
 </a>
- 
+
+<!-- Modal for Image Viewer -->
+<div id="lightbox" class="lightbox">
+  <span class="close">&times;</span>
+  <img class="lightbox-content" id="lightbox-img">
+  <a class="prev">&#10094;</a>
+  <a class="next">&#10095;</a>
+</div>
+
 <style>
-.explore-section {
-  padding: 3rem 1rem;
-  text-align: center;
-}
+/* Existing styles ... */
 
-.explore-section h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  background: linear-gradient(90deg, #7b2ff7, #00c6ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin: auto;
-  max-width: 1200px;
-}
-
-.img-card {
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
-}
-
-.img-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-}
-
-.img-card:hover {
-  transform: scale(1.05);
-}
-
-.floating-book {
+.lightbox {
+  display: none;
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 100px;      /* increased from 80px */
-  height: 100px;     /* increased from 80px */
-  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;   /* slightly bigger font */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 1000;
-  animation: jiggle 1s infinite alternate;
+  z-index: 2000;
+  padding-top: 80px;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.9);
   text-align: center;
-  padding: 5px;
 }
 
-@keyframes jiggle {
-  0% { transform: rotate(-5deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(-4deg); }
-  75% { transform: rotate(4deg); }
-  100% { transform: rotate(0deg); }
+.lightbox-content {
+  max-width: 80%;
+  max-height: 80%;
+  margin: auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
 }
 
-.floating-book:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease;
+.close {
+  position: absolute;
+  top: 20px; right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
+.explore-section { padding: 3rem 1rem; text-align: center; } .explore-section h1 { font-size: 2.5rem; font-weight: bold; margin-bottom: 2rem; background: linear-gradient(90deg, #7b2ff7, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: auto; max-width: 1200px; } .img-card { border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform 0.3s ease; } .img-card img { width: 100%; height: 200px; object-fit: cover; display: block; } .img-card:hover { transform: scale(1.05); } .floating-book { position: fixed; bottom: 30px; right: 30px; width: 100px; /* increased from 80px */ height: 100px; /* increased from 80px */ background: linear-gradient(135deg, #7b2ff7, #00c6ff); color: white; font-weight: bold; font-size: 1rem; /* slightly bigger font */ border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; animation: jiggle 1s infinite alternate; text-align: center; padding: 5px; } @keyframes jiggle { 0% { transform: rotate(-5deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } 100% { transform: rotate(0deg); } } .floating-book:hover { transform: scale(1.1); transition: transform 0.2s ease; }
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 40px;
+  transition: 0.3s;
+  user-select: none;
+}
 
+.prev { left: 10%; }
+.next { right: 10%; }
+
+.prev:hover, .next:hover, .close:hover {
+  color: #00c6ff;
+}
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const images = document.querySelectorAll(".gallery-img");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const closeBtn = document.querySelector(".close");
+  const prevBtn = document.querySelector(".prev");
+  const nextBtn = document.querySelector(".next");
+  let currentIndex = 0;
+
+  function showImage(index) {
+    lightbox.style.display = "block";
+    lightboxImg.src = images[index].src;
+    currentIndex = index;
+  }
+
+  images.forEach((img, index) => {
+    img.addEventListener("click", () => showImage(index));
+  });
+
+  closeBtn.addEventListener("click", () => {
+    lightbox.style.display = "none";
+  });
+
+  prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+  });
+
+  // Keyboard navigation
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.style.display === "block") {
+      if (e.key === "ArrowLeft") prevBtn.click();
+      if (e.key === "ArrowRight") nextBtn.click();
+      if (e.key === "Escape") closeBtn.click();
+    }
+  });
+});
+</script>
 {% endblock %}
