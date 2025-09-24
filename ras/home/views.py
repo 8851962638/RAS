@@ -330,6 +330,18 @@ def edit_profile_view(request):
     elif user.role == "customer":
         customer = get_object_or_404(Customer, user=user)
 
+        if request.method == "POST":
+            customer.customer_full_name = request.POST.get("name")
+            customer.email = request.POST.get("email")
+            customer.mobile = request.POST.get("contact")
+
+            # Handle profile picture
+            if "customer_photo" in request.FILES:
+                customer.customer_photo = request.FILES["customer_photo"]
+
+            customer.save()
+            return JsonResponse({"success": True, "message": "Profile updated successfully!"})
+
         context = {
             "name": customer.customer_full_name,
             "email": customer.email,
@@ -338,7 +350,6 @@ def edit_profile_view(request):
         }
         return render(request, "edit_customers_profile.html", context)
 
-    # fallback
     return render(request, "edit_profile.html", {"user": user})
 
 
