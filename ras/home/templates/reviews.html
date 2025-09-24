@@ -70,8 +70,7 @@
         {% csrf_token %}
         <input type="text" name="name" placeholder="Your Name" required>
         <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="customaer_review" rows="4" placeholder="Your Review"></textarea>
-
+        <textarea name="customer_review" rows="4" placeholder="Your Review"></textarea>
         <label>Your Rating:</label>
         <div class="star-rating">
           <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
@@ -133,7 +132,7 @@
             responseDiv.innerHTML = "<div style='color:green; margin-bottom:8px'>" + data.message + "</div>";
             const imgSrc = data.data.image ? data.data.image : defaultImage;
             const stars = '⭐'.repeat(Number(data.data.rating || 0));
-            const reviewText = data.data.customaer_review ? data.data.customaer_review : "";
+            const reviewText = data.data.customer_review ? data.data.customer_review : "";
             const newCard = `
               <div class="review-card">
                 <img src="${imgSrc}" alt="${data.data.name}">

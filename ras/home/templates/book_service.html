@@ -6,337 +6,329 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-<div class="booking-container">
-  <form class="booking-form" id="bookingForm" method="POST">
-    {% csrf_token %}
-    <h2>Book {{ service_name }}</h2>
-
-    <label>Service</label>
-    <input type="text" name="service_name" value="{{ service_name }}" readonly>
-
-    <div class="contact-row">
-      <div class="contact-field">
-        <label>Contact Number</label>
-        <input type="text" name="contact_number" placeholder="Enter Contact Number" required>
-      </div>
-      <div class="contact-field">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Enter Email" required>
-      </div>
-    </div>
-
-    <label>Address</label>
-    <textarea name="address" placeholder="Enter Full Address" required></textarea>
-
-    <div class="address-row">
-      <div class="address-field">
-        <label>Pin Code</label>
-        <input type="text" name="pin_code" placeholder="Pin Code" required>
-      </div>
-      <div class="address-field">
-        <label>State</label>
-        <input type="text" name="state" placeholder="State" required>
-      </div>
-      <div class="address-field">
-        <label>City</label>
-        <input type="text" name="city" placeholder="City" required>
-      </div>
-    </div>
-
-    <label>Total Walls</label>
-    <input type="number" name="total_walls" placeholder="Enter Total Number of Walls" required>
-
-    <div class="square-appointment-row">
-      <div class="square-ft">
-        <label>Square Ft</label>
-        <div class="square-ft-inputs">
-          <input type="number" id="width" name="width" placeholder="Width" required>
-          <span>*</span>
-          <input type="number" id="height" name="height" placeholder="Height" required>
-          <span>=</span>
-          <input type="number" id="total_sqft" name="total_sqft" placeholder="Total sq ft" readonly>
-        </div>
-      </div>
-    </div>
-
-    <div class="appointment-date">
-      <label for="appointment_date">Appointment Date</label>
-      <input type="date" class="colorful-input date-input" id="appointment_date" name="appointment_date" required>
-    </div>
-
-    <button type="button" onclick="saveBooking()">Submit</button>
-
-  </form>
-</div>
-
-<!-- Popup Modal -->
-<div id="popup" class="popup-overlay">
-  <div class="popup-box">
-    <h3>Booking Successful 🎉</h3>
-    <p>Your booking for <strong>{{ service_name }}</strong> is successful! <br>
-    Our team will get in touch with you within 24 hours.</p>
-    <button onclick="goHome()">Okay</button>
-  </div>
-</div>
-
 <style>
+/* Step indicator */
+.steps {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 1rem 0 2rem;
+    font-weight: bold;
+}
+
+.steps .step.active {
+    color: #7b2ff7;
+}
+
+.separator {
+    margin: 0 1rem;
+    color: #888;
+}
+
+.booking-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
+
+.slide {
+    display: none;
+}
+
+.slide.active {
+    display: block;
+}
+
 .booking-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 2rem;
+    padding: 2rem;
 }
 
 .booking-form {
-  background: #f9f9f9;
-  padding: 2rem 3rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  width: 100%;
-  max-width: 800px;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .booking-form h2 {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(90deg, #7b2ff7, #00c6ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .booking-form label {
-  display: block;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+    margin-top: 1rem;
+    font-weight: 500;
 }
 
-.booking-form input, 
+.booking-form input,
+.booking-form select,
 .booking-form textarea {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.booking-form textarea {
-  resize: vertical;
-}
-
-.contact-row {
-  display: flex;
-  gap: 1rem;
-}
-.contact-field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.address-row {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-.address-field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.square-ft {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-.square-ft input {
-  width: 114px;
-  text-align: center;
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.3rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 .booking-form button {
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 1.5rem;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
 }
+
 .booking-form button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
-.square-appointment-row {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-end;
-  margin-top: 1rem;
+.contact-row,
+.address-row,
+.card-row {
+    display: flex;
+    gap: 1rem;
 }
 
-.square-ft {
-  flex: 1;
+.contact-field,
+.address-field,
+.card-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .square-ft-inputs {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.square-ft-inputs input {
-  width: 106px;
-  text-align: center;
-}
-
-.appointment-date {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.date-input {
-  border: 2px solid #7b2ff7;
-  border-radius: 8px;
-  padding: 0.6rem;
-  font-size: 1rem;
-  background: #f9f9ff;
-  transition: all 0.3s ease;
-}
-
-.date-input:focus {
-  border-color: #00c6ff;
-  box-shadow: 0 0 10px rgba(0, 198, 255, 0.6);
-  background: #ffffff;
-}
-
-
-
-/* Popup styles */
-.popup-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
 .popup-box {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 400px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    text-align: center;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
-.popup-box h3 {
-  margin-bottom: 1rem;
-  color: #28a745;
-}
-.popup-box button {
-  margin-top: 1rem;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-}
-.popup-box button:hover {
-  opacity: 0.9;
-}
-
-@media (max-width: 768px) {
-  .address-row,
-  .contact-row {
-    flex-direction: column;
-  }
-}
-
 </style>
 
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<div class="booking-wrapper">
+
+    <div class="steps">
+        <span class="step" id="step1">1) Booking</span>
+        <span class="separator">-----------</span>
+        <span class="step" id="step2">2) Payment</span>
+    </div>
+
+    <div class="slide active" id="booking-slide">
+        <div class="booking-container">
+            <form class="booking-form" id="bookingForm" method="POST">
+                {% csrf_token %}
+                <h2>Book {{ service_name }}</h2>
+
+                <label>Service</label>
+                <input type="text" name="service_name" value="{{ service_name }}" readonly>
+
+                <div class="contact-row">
+                    <div class="contact-field">
+                        <label>Contact Number</label>
+                        <input type="text" name="contact_number" required>
+                    </div>
+                    <div class="contact-field">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                </div>
+
+                <label>Address</label>
+                <textarea name="address" required></textarea>
+
+                <div class="address-row">
+                    <div class="address-field">
+                        <label>Pin Code</label>
+                        <input type="text" name="pin_code" required>
+                    </div>
+                    <div class="address-field">
+                        <label>State</label>
+                        <input type="text" name="state" required>
+                    </div>
+                    <div class="address-field">
+                        <label>City</label>
+                        <input type="text" name="city" required>
+                    </div>
+                </div>
+
+                <label>Total Walls</label>
+                <input type="number" name="total_walls" required>
+
+                <div class="square-appointment-row">
+                    <div class="square-ft">
+                        <label>Square Ft</label>
+                        <div class="square-ft-inputs">
+                            <input type="number" id="width" name="width" placeholder="Width" required>
+                            <span>*</span>
+                            <input type="number" id="height" name="height" placeholder="Height" required>
+                            <span>=</span>
+                            <input type="number" id="total_sqft" name="total_sqft" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="appointment-date">
+                    <label>Appointment Date</label>
+                    <input type="date" id="appointment_date" name="appointment_date" required>
+                </div>
+
+                <button type="button" onclick="saveBooking()">Next → Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="slide" id="payment-slide">
+        <div class="booking-container">
+            <form class="booking-form" id="paymentForm" method="POST">
+                {% csrf_token %}
+                <h2>Payment</h2>
+
+                <label>Payment Mode</label>
+                <select name="payment_mode" id="payment_mode" required>
+                    <option value="card">Card</option>
+                    <option value="upi">UPI</option>
+                    <option value="cash">Cash on Service</option>
+                </select>
+
+                <div id="card_details" style="display: none;">
+                    <label>Card Number</label>
+                    <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX">
+
+                    <label>Name on Card</label>
+                    <input type="text" name="card_name" placeholder="John Doe">
+
+                    <div class="card-row">
+                        <div class="card-field">
+                            <label>Expiry Date</label>
+                            <input type="text" name="expiry_date" placeholder="MM/YY">
+                        </div>
+                        <div class="card-field">
+                            <label>CVV</label>
+                            <input type="text" name="cvv" placeholder="XXX">
+                        </div>
+                    </div>
+                </div>
+
+                <label>Amount</label>
+                <input type="text" name="amount" value="{{ booking_amount }}" readonly>
+
+                <button type="button" onclick="confirmPayment()">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="slide" id="confirmation-slide">
+        <div class="popup-box">
+            <h3>Booking Confirmed 🎉</h3>
+            <p>Your booking for <strong>{{ service_name }}</strong> is successful.<br>
+                Payment received successfully!</p>
+            <button onclick="goHome()">Okay</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-// Auto-calculate total square feet
-const widthInput = document.getElementById('width');
-const heightInput = document.getElementById('height');
-const totalInput = document.getElementById('total_sqft');
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    function showSlide(index) {
+        slides.forEach((s, i) => s.classList.toggle('active', i === index));
+        currentSlide = index;
+        document.getElementById("step1").classList.toggle("active", index === 0);
+        document.getElementById("step2").classList.toggle("active", index === 1);
+    }
 
-function calculateTotal() {
-    const w = parseFloat(widthInput.value) || 0;
-    const h = parseFloat(heightInput.value) || 0;
-    totalInput.value = w * h;
-}
-widthInput.addEventListener('input', calculateTotal);
-heightInput.addEventListener('input', calculateTotal);
+    // Auto sqft calculation
+    document.getElementById("width").addEventListener("input", calcSqft);
+    document.getElementById("height").addEventListener("input", calcSqft);
 
-// Popup handling
-// const form = document.getElementById('bookingForm');
-// const popup = document.getElementById('popup');
+    function calcSqft() {
+        let w = parseFloat(document.getElementById("width").value) || 0;
+        let h = parseFloat(document.getElementById("height").value) || 0;
+        document.getElementById("total_sqft").value = w * h;
+    }
 
-// form.addEventListener('submit', function(e) {
-//   e.preventDefault(); 
-//   popup.style.display = 'flex'; 
-// });
-
-function goHome() {
-  window.location.href = "{% url 'home' %}";
-}
-
-
-
-
-flatpickr("#appointment_date", {
-  dateFormat: "d-m-Y",
-  minDate: "today",  // disable past dates
-  theme: "material_blue", // you can use "airbnb", "dark", "material_green", etc.
-});
-
-
-//for saving data of booking
-
-function saveBooking() {
-    // auto-calc total sqft before saving
-    alert("s")
-    let width = parseFloat($('#width').val()) || 0;
-    let height = parseFloat($('#height').val()) || 0;
-    $('#total_sqft').val(width * height);
-
-    const form = $('#bookingForm')[0];
-    const formData = new FormData(form);
-
-    $.ajax({
-        url: '/home/save_bookings/',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: { "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val() },
-        success: function(response) {
-            if(response.success) {
-                $('#popup').fadeIn();
-                $('#bookingForm')[0].reset();
-            } else {
-                alert('Error: ' + response.message);
-            }
-        },
-        error: function(xhr) {
-            alert('Something went wrong: ' + xhr.responseText);
-        }
+    // Datepicker
+    flatpickr("#appointment_date", {
+        dateFormat: "d-m-Y",
+        minDate: "today"
     });
-}
+
+    // Function to handle card details visibility
+    document.addEventListener('DOMContentLoaded', () => {
+        const paymentModeSelect = document.getElementById('payment_mode');
+        const cardDetailsDiv = document.getElementById('card_details');
+
+        paymentModeSelect.addEventListener('change', (event) => {
+            if (event.target.value === 'card') {
+                cardDetailsDiv.style.display = 'block';
+                cardDetailsDiv.querySelectorAll('input').forEach(input => input.setAttribute('required', 'required'));
+            } else {
+                cardDetailsDiv.style.display = 'none';
+                cardDetailsDiv.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+            }
+        });
+    });
+
+    // Save Booking → Move to Payment
+    function saveBooking() {
+        let form = $('#bookingForm')[0];
+        let formData = new FormData(form);
+
+        $.ajax({
+            url: '/home/save_bookings/',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(resp) {
+                if (resp.success) {
+                    showSlide(1); // Go to Payment
+                } else {
+                    alert("Error: " + resp.message);
+                }
+            },
+            error: function() {
+                alert("Something went wrong!");
+            }
+        });
+    }
+
+    // Confirm Payment → Show Confirmation
+    function confirmPayment() {
+        let paymentMode = document.getElementById('payment_mode').value;
+        if (paymentMode === 'card') {
+            const cardNumber = document.querySelector('input[name="card_number"]').value;
+            const cardName = document.querySelector('input[name="card_name"]').value;
+            const expiryDate = document.querySelector('input[name="expiry_date"]').value;
+            const cvv = document.querySelector('input[name="cvv"]').value;
+
+            if (!cardNumber || !cardName || !expiryDate || !cvv) {
+                alert("Please fill in all card details.");
+                return;
+            }
+        }
+
+        showSlide(2);
+    }
+
+   
+    function goHome() {
+        window.location.href = "{% url 'home' %}";
+    }
 </script>
 {% endblock %}
