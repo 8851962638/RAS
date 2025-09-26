@@ -4,15 +4,54 @@
 {% block title %}{{ heading }} - RColourcraft{% endblock %}
 
 {% block content %}
-<section class="explore-section">
-  <h1>{{ heading }}</h1>
-  <div class="image-grid">
-    {% for img in images %}
-      <div class="img-card">
-        <img src="{% static img %}" alt="Artwork {{ forloop.counter }}" class="gallery-img" data-index="{{ forloop.counter0 }}">
-      </div>
-    {% endfor %}
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="main-heading">{{ heading }}</h1>
+    <p class="hero-subtitle">Discover amazing artworks from our talented artists</p>
   </div>
+</section>
+
+<section class="gallery-section">
+  {% if db_images %}
+    <div class="gallery-container">
+      {% for img in db_images %}
+        <div class="artwork-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+          <div class="image-wrapper">
+            <img src="{{ img.image.url }}" alt="{{ img.image_name }}" class="gallery-img" data-index="{{ forloop.counter0 }}">
+            <div class="image-overlay">
+              <div class="overlay-content">
+                <i class="fas fa-search-plus"></i>
+                <p>Click to view</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3 class="artwork-title">{{ img.image_name }}</h3>
+            <div class="artwork-details">
+              <span class="price-tag">₹{{ img.price }}</span>
+              <span class="art-type">{{ img.type_of_art }}</span>
+            </div>
+            <div class="artist-info">
+              <i class="fas fa-user-circle"></i>
+              <span>By {{ img.userupload_name }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-palette"></i>
+      </div>
+      <h3>No Artworks Yet</h3>
+      <p>Be the first to share your amazing {{ heading|lower }} with our community!</p>
+      <a href="{% url 'service_images' %}" class="cta-button">
+        <i class="fas fa-plus"></i>
+        Upload Your Art
+      </a>
+    </div>
+  {% endif %}
 </section>
 
 <!-- Floating Book Button -->
@@ -29,101 +68,410 @@
 </div>
 
 <style>
-/* Existing styles ... */
+* {
+  box-sizing: border-box;
+}
 
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, rgba(123, 47, 247, 0.9), rgba(0, 198, 255, 0.9)), 
+              url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="%23ffffff" opacity="0.05"/><circle cx="50" cy="10" r="0.8" fill="%23ffffff" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.main-heading {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #ffffff, #f0f8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  margin-bottom: 0;
+}
+
+.gallery-section {
+  padding: 4rem 2rem;
+  background: #f8fafc;
+  min-height: 60vh;
+}
+
+.gallery-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.artwork-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+}
+
+.artwork-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(123, 47, 247, 0.25);
+}
+
+.image-wrapper {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  cursor: pointer;
+}
+
+.artwork-card:hover .gallery-img {
+  transform: scale(1.1);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(123, 47, 247, 0.8), rgba(0, 198, 255, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.artwork-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  text-align: center;
+  color: white;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.artwork-card:hover .overlay-content {
+  transform: translateY(0);
+}
+
+.overlay-content i {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.card-content {
+  padding: 2rem;
+}
+
+.artwork-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.artwork-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.price-tag {
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(123, 47, 247, 0.3);
+}
+
+.art-type {
+  background: #f7fafc;
+  color: #4a5568;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  border: 2px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.artist-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #718096;
+  font-weight: 500;
+}
+
+.artist-info i {
+  color: #7b2ff7;
+  font-size: 1.2rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 6rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-icon {
+  margin-bottom: 2rem;
+}
+
+.empty-icon i {
+  font-size: 5rem;
+  color: #cbd5e0;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  font-size: 2rem;
+  color: #4a5568;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  color: #718096;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 25px rgba(123, 47, 247, 0.4);
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(123, 47, 247, 0.6);
+}
+
+/* Lightbox Styles */
 .lightbox {
   display: none;
   position: fixed;
   z-index: 2000;
   padding-top: 80px;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.9);
-  text-align: center;
+  left: 0; 
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  background-color: rgba(0,0,0,0.95);
+  backdrop-filter: blur(10px);
 }
 
 .lightbox-content {
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 90%;
+  max-height: 85%;
   margin: auto;
   display: block;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  border-radius: 15px;
+  box-shadow: 0 0 50px rgba(255,255,255,0.3);
+  animation: lightboxFadeIn 0.3s ease;
+}
+
+@keyframes lightboxFadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .close {
   position: absolute;
-  top: 20px; right: 35px;
+  top: 20px; 
+  right: 35px;
   color: #fff;
-  font-size: 40px;
-  font-weight: bold;
+  font-size: 50px;
+  font-weight: 300;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.explore-section { padding: 3rem 1rem; text-align: center; } .explore-section h1 { font-size: 2.5rem; font-weight: bold; margin-bottom: 2rem; background: linear-gradient(90deg, #7b2ff7, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: auto; max-width: 1200px; } .img-card { border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform 0.3s ease; } .img-card img { width: 100%; height: 200px; object-fit: cover; display: block; } .img-card:hover { transform: scale(1.05); } .floating-book { position: fixed; bottom: 30px; right: 30px; width: 100px; /* increased from 80px */ height: 100px; /* increased from 80px */ background: linear-gradient(135deg, #7b2ff7, #00c6ff); color: white; font-weight: bold; font-size: 1rem; /* slightly bigger font */ border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; animation: jiggle 1s infinite alternate; text-align: center; padding: 5px; } @keyframes jiggle { 0% { transform: rotate(-5deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } 100% { transform: rotate(0deg); } } .floating-book:hover { transform: scale(1.1); transition: transform 0.2s ease; }
 .prev, .next {
   cursor: pointer;
   position: absolute;
   top: 50%;
   width: auto;
-  padding: 16px;
+  padding: 20px;
   color: #fff;
   font-weight: bold;
-  font-size: 40px;
-  transition: 0.3s;
+  font-size: 50px;
+  transition: all 0.3s ease;
   user-select: none;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
 }
 
-.prev { left: 10%; }
-.next { right: 10%; }
+.prev { left: 5%; }
+.next { right: 5%; }
 
 .prev:hover, .next:hover, .close:hover {
   color: #00c6ff;
+  background: rgba(0, 198, 255, 0.1);
+  transform: scale(1.1);
+}
+
+/* Floating Book Button */
+.floating-book {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 30px rgba(123, 47, 247, 0.4);
+  cursor: pointer;
+  z-index: 1000;
+  animation: float 3s ease-in-out infinite;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.floating-book:hover {
+  transform: scale(1.15) translateY(-5px);
+  box-shadow: 0 15px 40px rgba(123, 47, 247, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-heading {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .gallery-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .artwork-card {
+    margin: 0 1rem;
+  }
+  
+  .floating-book {
+    width: 100px;
+    height: 100px;
+    font-size: 1rem;
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .prev, .next {
+    font-size: 40px;
+    padding: 15px;
+  }
+  
+  .prev { left: 2%; }
+  .next { right: 2%; }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 4rem 1rem 3rem;
+  }
+  
+  .main-heading {
+    font-size: 2rem;
+  }
+  
+  .gallery-section {
+    padding: 3rem 1rem;
+  }
+  
+  .card-content {
+    padding: 1.5rem;
+  }
+  
+  .artwork-details {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
 }
 </style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const images = document.querySelectorAll(".gallery-img");
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightbox-img");
-  const closeBtn = document.querySelector(".close");
-  const prevBtn = document.querySelector(".prev");
-  const nextBtn = document.querySelector(".next");
-  let currentIndex = 0;
-
-  function showImage(index) {
-    lightbox.style.display = "block";
-    lightboxImg.src = images[index].src;
-    currentIndex = index;
-  }
-
-  images.forEach((img, index) => {
-    img.addEventListener("click", () => showImage(index));
-  });
-
-  closeBtn.addEventListener("click", () => {
-    lightbox.style.display = "none";
-  });
-
-  prevBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    showImage(currentIndex);
-  });
-
-  nextBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % images.length;
-    showImage(currentIndex);
-  });
-
-  // Keyboard navigation
-  document.addEventListener("keydown", (e) => {
-    if (lightbox.style.display === "block") {
-      if (e.key === "ArrowLeft") prevBtn.click();
-      if (e.key === "ArrowRight") nextBtn.click();
-      if (e.key === "Escape") closeBtn.click();
-    }
-  });
-});
-</script>
 {% endblock %}
