@@ -94,80 +94,88 @@
           </div>
         </div>
 
-        <div class="form-group text-center">
-          <button type="submit">Submit Review</button>
-        </div>
+<div class="form-group text-center">
+  <button type="submit">Submit Review</button>
+</div>
+
       </form>
 
       <div id="response" style="margin-top:12px"></div>
     </div>
   </section>
-{% endblock %}
 
-{% block extra_js %}
-  <script>
-    (function(){
-      const form = document.getElementById('reviewForm');
-      const responseDiv = document.getElementById('response');
-      const reviewsGrid = document.getElementById('reviewsGrid');
-      const defaultImage = "{% static 'gallery/default-user.png' %}";
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+function submitReview() {
+  const form = $('#reviewForm')[0];
+  const formData = new FormData(form);
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        responseDiv.innerHTML = "";
+  $.ajax({
+    url: "{% url 'save_review' %}",   // ✅ use Django reverse
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: { "X-CSRFToken": csrftoken },
+    success: function(data){
+      if (data.success) {
+        $("#response").html(`<div style='color:green; margin-bottom:8px'>${data.message}</div>`);
+        const imgSrc = data.data.image ? data.data.image : "{% static 'gallery/default-user.png' %}";
+        const stars = "⭐".repeat(Number(data.data.rating || 0));
+        const reviewText = data.data.customer_review || "";
+        const newCard = `
+          <div class="review-card">
+            <img src="${imgSrc}" alt="${data.data.name}">
+            <div class="review-content">
+              <h3>${data.data.name} <span class="stars">${stars}</span></h3>
+              <p>"${reviewText}"</p>
+            </div>
+          </div>`;
+        $("#reviewsGrid").prepend(newCard);
+        $("#reviewForm")[0].reset();
+        $("#file-name-display").text("No file chosen");
+      } else {
+        if (data.errors) {
+          let html = "<ul style='color:red; text-align:left; display:inline-block;'>";
+          for (const k in data.errors) html += `<li>${k}: ${data.errors[k].join(", ")}</li>`;
+          html += "</ul>";
+          $("#response").html(html);
+        } else {
+          $("#response").html(`<div style='color:red'>${data.error || "Submission failed"}</div>`);
+        }
+      }
+    },
+    error: function(xhr){
+      console.log("AJAX error", xhr.status, xhr.responseText);   // ✅ show what failed
+      let msg = "Something went wrong.";
+      try { const err = JSON.parse(xhr.responseText); if (err.error) msg = err.error; } catch(e){}
+      $("#response").html(`<div style='color:red'>${msg}</div>`);
+    }
+  });
+}
 
-        const fd = new FormData(form);
+$(document).ready(function(){
+  console.log("✅ review.js loaded");
+  $("#reviewForm").on("submit", function(e){
+    e.preventDefault();
+    console.log("✅ Intercepted form submit");
+    submitReview();
+  });
 
-        fetch("{% url 'save_review' %}", {
-          method: "POST",
-          body: fd,
-        })
-        .then(async res => {
-          const json = await res.json().catch(()=>({success:false, error: 'Invalid JSON'}));
-          if (!res.ok) throw json;
-          return json;
-        })
-        .then(data => {
-          if (data.success) {
-            responseDiv.innerHTML = "<div style='color:green; margin-bottom:8px'>" + data.message + "</div>";
-            const imgSrc = data.data.image ? data.data.image : defaultImage;
-            const stars = '⭐'.repeat(Number(data.data.rating || 0));
-            const reviewText = data.data.customer_review ? data.data.customer_review : "";
-            const newCard = `
-              <div class="review-card">
-                <img src="${imgSrc}" alt="${data.data.name}">
-                <div class="review-content">
-                  <h3>${data.data.name} <span class="stars">${stars}</span></h3>
-                  <p>"${reviewText}"</p>
-                </div>
-              </div>`;
-            reviewsGrid.insertAdjacentHTML('afterbegin', newCard);
-            form.reset();
-          } else {
-            if (data.errors) {
-              let html = "<ul style='color:red; text-align:left; display:inline-block;'>";
-              for (const k in data.errors) {
-                html += `<li>${k}: ${data.errors[k].join(', ')}</li>`;
-              }
-              html += "</ul>";
-              responseDiv.innerHTML = html;
-            } else {
-              responseDiv.innerHTML = "<div style='color:red'>"+(data.error||'Submission failed')+"</div>";
-            }
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          const msg = (err && err.error) ? err.error : "Something went wrong. Check console.";
-          responseDiv.innerHTML = "<div style='color:red'>" + msg + "</div>";
-        });
-      });
+  $("#image").on("change", function(e){
+    const fileName = e.target.files.length > 0 ? e.target.files[0].name : "No file chosen";
+    $("#file-name-display").text(fileName);
+  });
+});
+</script>
+<style>
+  .gallery-section {
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #9bdded, hsl(125, 59%, 84%));
+    text-align: center;
+}
+</style>
 
-      // File input listener
-      document.getElementById('image').addEventListener('change', function(e) {
-        const fileName = e.target.files.length > 0 ? e.target.files[0].name : "No file chosen";
-        document.getElementById('file-name-display').textContent = fileName;
-      });
-    })();
-  </script>
+  
 {% endblock %}

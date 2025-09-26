@@ -14,7 +14,7 @@
     padding: 25px;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    background: #ffffff;
+    background: linear-gradient(90deg, #E0F7FA, #E0F7FA); /* purple to blue gradient */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
 
@@ -82,7 +82,8 @@
     padding: 50px;
     text-align: center;
     min-height: 100vh;
-    background-color: #f7f7f7;
+    background: linear-gradient(135deg, #9bdded, hsl(125, 59%, 84%));
+
   }
 
   .edit-profile-container {
@@ -90,7 +91,7 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
-    background-color: #fff;
+    background: linear-gradient(90deg, #7b2ff7, #00c6ff); /* purple to blue gradient */
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     padding: 30px;
@@ -126,82 +127,104 @@
     margin-top: 10px;
   }
 
-  .checkbox-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-  }
+.upload-btn {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
 
-  .checkbox-group input[type="checkbox"] {
-    margin-right: 8px;
-  }
+.upload-btn:hover {
+  background: #0056b3;
+}
 
-  .profile-picture {
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.edit-button {
+  margin-top: 15px;
+}
 
+.edit-button button {
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+}
+
+.edit-button button:hover {
+  background: linear-gradient(135deg, #0056b3, #0099cc);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .edit-profile-container {
+    padding: 25px;
+  }
   .profile-picture img {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 5px solid #007bff;
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.25);
-    transition: transform 0.3s ease;
+    width: 160px;
+    height: 160px;
   }
+}
 
-  .profile-picture img:hover {
-    transform: scale(1.04);
-  }
+/* Popup Modal Styles */
+.popup-modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 10000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
 
-  .edit-pic-link {
-    margin-top: 10px;
-    font-size: 15px;
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: 500;
-  }
+  /* Remove this from here */
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
 
-  .edit-button {
-    margin-top: 30px;
-  }
 
-  .edit-button button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.popup-content {
+  background-color: #fff;
+  padding: 25px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  max-width: 400px;
+  width: 80%;
+  font-size: 16px;
+  position: relative;
+  animation: popupShow 0.3s ease-out;
+}
 
-  .edit-button button:hover {
-    background-color: #0056b3;
-  }
+.popup-content p {
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
 
-  @media (max-width: 768px) {
-    .profile-picture img {
-      width: 180px;
-      height: 180px;
-    }
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #007bff;
+}
 
-    .edit-profile-container {
-      padding: 20px;
-    }
+@keyframes popupShow {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-    .edit-button {
-      margin-top: 20px;
-    }
-    
-  }
 </style>
 
 <main class="edit-profile-page">
@@ -221,37 +244,59 @@
       <input type="text" name="contact" id="contact" value="{{ contact }}">
     </div>
 
+
     <div class="profile-picture">
       <img src="{% if profile_pic %}{{ profile_pic }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
-      <input type="file" name="customer_photo" id="customer_photo">
+      <label for="customer_photo" class="upload-btn">Upload New</label>
+      <input type="file" name="customer_photo" id="customer_photo" hidden>
     </div>
   </form>
 
+  
   <div class="edit-button">
-    <button type="button" id="saveCustomerProfile">Save Profile</button>
+    <button type="button" id="saveCustomerProfile">💾 Save Profile</button>
   </div>
 </main>
-
+<div id="responsePopup" class="popup-modal">
+  <div class="popup-content">
+    <span class="close-popup">&times;</span>
+    <p id="popupMessage"></p>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $("#saveCustomerProfile").click(function () {
-    let formData = new FormData($("#customerProfileForm")[0]);
+  let formData = new FormData($("#customerProfileForm")[0]);
 
-    $.ajax({
-      url: "{% url 'edit_profile' %}",  // make sure this matches your view URL name
-      type: "POST",
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        alert(response.message);
-      },
-      error: function (xhr, status, error) {
-        alert("Something went wrong: " + error);
-      },
-    });
+  $.ajax({
+    url: "{% url 'edit_profile' %}",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+  $("#popupMessage").text(response.message);
+  $("#responsePopup").css('display', 'flex').hide().fadeIn();
+
+  setTimeout(function () {
+    $("#responsePopup").fadeOut();
+  }, 3000);
+},
+
+error: function (xhr, status, error) {
+  $("#popupMessage").text("Something went wrong: " + error);
+  $("#responsePopup").css('display', 'flex').hide().fadeIn();
+},
+
   });
+});
+
+// Close button click
+$(".close-popup").click(function () {
+  $("#responsePopup").fadeOut();
+});
+
 </script>
 
 
