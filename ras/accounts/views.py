@@ -410,3 +410,8 @@ def password_reset_confirm(request, uidb64, token):
     else:
         # Invalid link → show error
         return render(request, "password_reset.html", {"validlink": False})
+
+
+
+
+
