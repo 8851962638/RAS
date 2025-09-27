@@ -58,9 +58,10 @@
           <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
           <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
           <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li>
+          <li><a href="{% url 'service_images' %}">Art Images</a></li>
+
           {% if request.user.is_authenticated and request.user.role == "customer" %}
           <li><a href="{% url 'my_orders' %}">My Orders</a></li>
-          <li><a href="{% url 'service_images' %}">Art Images</a></li>
           {% endif %}
         </ul>
       </nav>
