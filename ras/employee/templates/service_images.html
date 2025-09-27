@@ -1,0 +1,64 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}Add Service Image{% endblock %}
+
+{% block content %}
+<section class="form-section">
+  <h1>Add Service Image</h1>
+  <form id="serviceImageForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label>Name of Photo:</label>
+      <input type="text" name="image_name" required>
+    </div>
+    <div>
+      <label>Price:</label>
+      <input type="number" step="0.01" name="price" required>
+    </div>
+    <div>
+      <label>Image:</label>
+      <input type="file" name="image" accept="image/*" required>
+    </div>
+    <div>
+      <label>Type of Art:</label>
+      <input type="text" name="type_of_art" required>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="responseMessage" style="margin-top:20px;"></div>
+</section>
+
+<script>
+document.getElementById("serviceImageForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // prevent normal form submit
+
+    let form = e.target;
+    let formData = new FormData(form);
+
+    fetch("{% url 'service_images' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        let msgDiv = document.getElementById("responseMessage");
+        if (data.success) {
+            msgDiv.innerHTML = `<p style="color:green;">✅ ${data.message}</p>`;
+            form.reset(); // clear form
+        } else {
+            msgDiv.innerHTML = `<p style="color:red;">❌ ${data.message}</p>`;
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("responseMessage").innerHTML = `<p style="color:red;">⚠️ Something went wrong!</p>`;
+    });
+});
+</script>
+{% endblock %}
