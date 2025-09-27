@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     # path('u/', include('user.urls')),
-    # path('emp/', include('employee.urls')),
+    path('emp/', include('employee.urls')),
     # path('panel/', include('myadmin.urls')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('api/', include('api.urls', namespace='api')),
