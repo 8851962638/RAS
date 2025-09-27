@@ -4,224 +4,294 @@
 
 {% block content %}
 <style>
-  body {
-    margin-top: 0px;
-    padding: 0px;
-    background-color: #f7f7f7;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+    /*
+    * 1. GLOBAL BODY AND BACKGROUND STYLES
+    * Applying the gradient background from your screens.
+    */
+    body {
+        margin-top: 0;
+        padding: 0;
+        /* Remove static color and apply the light green-to-blue gradient */
+        background: linear-gradient(135deg, #c3e8cd, #a8dadc); 
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-  main.edit-profile-page {
-    padding: 50px;
-    text-align: center;
-    min-height: 100vh;
-    background-color: #f7f7f7;
-  }
+    main.edit-profile-page {
+        padding: 50px 20px;
+        text-align: center;
+        min-height: calc(100vh - 80px); /* Adjusting for header height */
+    }
 
-  .edit-profile-container {
+    /* * 2. MAIN CONTAINER STYLES
+    * Applying the solid colored box style from the shared image (image_c03540.jpg).
+    */
+    .edit-profile-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        /* Match the light teal/blue background from your shared image */
+        background-color: #d1f4f9; 
+        border-radius: 16px;
+        /* Use a softer shadow or none at all, as the shared one has no obvious shadow */
+        box-shadow: none; 
+        padding: 40px; /* Increased padding slightly for better spacing */
+        max-width: 1000px;
+        margin: 40px auto; /* Centering the container */
+        gap: 40px;
+    }
+
+    /* * 3. TYPOGRAPHY AND FIELD STYLES 
+    * Matching the bold/centered H1 and clean input fields.
+    */
+    h1 {
+        margin: 20px 0 40px;
+        font-size: 2.2em;
+        font-weight: 700;
+        color: #333; /* Darker color for emphasis */
+    }
+
+    .profile-details {
+        flex: 2; /* Increased flex ratio to make it wider than the picture column */
+        min-width: 300px;
+        max-width: 500px; 
+        text-align: left;
+    }
+
+    .profile-details label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #444;
+    }
+    .aadhar-image-display {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    padding: 30px;
-    max-width: 1000px;
-    margin: 0 auto 40px;
-    gap: 40px;
-  }
-
-  .profile-details {
-    flex: 1;
-    min-width: 300px;
-    text-align: left;
-  }
-
-  .profile-details label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #444;
-  }
-
-  .profile-details input,
-  .profile-details select {
-    border: 1px solid #ccc;
-    padding: 10px 14px;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 15px;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 18px;
-  }
+    /* Optional: Ensure file input takes full width */
+    width: 100%; 
+}
 
-  .checkbox-group {
-    margin-top: 10px;
-  }
+.aadhar-image-display img {
+    width: 80px; /* Small thumbnail size */
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .checkbox-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-  }
-
-  .checkbox-group input[type="checkbox"] {
-    margin-right: 8px;
-  }
-
-  .profile-picture {
-    flex: 1;
-    min-width: 250px;
+.aadhar-file-group {
+    /* Optional: Style to organize the label and input field */
     display: flex;
     flex-direction: column;
-    align-items: center;
-  }
+}
 
-  .profile-picture img {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 5px solid #007bff;
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.25);
-    transition: transform 0.3s ease;
-  }
+    .profile-details input,
+    .profile-details select {
+        border: 1px solid #ccc;
+        padding: 10px 14px;
+        width: 100%;
+        border-radius: 6px;
+        font-size: 15px;
+        margin-bottom: 18px;
+        /* Ensure background is white for contrast */
+        background-color: #fff; 
+    }
 
-  .profile-picture img:hover {
-    transform: scale(1.04);
-  }
+    /* * 4. PROFILE PICTURE & BUTTON STYLES
+    * Matching the blue border and the primary button styles.
+    */
+    .profile-picture {
+        flex: 1;
+        min-width: 200px;
+        max-width: 250px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Added margin-top to align it better visually */
+        margin-top: 20px; 
+    }
 
-  .edit-pic-link {
-    margin-top: 10px;
-    font-size: 15px;
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: 500;
-  }
-
-  .edit-button {
-    margin-top: 30px;
-  }
-
-  .edit-button button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .edit-button button:hover {
-    background-color: #0056b3;
-  }
-
-  @media (max-width: 768px) {
     .profile-picture img {
-      width: 180px;
-      height: 180px;
+        width: 180px; /* Slightly smaller to match visual feel */
+        height: 180px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #007bff; /* Blue border is prominent in the image */
+        box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35); /* Stronger shadow on the picture */
+        transition: transform 0.3s ease;
     }
-    .edit-profile-container {
-      padding: 20px;
+    
+    /* NEW: Profile Picture Upload Link Styling - Matching the blue "Upload New" button */
+    .upload-file-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 15px;
     }
+
+    .upload-file-container input[type="file"] {
+        display: none; /* Hide the default file input */
+    }
+
+    .upload-btn {
+        display: inline-block;
+        background: #007bff; /* Blue background */
+        color: #fff; /* White text */
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .upload-btn:hover {
+        background: #0056b3;
+    }
+
+
+    /* NEW: Main Save Button Styling - Matching the wider blue button */
     .edit-button {
-      margin-top: 20px;
+        flex-basis: 100%; /* Make button full width of the container */
+        text-align: center;
+        margin-top: 40px;
     }
-  }
+
+    .edit-button button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 60px; /* Wider padding for a bigger button */
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 25px; /* Fully rounded button style */
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .edit-button button:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        .edit-profile-container {
+            padding: 25px;
+        }
+        .profile-picture img {
+            width: 150px;
+            height: 150px;
+        }
+    }
 </style>
 
 <main class="edit-profile-page">
-  <h1 style="margin-top: 40px;">Edit Profile</h1>
+    <h1>Edit Profile</h1>
 
 <form class="edit-profile-container" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
+    {% csrf_token %}
 
-  <!-- Left: Profile Info -->
-  <div class="profile-details">
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="full_name" value="{{ name }}" readonly>
+    <div class="profile-details">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="full_name" value="{{ name }}" readonly>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email_address" value="{{ email_address }}" readonly>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email_address" value="{{ email_address }}" readonly>
 
-    <label for="contact">Mobile</label>
-    <input type="text" id="contact" name="mobile" value="{{ contact }}" readonly>
+        <label for="contact">Mobile</label>
+        <input type="text" id="contact" name="mobile" value="{{ contact }}" readonly>
 
-    <label for="fathers_name">Father's Name</label>
-    <input type="text" id="fathers_name" name="fathers_name" value="{{ fathers_name|default_if_none:'' }}">
+        <label for="fathers_name">Father's Name</label>
+        <input type="text" id="fathers_name" name="fathers_name" value="{{ fathers_name|default_if_none:'' }}">
 
-    <label for="dob">Date of Birth</label>
-    <input type="date" id="dob" name="dob" value="{{ dob|date:'Y-m-d' }}">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" value="{{ dob|date:'Y-m-d' }}">
 
-    <label for="gender">Gender</label>
-    <input type="text" id="gender" name="gender" value="{{ gender|default_if_none:'' }}">
+        <label for="gender">Gender</label>
+        <input type="text" id="gender" name="gender" value="{{ gender|default_if_none:'' }}">
 
-    <label for="house_no">House No</label>
-    <input type="text" id="house_no" name="house_no" value="{{ house_no|default_if_none:'' }}">
+        <label for="house_no">House No</label>
+        <input type="text" id="house_no" name="house_no" value="{{ house_no|default_if_none:'' }}">
 
-    <label for="village">Village</label>
-    <input type="text" id="village" name="village" value="{{ village|default_if_none:'' }}">
+        <label for="village">Village</label>
+        <input type="text" id="village" name="village" value="{{ village|default_if_none:'' }}">
 
-    <label for="city">City</label>
-    <input type="text" id="city" name="city" value="{{ city|default_if_none:'' }}">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" value="{{ city|default_if_none:'' }}">
 
-    <label for="state">State</label>
-    <input type="text" id="state" name="state" value="{{ state|default_if_none:'' }}">
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" value="{{ state|default_if_none:'' }}">
 
-    <label for="pincode">Pincode</label>
-    <input type="text" id="pincode" name="pincode" value="{{ pincode|default_if_none:'' }}">
+        <label for="pincode">Pincode</label>
+        <input type="text" id="pincode" name="pincode" value="{{ pincode|default_if_none:'' }}">
 
-    <label for="aadhar_card_no">Aadhar Card No</label>
-    <input type="text" id="aadhar_card_no" name="aadhar_card_no" value="{{ aadhar_card_no|default_if_none:'' }}">
+        <label for="aadhar_card_no">Aadhar Card No</label>
+        <input type="text" id="aadhar_card_no" name="aadhar_card_no" value="{{ aadhar_card_no|default_if_none:'' }}">
 
-    <label for="aadhar_card_image_front">Aadhar Card (Front)</label>
-    <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front">
+        <label for="aadhar_card_image_front">Aadhar Card (Front)</label>
+              <div class="aadhar-image-display">
+                  {% if aadhar_card_image_front %}
+                      <img src="{{ aadhar_card_image_front }}" alt="Aadhar Front">
+                  {% endif %}
+                  <div class="aadhar-file-group">
+                      <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front">
+                  </div>
+              </div>
 
-    <label for="aadhar_card_image_back">Aadhar Card (Back)</label>
-    <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back">
+              <label for="aadhar_card_image_back">Aadhar Card (Back)</label>
+              <div class="aadhar-image-display">
+                  {% if aadhar_card_image_back %}
+                      <img src="{{ aadhar_card_image_back }}" alt="Aadhar Back">
+                  {% endif %}
+                  <div class="aadhar-file-group">
+                      <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back">
+                  </div>
+              </div>
 
-    <label for="experience">Experience (years)</label>
-    <input type="number" id="experience" name="experience" value="{{ experience|default_if_none:'' }}">
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="type_of_work" value="3D Art" {% if '3D Art' in type_of_work %}checked{% endif %}> 3D Art</label>
-      <label><input type="checkbox" name="type_of_work" value="Mural Art" {% if 'Mural Art' in type_of_work %}checked{% endif %}> Mural Art</label>
-      <label><input type="checkbox" name="type_of_work" value="Normal Paint" {% if 'Normal Paint' in type_of_work %}checked{% endif %}> Normal Paint</label>
-      <label><input type="checkbox" name="type_of_work" value="2D Art" {% if '2D Art' in type_of_work %}checked{% endif %}> 2D Art</label>
-      <label><input type="checkbox" name="type_of_work" value="Digital Art" {% if 'Digital Art' in type_of_work %}checked{% endif %}> Digital Art</label>
+        
+        <label for="experience">Experience (years)</label>
+        <input type="number" id="experience" name="experience" value="{{ experience|default_if_none:'' }}">
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="type_of_work" value="3D Art" {% if '3D Art' in type_of_work %}checked{% endif %}> 3D Art</label>
+            <label><input type="checkbox" name="type_of_work" value="Mural Art" {% if 'Mural Art' in type_of_work %}checked{% endif %}> Mural Art</label>
+            <label><input type="checkbox" name="type_of_work" value="Normal Paint" {% if 'Normal Paint' in type_of_work %}checked{% endif %}> Normal Paint</label>
+            <label><input type="checkbox" name="type_of_work" value="2D Art" {% if '2D Art' in type_of_work %}checked{% endif %}> 2D Art</label>
+            <label><input type="checkbox" name="type_of_work" value="Digital Art" {% if 'Digital Art' in type_of_work %}checked{% endif %}> Digital Art</label>
+        </div>
+
+        <label for="preferred_work_location">Preferred Work Location</label>
+        <input type="text" id="preferred_work_location" name="preferred_work_location" value="{{ preferred_work_location|default_if_none:'' }}">
+
+        <label for="bank_account_holder_name">Bank Account Holder Name</label>
+        <input type="text" id="bank_account_holder_name" name="bank_account_holder_name" value="{{ bank_account_holder_name|default_if_none:'' }}">
+
+        <label for="account_no">Account No</label>
+        <input type="text" id="account_no" name="account_no" value="{{ account_no|default_if_none:'' }}">
+
+        <label for="ifsc_code">IFSC Code</label>
+        <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ifsc_code|default_if_none:'' }}">
     </div>
 
-    <label for="preferred_work_location">Preferred Work Location</label>
-    <input type="text" id="preferred_work_location" name="preferred_work_location" value="{{ preferred_work_location|default_if_none:'' }}">
-
-    <label for="bank_account_holder_name">Bank Account Holder Name</label>
-    <input type="text" id="bank_account_holder_name" name="bank_account_holder_name" value="{{ bank_account_holder_name|default_if_none:'' }}">
-
-    <label for="account_no">Account No</label>
-    <input type="text" id="account_no" name="account_no" value="{{ account_no|default_if_none:'' }}">
-
-    <label for="ifsc_code">IFSC Code</label>
-    <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ifsc_code|default_if_none:'' }}">
-  </div>
-
-  <!-- Right: Profile Picture -->
-  <div class="profile-picture">
-    <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
-    <input type="file" id="passport_photo" name="passport_photo">
-  </div>
-  
-  <!-- Save button inside form -->
-  <div class="edit-button">
-    <button type="submit">Save Changes</button>
-  </div>
+    <div class="profile-picture">
+        <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+        
+        <div class="upload-file-container">
+            <input type="file" id="passport_photo" name="passport_photo">
+            <label for="passport_photo" class="upload-btn">Upload New</label>
+        </div>
+    </div>
+    
+    <div class="edit-button">
+        <button type="submit">Save Profile</button>
+    </div>
 </form>
-
-
-
 
 </main>
 

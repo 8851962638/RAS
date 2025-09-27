@@ -133,22 +133,31 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import Review
-
 @csrf_exempt
 @require_POST
 def save_review(request):
     try:
+        if not request.user.is_authenticated:
+            return JsonResponse({"success": False, "error": "User not authenticated"}, status=401)
+
+        # ✅ Ensure logged-in user is a customer
+        try:
+            customer = Customer.objects.get(user=request.user)
+        except Customer.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Only customers can submit reviews"}, status=403)
+
         name = request.POST.get("name")
         email = request.POST.get("email")
-        review_text = request.POST.get("customer_review") 
+        review_text = request.POST.get("customer_review")
         rating = request.POST.get("rating")
         image = request.FILES.get("image")
 
         if not (name and email and rating):
             return JsonResponse({"success": False, "error": "Missing required fields"}, status=400)
-        print("frw")
+
+        # ✅ Use logged-in customer id
         review = Review.objects.create(
-            # customer_id = str(uuid.uuid4()),
+            customer_id=customer.id,  
             customer_name=name,
             customer_email=email,
             customer_review=review_text,
@@ -160,6 +169,7 @@ def save_review(request):
             "success": True,
             "message": "Review submitted successfully!",
             "data": {
+                "customer_id": customer.id,  
                 "name": review.customer_name,
                 "email": review.customer_email,
                 "customer_review": review.customer_review,
@@ -171,8 +181,6 @@ def save_review(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-
 
 
 from .models import Booking
@@ -265,6 +273,7 @@ def edit_profile_view(request):
             employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
             employee.account_no = request.POST.get("account_no")
             employee.ifsc_code = request.POST.get("ifsc_code")
+            employee.role = "employee"
 
             # File fields
             if "passport_photo" in request.FILES:
@@ -365,66 +374,57 @@ def my_orders(request):
 from django.shortcuts import render
 from .models import Review 
 from django.db.models import F
+from .models import Review
+from accounts.models import Customer
 
 def home_view(request):
-    # Fetch the top 3 latest reviews, ordered by review date
     reviews = Review.objects.all().order_by('-review_date')[:3]
-
-    # Handle the case where there are not enough reviews
     reviews_list = list(reviews)
-    
-    # Create placeholder reviews if needed
-    fake_reviews = []
-    if len(reviews_list) < 3:
-        if len(reviews_list) == 2:
-            fake_reviews.append({
-                'customer_name': 'A. Patel',
-                'customer_review': 'Amazing service! The team was professional and the result was beyond my expectations.',
-                'rating': 5,
-                'review_image': None,
-            })
-        elif len(reviews_list) == 1:
-            fake_reviews.extend([
-                {
-                    'customer_name': 'R. Sharma',
-                    'customer_review': 'They made my living room look fantastic. Highly recommended!',
-                    'rating': 5,
-                    'review_image': None,
-                },
-                {
-                    'customer_name': 'B. Singh',
-                    'customer_review': 'The best painters I have ever hired. Punctual and very skilled.',
-                    'rating': 5,
-                    'review_image': None,
-                }
-            ])
-        elif len(reviews_list) == 0:
-            fake_reviews.extend([
-                {
-                    'customer_name': 'P. Reddy',
-                    'customer_review': 'A true artist! The mural they painted for my cafe is a masterpiece.',
-                    'rating': 5,
-                    'review_image': None,
-                },
-                {
-                    'customer_name': 'S. Kumar',
-                    'customer_review': 'Excellent work and very easy to communicate with. Will definitely use their service again.',
-                    'rating': 5,
-                    'review_image': None,
-                },
-                {
-                    'customer_name': 'M. Gupta',
-                    'customer_review': 'The 3D art on my wall looks so real. It completely changed the feel of the room.',
-                    'rating': 5,
-                    'review_image': None,
-                }
-            ])
-    
-    # Combine real reviews and fake reviews to get a total of 3
+
+    fake_reviews = [
+    {
+        'customer_name': 'P. Reddy',
+        'customer_review': 'A true artist! The mural they painted for my cafe is a masterpiece.',
+        'rating': 5,
+        'review_image': None,
+    },
+    {
+        'customer_name': 'S. Kumar',
+        'customer_review': 'Excellent work and very easy to communicate with. Will definitely use their service again.',
+        'rating': 5,
+        'review_image': None,
+    },
+    {
+        'customer_name': 'M. Gupta',
+        'customer_review': 'The 3D art on my wall looks so real. It completely changed the feel of the room.',
+        'rating': 5,
+        'review_image': None,
+    },
+]
+  # keep your same fake reviews
+
     all_reviews = reviews_list + fake_reviews[:3 - len(reviews_list)]
 
+    enriched_reviews = []
+    for r in all_reviews:
+        if isinstance(r, dict):
+            rating = r["rating"]
+            r["full_stars"] = range(rating)
+            r["empty_stars"] = range(5 - rating)
+            r["customer_photo"] = None  # fake ones don’t have photos
+            enriched_reviews.append(r)
+        else:  
+            rating = r.rating
+            setattr(r, "full_stars", range(rating))
+            setattr(r, "empty_stars", range(5 - rating))
+            try:
+                customer = Customer.objects.get(id=r.customer_id)
+                setattr(r, "customer_photo", customer.customer_photo.url if customer.customer_photo else None)
+            except Customer.DoesNotExist:
+                setattr(r, "customer_photo", None)
+            enriched_reviews.append(r)
+
     context = {
-        'reviews': all_reviews,
-        # ... other context variables for your page
+        "reviews": enriched_reviews,
     }
-    return render(request, 'home.html', context)
+    return render(request, "home.html", context)
