@@ -6,35 +6,51 @@
 {% block content %}
 <section class="form-section">
   <h1>Add Service Image</h1>
-  <form id="serviceImageForm" method="POST" enctype="multipart/form-data">
+  <form id="serviceImageForm" method="POST" enctype="multipart/form-data" class="styled-form">
     {% csrf_token %}
-    <div>
+
+    <div class="form-group">
       <label>Name of Photo:</label>
       <input type="text" name="image_name" required>
     </div>
-    <div>
-      <label>Price:</label>
-      <input type="number" step="0.01" name="price" required>
-    </div>
-    <div>
-      <label>Image:</label>
-      <input type="file" name="image" accept="image/*" required>
-    </div>
-    <div>
-      <label>Type of Art:</label>
-      <input type="text" name="type_of_art" required>
+
+    <!-- Row for Price + File + Dropdown -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price:</label>
+        <div class="price-input">
+          <input type="number" step="0.01" name="price" required>
+          <span class="unit">₹ / sq ft</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*" required class="file-input">
+      </div>
+
+      <div class="form-group">
+        <label>Type of Art:</label>
+        <select name="type_of_art" required>
+          <option value="">-- Select Type --</option>
+          <option value="3D Art">3D Art</option>
+          <option value="Mural">Mural</option>
+          <option value="Normal Paint">Normal Paint</option>
+          <option value="Madhubani">Madhubani</option>
+          <option value="Advertisement Art">Advertisement Art</option>
+        </select>
+      </div>
     </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="submit-btn">Submit</button>
   </form>
 
-  <div id="responseMessage" style="margin-top:20px;"></div>
+  <div id="responseMessage" class="response-message"></div>
 </section>
 
 <script>
 document.getElementById("serviceImageForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // prevent normal form submit
-
+    e.preventDefault(); 
     let form = e.target;
     let formData = new FormData(form);
 
@@ -49,16 +65,166 @@ document.getElementById("serviceImageForm").addEventListener("submit", function(
     .then(data => {
         let msgDiv = document.getElementById("responseMessage");
         if (data.success) {
-            msgDiv.innerHTML = `<p style="color:green;">✅ ${data.message}</p>`;
-            form.reset(); // clear form
+            msgDiv.innerHTML = `<p class="success-msg">✅ ${data.message}</p>`;
+            form.reset();
         } else {
-            msgDiv.innerHTML = `<p style="color:red;">❌ ${data.message}</p>`;
+            msgDiv.innerHTML = `<p class="error-msg">❌ ${data.message}</p>`;
         }
     })
     .catch(error => {
         console.error("Error:", error);
-        document.getElementById("responseMessage").innerHTML = `<p style="color:red;">⚠️ Something went wrong!</p>`;
+        document.getElementById("responseMessage").innerHTML = `<p class="error-msg">⚠️ Something went wrong!</p>`;
     });
 });
 </script>
+
+<style>
+/* Form Section */
+.form-section {
+  max-width: 800px;
+  margin: 50px auto;
+  background: #e6f7e6; /* pale green background */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.form-section h1 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+/* Form Styling */
+.styled-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  text-align: left;
+  flex: 1;
+}
+
+label {
+  font-weight: 600;
+  color: #34495e;
+  display: block;
+  margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #b2d8b2;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #f9fff9;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 6px rgba(40,167,69,0.3);
+}
+
+/* Row layout */
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Price Unit */
+.price-input {
+  display: flex;
+  align-items: center;
+}
+
+.price-input input {
+  flex: 1;
+}
+
+.price-input .unit {
+  margin-left: 10px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* File Input Custom Style */
+.file-input {
+  padding: 8px;
+  background: #f9fff9;
+  cursor: pointer;
+}
+
+.file-input::-webkit-file-upload-button {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+  background: #218838;
+}
+
+/* Dropdown */
+select {
+  appearance: none;
+  background: #f9fff9 url("data:image/svg+xml;utf8,<svg fill='green' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center;
+  background-size: 16px;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #218838, #1c6f2d);
+  transform: translateY(-2px);
+}
+
+/* Messages */
+.response-message {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.success-msg {
+  color: green;
+  font-weight: 600;
+}
+
+.error-msg {
+  color: red;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+</style>
 {% endblock %}

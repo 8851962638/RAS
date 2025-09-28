@@ -37,7 +37,7 @@ class Booking(models.Model):
 
 class Review(models.Model):
     id = models.BigAutoField(primary_key=True)   # Explicit primary key
-    customer_id = models.CharField(max_length=50, unique=True)  # Custom customer id
+    customer_id = models.CharField(max_length=50)  # Custom customer id
 
     customer_name = models.CharField(max_length=100)
     customer_email = models.EmailField()
