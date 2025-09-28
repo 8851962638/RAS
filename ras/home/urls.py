@@ -17,5 +17,7 @@ urlpatterns = [
     path('home/save_bookings/', views.save_booking, name='save_booking'),  
     path('shop/', views.shop, name='shop'),
     path('my-orders/', views.my_orders, name='my_orders'),
+    path('create_razorpay_order/', views.create_razorpay_order, name='create_razorpay_order'),
+    path('verify_razorpay_payment/', views.verify_razorpay_payment, name='verify_razorpay_payment'),
 
 ]
