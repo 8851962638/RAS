@@ -197,52 +197,52 @@ from datetime import datetime
 import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-@login_required
-@csrf_exempt
-def save_booking(request):
-    if request.method == 'POST':
-        try:
-            print("Logged-in user:", request.user, request.user.id)
+# @login_required
+# @csrf_exempt
+# def save_booking(request):
+#     if request.method == 'POST':
+#         try:
+#             print("Logged-in user:", request.user, request.user.id)
 
-            # Get the Customer record
-            customer_qs = request.user.customers.all()
-            if not customer_qs.exists():
-                return JsonResponse({'success': False, 'message': 'This option is only available for customers.'})
+#             # Get the Customer record
+#             customer_qs = request.user.customers.all()
+#             if not customer_qs.exists():
+#                 return JsonResponse({'success': False, 'message': 'This option is only available for customers.'})
 
-            customer = customer_qs.first()  # the single Customer object
+#             customer = customer_qs.first()  # the single Customer object
 
-            booking_id = str(uuid.uuid4())[:8]
+#             booking_id = str(uuid.uuid4())[:8]
 
-            appointment_date = None
-            appointment_date_str = request.POST.get('appointment_date')
-            if appointment_date_str:
-                appointment_date = datetime.strptime(appointment_date_str, "%d-%m-%Y").date()
+#             appointment_date = None
+#             appointment_date_str = request.POST.get('appointment_date')
+#             if appointment_date_str:
+#                 appointment_date = datetime.strptime(appointment_date_str, "%d-%m-%Y").date()
 
-            booking = Booking.objects.create(
-                booking_id=booking_id,
-                customer_name=customer.customer_full_name,
-                customer_user_id=customer.id,
-                service_name=request.POST.get('service_name'),
-                contact_number=request.POST.get('contact_number'),
-                email=request.POST.get('email'),
-                address=request.POST.get('address'),
-                pin_code=request.POST.get('pin_code'),
-                state=request.POST.get('state'),
-                city=request.POST.get('city'),
-                total_walls=int(request.POST.get('total_walls', 0)),
-                width=float(request.POST.get('width', 0)),
-                height=float(request.POST.get('height', 0)),
-                total_sqft=float(request.POST.get('total_sqft', 0)),
-                appointment_date=appointment_date,
-                payment_option="pending",
-                payment_amount=0.00,
-                is_paid=False
-            )
+#             booking = Booking.objects.create(
+#                 booking_id=booking_id,
+#                 customer_name=customer.customer_full_name,
+#                 customer_user_id=customer.id,
+#                 service_name=request.POST.get('service_name'),
+#                 contact_number=request.POST.get('contact_number'),
+#                 email=request.POST.get('email'),
+#                 address=request.POST.get('address'),
+#                 pin_code=request.POST.get('pin_code'),
+#                 state=request.POST.get('state'),
+#                 city=request.POST.get('city'),
+#                 total_walls=int(request.POST.get('total_walls', 0)),
+#                 width=float(request.POST.get('width', 0)),
+#                 height=float(request.POST.get('height', 0)),
+#                 total_sqft=float(request.POST.get('total_sqft', 0)),
+#                 appointment_date=appointment_date,
+#                 payment_option="pending",
+#                 payment_amount=0.00,
+#                 is_paid=False
+#             )
 
-            return JsonResponse({'success': True, 'message': 'Booking saved successfully!'})
+#             return JsonResponse({'success': True, 'message': 'Booking saved successfully!'})
 
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
+#         except Exception as e:
+#             return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
 
 
 from django.shortcuts import render
@@ -428,3 +428,180 @@ def home_view(request):
         "reviews": enriched_reviews,
     }
     return render(request, "home.html", context)
+
+
+
+
+# views.py - Add these functions to your existing views.py
+
+import razorpay
+import time
+import json
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+# Initialize Razorpay client
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+@require_http_methods(["POST"])
+def create_razorpay_order(request):
+    try:
+        # Get amount from request (convert to paise - multiply by 100)
+        amount_str = request.POST.get('amount', '0')
+        amount = int(float(amount_str) * 100)  # Convert to paise
+        
+        # Create unique receipt ID
+        receipt_id = f'booking_{int(time.time())}'
+        
+        # Create Razorpay order
+        order_data = {
+            'amount': amount,
+            'currency': 'INR',
+            'receipt': receipt_id,
+            'payment_capture': 1  # Auto capture payment
+        }
+        
+        order = razorpay_client.order.create(data=order_data)
+        
+        return JsonResponse({
+            'success': True,
+            'order_id': order['id'],
+            'amount': order['amount'],
+            'currency': order['currency'],
+            'key_id': settings.RAZORPAY_KEY_ID
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def verify_razorpay_payment(request):
+    try:
+        # Parse JSON data
+        data = json.loads(request.body)
+        
+        # Extract payment details
+        razorpay_order_id = data.get('razorpay_order_id')
+        razorpay_payment_id = data.get('razorpay_payment_id')
+        razorpay_signature = data.get('razorpay_signature')
+        
+        # Verify payment signature
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+        
+        # This will raise an exception if signature is invalid
+        razorpay_client.utility.verify_payment_signature(params_dict)
+        
+        # Payment is verified successfully
+        # Here you can save payment details to your database
+        # Example:
+        # Payment.objects.create(
+        #     order_id=razorpay_order_id,
+        #     payment_id=razorpay_payment_id,
+        #     signature=razorpay_signature,
+        #     status='completed'
+        # )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Payment verified successfully',
+            'payment_id': razorpay_payment_id
+        })
+        
+    except razorpay.errors.SignatureVerificationError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Payment signature verification failed'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+    
+
+# Add this to your views.py or update your existing save_bookings view
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+@require_http_methods(["POST"])
+def save_booking(request):
+    try:
+        # Get form data
+        service_name = request.POST.get('service_name')
+        contact_number = request.POST.get('contact_number')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        pin_code = request.POST.get('pin_code')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        total_walls = request.POST.get('total_walls')
+        width = request.POST.get('width')
+        height = request.POST.get('height')
+        total_sqft = request.POST.get('total_sqft')
+        appointment_date = request.POST.get('appointment_date')
+        
+        # Validate required fields
+        required_fields = [service_name, contact_number, email, address, pin_code, 
+                          state, city, total_walls, width, height, appointment_date]
+        
+        if not all(required_fields):
+            return JsonResponse({
+                'success': False,
+                'message': 'Please fill all required fields'
+            })
+        
+        # Save to database (replace with your model)
+        # Example:
+        # booking = Booking.objects.create(
+        #     service_name=service_name,
+        #     contact_number=contact_number,
+        #     email=email,
+        #     address=address,
+        #     pin_code=pin_code,
+        #     state=state,
+        #     city=city,
+        #     total_walls=total_walls,
+        #     width=width,
+        #     height=height,
+        #     total_sqft=total_sqft,
+        #     appointment_date=appointment_date
+        # )
+        
+        # Store booking data in session for payment step
+        request.session['booking_data'] = {
+            'service_name': service_name,
+            'contact_number': contact_number,
+            'email': email,
+            'address': address,
+            'pin_code': pin_code,
+            'state': state,
+            'city': city,
+            'total_walls': total_walls,
+            'width': width,
+            'height': height,
+            'total_sqft': total_sqft,
+            'appointment_date': appointment_date
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Booking data saved successfully'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Error saving booking: {str(e)}'
+        })
