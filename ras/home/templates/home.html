@@ -7,22 +7,21 @@
 <div class="hero">
   <div class="hero-overlay">
     <div class="hero-text glass-card">
-  <h1>
-  {% if request.user.is_authenticated %}
-    {% if request.user.is_superuser %}
-      Welcome Neeraj
-    {% elif request.user.role == "customer" %}
-      Welcome {{ request.user.customers.first.customer_full_name }}
-    {% elif request.user.role == "employee" %}
-      Welcome {{ request.user.employees.first.full_name }}
-    {% else %}
-      Welcome {{ request.user.full_name }}
-    {% endif %}
-  {% else %}
-    Welcome Back
-  {% endif %}
-</h1>
-
+      <h1>
+      {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser %}
+          Welcome Neeraj
+        {% elif request.user.role == "customer" %}
+          Welcome {{ request.user.customers.first.customer_full_name }}
+        {% elif request.user.role == "employee" %}
+          Welcome {{ request.user.employees.first.full_name }}
+        {% else %}
+          Welcome {{ request.user.full_name }}
+        {% endif %}
+      {% else %}
+        Welcome Back
+      {% endif %}
+      </h1>
       <p>At RColourcraft, we specialize in stunning murals, creative paintings, and artistic designs that transform your space.</p>
       <button>Explore Services</button>
     </div>
@@ -36,13 +35,15 @@
 <section>
   <h1>Our Services</h1>
   <div class="services-grid">
+
+    <!-- Existing Services -->
     <div class="service-card">
       <div class="circle"><img src="{% static 'gallery/3dopen.png' %}" alt="3D Art"></div>
       <h3>3D Art</h3>
-      <p>We create immersive 3D painting experiences that bring your walls and spaces to life, offering custom designs with vibrant colors and realistic depth for a truly captivating visual impact.</p>
+      <p>We create immersive 3D painting experiences that bring your walls and spaces to life.</p>
       <div class="card-buttons">
-<a href="{% url 'book_service' '3d-art' %}" class="book-btn">Book this Service</a>
-<a href="{% url 'explore_service' '3d-art' %}" class="explore-btn">Explore</a>
+        <a href="{% url 'book_service' '3d-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' '3d-art' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 
@@ -51,93 +52,154 @@
       <h3>Mural Art</h3>
       <p>Creative 2D artworks tailored for you.</p>
       <div class="card-buttons">
-<a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
-<a href="{% url 'explore_service' 'mural' %}" class="explore-btn">Explore</a>
+        <a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'mural' %}" class="explore-btn">Explore</a>
       </div>
     </div>
-  
+
     <div class="service-card">
       <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
       <h3>Normal Painting</h3>
       <p>High-quality indoor & outdoor painting.</p>
       <div class="card-buttons">
-        <a href="{% url 'book_service' '3d-art' %}">
-<a href="{% url 'book_service' 'normal-paint' %}" class="book-btn">Book this Service</a>
-        </a>
-<a href="{% url 'explore_service' 'normal-paint' %}" class="explore-btn">Explore</a>
+        <a href="{% url 'book_service' 'normal-paint' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'normal-paint' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 
     <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/ad.png' %}" alt="3D Art"></div>
+      <div class="circle"><img src="{% static 'gallery/ad.png' %}" alt="Advertisement Art"></div>
       <h3>Advertisement Art</h3>
-      <p>A specific way to brand your paint service</p>
+      <p>A specific way to brand your paint service.</p>
       <div class="card-buttons">
-        <button class="book-btn">Book this Service</button>
-        <button class="explore-btn">Explore</button>
+        <a href="{% url 'book_service' 'advertisement-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'advertisement-art' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 
     <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/aesthetic.png' %}" alt="Mural Art"></div>
+      <div class="circle"><img src="{% static 'gallery/aesthetic.png' %}" alt="Aesthetic Art"></div>
       <h3>Aesthetic Art</h3>
-      <p>Creative Aesthetic artworks tailored for you.</p>
+      <p>Creative aesthetic artworks tailored for you.</p>
       <div class="card-buttons">
-        <button class="book-btn">Book this Service</button>
-        <button class="explore-btn">Explore</button>
+        <a href="{% url 'book_service' 'aesthetic-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'aesthetic-art' %}" class="explore-btn">Explore</a>
       </div>
     </div>
 
     <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
-      <h3>Normal Painting</h3>
-      <p>High-quality indoor & outdoor painting.</p>
+      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Madhubani Art"></div>
+      <h3>Madhubani Art</h3>
+      <p>High-quality traditional Madhubani painting.</p>
       <div class="card-buttons">
-        <a href="{% url 'book_service' '3d-art' %}">
-          <button class="book-btn">Book this Service</button>
-        </a>
-        <button class="explore-btn">Explore</button>
+        <a href="{% url 'book_service' 'madhubani-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'madhubani-art' %}" class="explore-btn">Explore</a>
       </div>
     </div>
+
+    <!-- New Services -->
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/cartoon.png' %}" alt="Cartoon Art"></div>
+      <h3>Cartoon Art</h3>
+      <p>Fun and creative cartoon artworks for any space.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'cartoon-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'cartoon-art' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/nature.png' %}" alt="Nature Art"></div>
+      <h3>Nature Art</h3>
+      <p>Artworks inspired by nature’s beauty.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'nature-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'nature-art' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/metro.png' %}" alt="Metro Advertisement"></div>
+      <h3>Metro Advertisement</h3>
+      <p>Creative ads for metro stations and public spaces.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'metro-advertisement' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'metro-advertisement' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/scrap.png' %}" alt="Scrap Yard Art"></div>
+      <h3>Scrap Yard Art</h3>
+      <p>Unique artworks using scrap and recycled materials.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'scrap-yard-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'scrap-yard-art' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/spray.png' %}" alt="Spray Art"></div>
+      <h3>Spray Art</h3>
+      <p>Modern spray painting techniques for vibrant visuals.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'spray-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'spray-art' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="circle"><img src="{% static 'gallery/structure.png' %}" alt="Structure Art"></div>
+      <h3>Structure Art</h3>
+      <p>Artworks focused on architectural and structural designs.</p>
+      <div class="card-buttons">
+        <a href="{% url 'book_service' 'structure-art' %}" class="book-btn">Book this Service</a>
+        <a href="{% url 'explore_service' 'structure-art' %}" class="explore-btn">Explore</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
+<!-- Reviews Section -->
 <section class="reviews-section">
     <h1>Customer Reviews</h1>
     <div class="reviews-container">
         {% for review in reviews %}
-<div class="review-card">
-  <div class="review-header">
-    {% if review.customer_photo %}
-      <img src="{{ review.customer_photo }}" alt="{{ review.customer_name }} photo" class="review-photo">
-    {% else %}
-      <img src="{% static 'images/default-avatar.png' %}" alt="Avatar" class="review-photo">
-    {% endif %}
-
-    <div class="review-meta">
-      <h3>{{ review.customer_name }}</h3>
-      <div class="stars">
-        {% for _ in review.full_stars %}
-          <i class="fa fa-star text-warning"></i>
-        {% endfor %}
-        {% for _ in review.empty_stars %}
-          <i class="fa fa-star-o text-warning"></i>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-
-  <p class="review-text">{{ review.customer_review }}</p>
-
-  {% if review.review_image %}
-  <div class="review-image-container">
-    <img src="{{ review.review_image.url }}" alt="Review Image" class="review-image">
-  </div>
-  {% endif %}
-</div>
-
-
+        <div class="review-card">
+            <div class="review-header">
+                {% if review.customer_photo %}
+                    <img src="{{ review.customer_photo }}" alt="{{ review.customer_name }} photo" class="review-avatar">
+                {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" alt="Avatar" class="review-avatar">
+                {% endif %}
+                <div class="review-meta">
+                    <h3>{{ review.customer_name }}</h3>
+                    <p class="review-text-inline">{{ review.customer_review }}</p>
+                    <div class="stars">
+                        {% for _ in review.full_stars %}
+                            <i class="fa fa-star text-warning"></i>
+                        {% endfor %}
+                        {% for _ in review.empty_stars %}
+                            <i class="fa fa-star-o text-warning"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if review.review_image %}
+            <div class="review-image-container" onclick="openModal('{{ review.review_image.url }}')">
+                <img src="{{ review.review_image.url }}" alt="Review Image" class="review-image">
+            </div>
+            {% endif %}
+        </div>
         {% endfor %}
     </div>
 </section>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+    <span class="close-btn">&times;</span>
+    <img class="modal-content" id="img01">
+</div>
+
 {% endblock %}

@@ -96,12 +96,16 @@
 
     /* Review Form */
     .review-form {
-      margin-top: 40px;
-      max-width: 500px; margin-left: auto; margin-right: auto;
-      text-align: left;
-      background: #fff; padding: 25px;
-      border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+  margin-top: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  background: #dfffe0; 
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
     .review-form h3 { margin-bottom: 15px; }
     .review-form input, .review-form textarea {
       width: 100%; padding: 12px; margin: 8px 0;
@@ -148,37 +152,11 @@
   
 
 
-    /* Custom File Input Styling */
-.custom-file-input-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
 
-.custom-file-input {
-  display: none;
-}
 
-.custom-file-label {
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
 
-.custom-file-label:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-}
 
-.file-name-text {
-  font-size: 0.9em;
-  color: #555;
-}
+
 
 /* Submit Button Styling */
 .review-form button[type="submit"] {
@@ -195,4 +173,81 @@
 .review-form button[type="submit"]:hover {
   background: linear-gradient(to right, #0072ff, #00c6ff);
   transform: scale(1.05);
+}
+
+
+
+
+
+
+
+
+/* Hide the ugly default file input */
+input[type="file"].custom-file-input {
+  display: none !important;
+}
+
+/* Style the label to look like a button */
+.custom-file-label {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: lightskyblue;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* File name next to button */
+.file-name-text {
+  margin-left: 10px;
+  font-style: italic;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.custom-file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+/* Hide the ugly default input */
+.file-upload-input {
+  display: none !important;
+}
+
+/* Style the label like a button */
+.file-upload-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background: lightskyblue;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.file-upload-btn:hover {
+  background: deepskyblue;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* File name text */
+.file-name-text {
+  margin-left: 10px;
+  font-style: italic;
+  font-size: 0.9em;
+  color: #444;
+}
+
+/* Keep button + filename inline */
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }

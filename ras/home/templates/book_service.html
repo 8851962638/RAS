@@ -67,6 +67,58 @@
     border-radius: 8px;
     border: 1px solid #ccc;
 }
+/* Confirmation Box */
+.confirmation-box {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.confirmation-box h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.confirmation-box p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.confirmation-box button {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 30px;
+    background: #fff;
+    color: #7b2ff7;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.confirmation-box button:hover {
+    background: #f1f1f1;
+    transform: scale(1.05);
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    0% { 
+        opacity: 0; 
+        transform: translateY(40px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
 
 .booking-form button {
     margin-top: 1.5rem;
@@ -233,13 +285,16 @@
     </div>
 
     <div class="slide" id="confirmation-slide">
-        <div class="popup-box">
-            <h3>Booking Confirmed 🎉</h3>
-            <p>Your booking for <strong>{{ service_name }}</strong> is successful.<br>
-                Payment received successfully!</p>
-            <button onclick="goHome()">Okay</button>
-        </div>
+    <div class="confirmation-box">
+        <h3>🎉 Booking Confirmed!</h3>
+        <p>
+            Your booking for <strong>{{ service_name }}</strong> is successful.<br>
+            ✅ Payment received successfully!<br>
+            We got the confirmation. Our team will get in touch with you within 24 hrs.
+        </p>
+        <button onclick="goHome()">Go to Home</button>
     </div>
+</div>
 </div>
 
 <!-- SCRIPTS -->
