@@ -53,20 +53,45 @@ def explore_service(request, service_type):
 
 def book_service(request, service_type):
     """
-    service_type: '3d-art', 'mural', 'normal-paint'
+    service_type: could be any of the defined service keys.
     """
     service_dict = {
         '3d-art': '3D Art',
         'mural': 'Mural Art',
-        'normal-paint': 'Normal Painting'
+        'normal-paint': 'Normal Painting',
+        'advertisement-art': 'Advertisement Art',
+        'aesthetic-art': 'Aesthetic Art',
+        'madhubani-art': 'Madhubani Art',
+        'cartoon-art': 'Cartoon Art',
+        'nature-art': 'Nature Art',
+        'metro-advertisement': 'Metro Advertisement',
+        'scrap-yard-art': 'Scrap Yard Art',
+        'spray-art': 'Spray Art',
+        'structure-art': 'Structure Art'
     }
+    
     service_name = service_dict.get(service_type, 'Service')
+    
+    # Filter images dynamically based on service_type
+    if service_type in ['3d-art', 'mural', 'normal-paint']:
+        if service_type == "3d-art":
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="3D")
+        elif service_type == "mural":
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="mural")
+        else:
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="normal")
+    else:
+        # For other service types, filter by the service name
+        db_images = ServiceImage.objects.filter(type_of_art__icontains=service_name)
 
     if request.method == 'POST':
-        # handle form submission
+        # Handle booking form submission if needed
         pass
 
-    return render(request, 'book_service.html', {'service_name': service_name})
+    return render(request, "book_service.html", {
+        "service_name": service_name,
+        "db_images": db_images
+    })
 
 
 
@@ -501,15 +526,7 @@ def verify_razorpay_payment(request):
         # This will raise an exception if signature is invalid
         razorpay_client.utility.verify_payment_signature(params_dict)
         
-        # Payment is verified successfully
-        # Here you can save payment details to your database
-        # Example:
-        # Payment.objects.create(
-        #     order_id=razorpay_order_id,
-        #     payment_id=razorpay_payment_id,
-        #     signature=razorpay_signature,
-        #     status='completed'
-        # )
+      
         
         return JsonResponse({
             'success': True,
@@ -534,11 +551,17 @@ def verify_razorpay_payment(request):
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from .models import Booking
+@csrf_exempt
 
 @require_http_methods(["POST"])
 def save_booking(request):
     try:
-        # Get form data
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'message': 'You must be logged in to book a service'})
+
+        # --- Standard Fields ---
         service_name = request.POST.get('service_name')
         contact_number = request.POST.get('contact_number')
         email = request.POST.get('email')
@@ -549,59 +572,93 @@ def save_booking(request):
         total_walls = request.POST.get('total_walls')
         width = request.POST.get('width')
         height = request.POST.get('height')
-        total_sqft = request.POST.get('total_sqft')
+        total_sqft = request.POST.get('total_sqft') or '0'
         appointment_date = request.POST.get('appointment_date')
         
-        # Validate required fields
-        required_fields = [service_name, contact_number, email, address, pin_code, 
-                          state, city, total_walls, width, height, appointment_date]
-        
+        # *** CRITICAL FIX: Use the calculated amount from the front-end ***
+        total_amount = request.POST.get("total_amount")
+        print(total_amount,"total_amount_+++++++++++++++++++++")
+        # --- Design Fields (from form or null) ---
+        selected_design_name = request.POST.get('selected_design_name')
+        selected_design_price = request.POST.get('selected_design_price') # This is the price/rate for the design
+        custom_design_file = request.FILES.get('custom_design') # This handles uploaded file
+
+        required_fields = [service_name, contact_number, email, address,
+                           pin_code, state, city, total_walls,
+                           width, height, appointment_date]
         if not all(required_fields):
-            return JsonResponse({
-                'success': False,
-                'message': 'Please fill all required fields'
-            })
+             # Check for total_sqft > 0 instead of just existence
+            if not total_sqft or float(total_sqft) <= 0:
+                 return JsonResponse({'success': False, 'message': 'Please enter valid width/height to calculate square footage.'})
+            return JsonResponse({'success': False, 'message': 'Please fill all required fields'})
+
+
+        if appointment_date:
+            try:
+                # Assuming the JS sends 'DD-MM-YYYY'
+                appointment_date = datetime.strptime(appointment_date, "%d-%m-%Y").date()
+            except ValueError:
+                 # Check if format is YYYY-MM-DD (standard date input fallback)
+                try:
+                    appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+                except ValueError:
+                    return JsonResponse({'success': False, 'message': 'Invalid date format, use DD-MM-YYYY or YYYY-MM-DD'})
         
-        # Save to database (replace with your model)
-        # Example:
-        # booking = Booking.objects.create(
-        #     service_name=service_name,
-        #     contact_number=contact_number,
-        #     email=email,
-        #     address=address,
-        #     pin_code=pin_code,
-        #     state=state,
-        #     city=city,
-        #     total_walls=total_walls,
-        #     width=width,
-        #     height=height,
-        #     total_sqft=total_sqft,
-        #     appointment_date=appointment_date
-        # )
+        next_id = Booking.objects.count() + 1
+        booking_id = f"RCC{next_id}"
+        print("getting to it ")
+
+        # --- Finalize Design Fields for Model ---
+        design_name_to_save = selected_design_name if selected_design_name else None
         
-        # Store booking data in session for payment step
-        request.session['booking_data'] = {
-            'service_name': service_name,
-            'contact_number': contact_number,
-            'email': email,
-            'address': address,
-            'pin_code': pin_code,
-            'state': state,
-            'city': city,
-            'total_walls': total_walls,
-            'width': width,
-            'height': height,
-            'total_sqft': total_sqft,
-            'appointment_date': appointment_date
-        }
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Booking data saved successfully'
-        })
-        
+        # Save the design price/rate (which was used to calculate the final amount)
+        price_to_save = float(selected_design_price) if selected_design_price else None 
+
+        # Determine type_of_art_booked
+        if design_name_to_save:
+            art_type = "Selected Design"
+        elif custom_design_file:
+            art_type = "Custom Upload"
+            # If custom design is uploaded, the price/rate used would be the service's default rate
+            # You might want to pull the default rate here, but we'll use null/0 for simplicity.
+            price_to_save = price_to_save if price_to_save is not None else 0 # Default price if needed
+        else:
+            art_type = "Standard Service"
+            # If standard, the price/rate is the hardcoded base rate from your JS, which you may want to save here.
+            # For now, we'll keep price_to_save as None/0 if no design selected/uploaded.
+            # If you want to save the rate from SERVICE_BASE_RATES, you'd need to send it from JS or look it up here.
+
+
+        booking = Booking.objects.create(
+            customer_name=request.user.full_name if request.user.full_name else request.user.email,
+            customer_user_id=request.user.id,
+            booking_id=booking_id,
+            service_name=service_name,
+            contact_number=contact_number,
+            email=email,
+            address=address,
+            pin_code=pin_code,
+            state=state,
+            city=city,
+            total_walls=total_walls,
+            width=width,
+            height=height,
+            total_sqft=total_sqft,
+            appointment_date=appointment_date,
+            
+            # --- SAVING DESIGN AND PRICE ---
+            design_names=design_name_to_save,
+            type_of_art_booked=art_type,
+            price_of_design=price_to_save, # The per-sqft rate or design fixed price
+            customer_design=custom_design_file, # Saves the uploaded file or None
+            
+            # --- FINAL AMOUNT FIX ---
+            total_amount=total_amount
+        )
+
+        return JsonResponse({'success': True, 'message': 'Booking saved successfully', 'id': booking.id})
+
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'message': f'Error saving booking: {str(e)}'
-        })
+        import traceback
+        print(traceback.format_exc())
+        return JsonResponse({'success': False, 'message': str(e)})

@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+# app_name = "home"
 
 urlpatterns = [
     path('', views.home_view, name='home'),   # root: /
@@ -14,7 +15,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path("artists/", views.artists, name="artists"),
     path('bookings/', views.bookings, name='bookings'),
-    path('home/save_bookings/', views.save_booking, name='save_booking'),  
+    path('home/save_booking/', views.save_booking, name='save_booking'), 
     path('shop/', views.shop, name='shop'),
     path('my-orders/', views.my_orders, name='my_orders'),
     path('create_razorpay_order/', views.create_razorpay_order, name='create_razorpay_order'),
