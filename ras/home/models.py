@@ -18,11 +18,18 @@ class Booking(models.Model):
     height = models.DecimalField(max_digits=10, decimal_places=2)
     total_sqft = models.DecimalField(max_digits=12, decimal_places=2)
     appointment_date = models.DateField()
+    design_names = models.TextField(blank=True, null=True)
+    type_of_art_booked = models.CharField(max_length=100)
+    customer_design = models.ImageField(upload_to='customer_designs/', blank=True, null=True)
+    price_of_design = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     # Payment-related fields
-    payment_option = models.CharField(max_length=50)  # free text field
+    payment_option = models.CharField(max_length=50, default='Razorpay')  # free text field
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_paid = models.BooleanField(default=False)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
