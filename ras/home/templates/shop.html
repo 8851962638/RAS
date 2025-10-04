@@ -1,113 +1,109 @@
-{% extends "base1.html" %}
-{% load static %}
-
-{% block title %}Shop - RColourcraft{% endblock %}
-
-{% block content %}
+{% extends "base1.html" %} {% load static %} {% block title %}Shop -
+RColourcraft{% endblock %} {% block content %}
 <style>
-/* --- General Styles --- */
-.shop-container {
+  /* --- General Styles --- */
+  .shop-container {
     padding: 60px 20px;
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     background: linear-gradient(135deg, #f7f9fc, #eef4f9);
-}
+  }
 
-.section-title {
+  .section-title {
     font-size: 36px;
     font-weight: 700;
     color: #333;
     margin-bottom: 20px;
     position: relative;
     display: inline-block;
-}
+  }
 
-.section-title::after {
-    content: '';
+  .section-title::after {
+    content: "";
     display: block;
     width: 60px;
     height: 4px;
     background-color: #007bff;
     margin: 10px auto 0;
     border-radius: 2px;
-}
+  }
 
-/* --- Product Grid & Cards --- */
-.product-grid {
+  /* --- Product Grid & Cards --- */
+  .product-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     padding: 0 5%;
-}
+  }
 
-@media (max-width: 992px) {
+  @media (max-width: 992px) {
     .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
-}
+  }
 
-@media (max-width: 576px) {
+  @media (max-width: 576px) {
     .product-grid {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
     }
-}
+  }
 
-.product-card {
+  .product-card {
     background: #fff;
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+  }
 
-.product-card:hover {
+  .product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-}
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  }
 
-.product-card img {
+  .product-card img {
     width: 100%;
     height: 200px;
     /* This is the key change to prevent images from being cut off */
     object-fit: contain;
     border-radius: 10px;
     margin-bottom: 15px;
-}
+  }
 
-.product-card h3 {
+  .product-card h3 {
     font-size: 20px;
     font-weight: 600;
     margin: 10px 0 5px;
     color: #444;
-}
+  }
 
-.product-card p.description {
+  .product-card p.description {
     font-size: 14px;
     color: #777;
     margin-bottom: 15px;
     text-align: left;
     flex-grow: 1;
-}
+  }
 
-.product-card .price {
+  .product-card .price {
     font-size: 22px;
     font-weight: 700;
     color: #007bff;
     margin-top: auto;
     margin-bottom: 15px;
-}
+  }
 
-.card-actions {
+  .card-actions {
     display: flex;
     justify-content: center;
     gap: 15px;
     width: 100%;
-}
+  }
 
-.btn-primary {
+  .btn-primary {
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -116,12 +112,12 @@
     background: #007bff;
     color: #fff;
     transition: background 0.3s ease;
-}
+  }
 
-.btn-primary:hover {
+  .btn-primary:hover {
     background: #0056b3;
-}
-.btn-secondary {
+  }
+  .btn-secondary {
     padding: 10px 20px;
     border: 1px solid #007bff;
     border-radius: 8px;
@@ -130,14 +126,14 @@
     background: transparent;
     color: #007bff;
     transition: background 0.3s ease;
-}
+  }
 
-.btn-secondary:hover {
+  .btn-secondary:hover {
     background: #e6f2ff;
-}
+  }
 
-/* --- Pop-up Modal --- */
-.book-modal {
+  /* --- Pop-up Modal --- */
+  .book-modal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -145,28 +141,34 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
-}
+  }
 
-.modal-content {
+  .modal-content {
     background-color: #fff;
     padding: 30px;
     border-radius: 15px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
     position: relative;
     animation: fadeIn 0.3s ease-out;
-}
+  }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-.close-btn {
+  .close-btn {
     position: absolute;
     top: 15px;
     right: 20px;
@@ -174,30 +176,30 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-}
+  }
 
-.close-btn:hover {
+  .close-btn:hover {
     color: #333;
-}
+  }
 
-.modal-content h2 {
+  .modal-content h2 {
     margin-top: 0;
     color: #333;
     border-bottom: 2px solid #007bff;
     padding-bottom: 10px;
     margin-bottom: 20px;
     text-align: center;
-}
+  }
 
-.modal-content form label {
+  .modal-content form label {
     display: block;
     margin-bottom: 5px;
     font-weight: 600;
     color: #555;
-}
+  }
 
-.modal-content form input,
-.modal-content form textarea {
+  .modal-content form input,
+  .modal-content form textarea {
     width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 15px;
@@ -205,15 +207,15 @@
     border-radius: 8px;
     font-size: 16px;
     transition: border-color 0.3s ease;
-}
+  }
 
-.modal-content form input:focus,
-.modal-content form textarea:focus {
+  .modal-content form input:focus,
+  .modal-content form textarea:focus {
     outline: none;
     border-color: #007bff;
-}
+  }
 
-.modal-content form button {
+  .modal-content form button {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -224,163 +226,319 @@
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+  }
 
-.modal-content form button:hover {
+  .modal-content form button:hover {
     background-color: #0056b3;
-}
+  }
+
+  /* Floating round popup button */
+  .custom-popup-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #ff5722;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 50px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.3s ease, background 0.3s ease;
+    z-index: 1100;
+  }
+  .custom-popup-btn:hover {
+    background: #e64a19;
+    transform: scale(1.05);
+  }
+
+  .material-options {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
 </style>
 
 <div class="shop-container">
-    <h2 class="section-title">Masterpieces</h2>
+  <h2 class="section-title">Masterpieces</h2>
 
-    <div class="product-grid">
-        <div class="product-card">
-            <img src="{% static 'gallery/ganeshmurtii.png' %}" alt="Lord Ganesha Stone Murti">
-            <h3>Stone Ganesha Murti</h3>
-            <p class="description">A handcrafted Lord Ganesha idol carved from a single piece of natural stone, perfect for your home shrine or as a decorative piece.</p>
-            <p class="price">₹ 4,500</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'gallery/zep800.jpg' %}" alt="Marble Ganesha Murti">
-            <h3>Marble Durga Murti</h3>
-            <p class="description">This large, elegant marble statue of Lord Ganesha is hand-carved with intricate details, bringing a divine and artistic touch to any space.</p>
-            <p class="price">₹ 1,800</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'gallery/ambedkarji.jpg' %}" alt="Dr. B. R. Ambedkar Statue">
-            <h3>Dr. B. R. Ambedkar Statue</h3>
-            <p class="description">A beautiful and detailed sculpture honoring Dr. B. R. Ambedkar. This statue is a powerful symbol of knowledge and justice.</p>
-            <p class="price">₹ 5,999</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <img
+        src="{% static 'gallery/ganeshmurtii.png' %}"
+        alt="Lord Ganesha Stone Murti"
+      />
+      <h3>Stone Ganesha Murti</h3>
+      <p class="description">
+        A handcrafted Lord Ganesha idol carved from a single piece of natural
+        stone, perfect for your home shrine or as a decorative piece.
+      </p>
+      <p class="price">₹ 4,500</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
     </div>
 
-    <h2 class="section-title" style="margin-top: 60px;">Art Supplies</h2>
-
-    <div class="product-grid">
-        <div class="product-card">
-            <img src="{% static 'gallery/king.png' %}" alt="Canvas Board Set">
-            <h3>Canvas Portrait</h3>
-            <p class="description">Capturing the serene and wild essence of nature on canvas.</p>
-            <p class="price">₹ 299</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'gallery/portrait1.png' %}" alt="Brush Kit">
-            <h3>Brushing portrait</h3>
-            <p class="description">Beauty and strength, artfully rendered..</p>
-            <p class="price">₹ 399</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'gallery/child.png' %}" alt="Oil Pastels">
-            <h3>Oil Pastels</h3>
-            <p class="description">Set of 24 rich and creamy oil pastels for bold, expressive artworks. Easy to blend and perfect for artists of all ages.</p>
-            <p class="price">₹ 199</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'images/pottery-wheel.jpg' %}" alt="Mini Pottery Wheel">
-            <h3>Mini Pottery Wheel</h3>
-            <p class="description">A compact and portable pottery wheel, great for aspiring potters and hobbyists. Includes tools and a guide to get you started.</p>
-            <p class="price">₹ 2,500</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-        
-        <div class="product-card">
-            <img src="{% static 'images/stone-carving-set.jpg' %}" alt="Stone Carving Tools">
-            <h3>Stone Carving Set</h3>
-            <p class="description">Professional-grade 8-piece stone carving tool kit, forged from high-quality steel for precision work on soft stones.</p>
-            <p class="price">₹ 1,200</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'images/art-easel.jpg' %}" alt="Wooden Art Easel">
-            <h3>Wooden Art Easel</h3>
-            <p class="description">A sturdy and adjustable wooden art easel, perfect for holding your canvas. Folds flat for easy storage and portability.</p>
-            <p class="price">₹ 1,500</p>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="openBookModal()">Book Now</button>
-            </div>
-        </div>
+    <div class="product-card">
+      <img src="{% static 'gallery/zep800.jpg' %}" alt="Marble Ganesha Murti" />
+      <h3>Marble Durga Murti</h3>
+      <p class="description">
+        This large, elegant marble statue of Lord Ganesha is hand-carved with
+        intricate details, bringing a divine and artistic touch to any space.
+      </p>
+      <p class="price">₹ 1,800</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
     </div>
+
+    <div class="product-card">
+      <img
+        src="{% static 'gallery/ambedkarji.jpg' %}"
+        alt="Dr. B. R. Ambedkar Statue"
+      />
+      <h3>Dr. B. R. Ambedkar Statue</h3>
+      <p class="description">
+        A beautiful and detailed sculpture honoring Dr. B. R. Ambedkar. This
+        statue is a powerful symbol of knowledge and justice.
+      </p>
+      <p class="price">₹ 5,999</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title" style="margin-top: 60px">Art Supplies</h2>
+
+  <div class="product-grid">
+    <div class="product-card">
+      <img src="{% static 'gallery/king.png' %}" alt="Canvas Board Set" />
+      <h3>Canvas Portrait</h3>
+      <p class="description">
+        Capturing the serene and wild essence of nature on canvas.
+      </p>
+      <p class="price">₹ 299</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'gallery/portrait1.png' %}" alt="Brush Kit" />
+      <h3>Brushing portrait</h3>
+      <p class="description">Beauty and strength, artfully rendered..</p>
+      <p class="price">₹ 399</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'gallery/child.png' %}" alt="Oil Pastels" />
+      <h3>Oil Pastels</h3>
+      <p class="description">
+        Set of 24 rich and creamy oil pastels for bold, expressive artworks.
+        Easy to blend and perfect for artists of all ages.
+      </p>
+      <p class="price">₹ 199</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img
+        src="{% static 'images/pottery-wheel.jpg' %}"
+        alt="Mini Pottery Wheel"
+      />
+      <h3>Mini Pottery Wheel</h3>
+      <p class="description">
+        A compact and portable pottery wheel, great for aspiring potters and
+        hobbyists. Includes tools and a guide to get you started.
+      </p>
+      <p class="price">₹ 2,500</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img
+        src="{% static 'images/stone-carving-set.jpg' %}"
+        alt="Stone Carving Tools"
+      />
+      <h3>Stone Carving Set</h3>
+      <p class="description">
+        Professional-grade 8-piece stone carving tool kit, forged from
+        high-quality steel for precision work on soft stones.
+      </p>
+      <p class="price">₹ 1,200</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/art-easel.jpg' %}" alt="Wooden Art Easel" />
+      <h3>Wooden Art Easel</h3>
+      <p class="description">
+        A sturdy and adjustable wooden art easel, perfect for holding your
+        canvas. Folds flat for easy storage and portability.
+      </p>
+      <p class="price">₹ 1,500</p>
+      <div class="card-actions">
+        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="book-modal" class="book-modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeBookModal()">&times;</span>
-        <h2>Book Your Product</h2>
-        <form id="booking-form">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required>
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeBookModal()">&times;</span>
+    <h2>Book Your Product</h2>
+    <form id="booking-form">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" required />
 
-            <label for="email">Your Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="phone">Your Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
+      <label for="email">Your Email:</label>
+      <input type="email" id="email" name="email" required />
 
-            <label for="address">Your Full Address:</label>
-            <textarea id="address" name="address" rows="3" required></textarea>
+      <label for="phone">Your Phone Number:</label>
+      <input type="tel" id="phone" name="phone" required />
 
-            <label for="details">Booking Details (e.g., desired size, style, etc.):</label>
-            <textarea id="details" name="details" rows="3" required></textarea>
+      <label for="address">Your Full Address:</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
 
-            <button type="submit">Submit Booking Request</button>
-        </form>
-    </div>
+      <label for="details"
+        >Booking Details (e.g., desired size, style, etc.):</label
+      >
+      <textarea id="details" name="details" rows="3" required></textarea>
+
+      <button type="submit">Submit Booking Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- Floating Button -->
+<div class="custom-popup-btn" onclick="openCustomModal()">
+  Get Your Customized Product
+</div>
+
+<!-- Custom Product Modal -->
+<div id="custom-modal" class="book-modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeCustomModal()">&times;</span>
+    <h2>Customized Product Request</h2>
+    <form id="custom-form" method="POST">
+      {% csrf_token %}
+
+      <label for="product_name">Product Name:</label>
+      <input type="text" id="product_name" name="product_name" required />
+
+      <label>Type of Material:</label>
+      <div class="material-options">
+        <label
+          ><input type="radio" name="material" value="Clay" required />
+          Clay</label
+        >
+        <label
+          ><input type="radio" name="material" value="Metal" /> Metal</label
+        >
+        <label
+          ><input type="radio" name="material" value="Plaster" /> Plaster</label
+        >
+        <label
+          ><input type="radio" name="material" value="Other" /> Other</label
+        >
+      </div>
+      <input
+        type="text"
+        id="other_material"
+        name="other_material"
+        placeholder="Please specify..."
+        style="display: none; margin-top: 10px"
+      />
+
+      <label for="size">Length / Size / Measurements:</label>
+      <input type="text" id="size" name="size" required />
+
+      <label for="message">Message / Extra Details:</label>
+      <textarea id="message" name="message" rows="3" required></textarea>
+
+      <button type="submit">Submit Request</button>
+    </form>
+  </div>
 </div>
 
 <script>
-    function openBookModal() {
-        document.getElementById('book-modal').style.display = 'flex';
-    }
+  // Open/Close Custom Modal
+  function openCustomModal() {
+    document.getElementById("custom-modal").style.display = "flex";
+  }
+  function closeCustomModal() {
+    document.getElementById("custom-modal").style.display = "none";
+  }
 
-    function closeBookModal() {
-        document.getElementById('book-modal').style.display = 'none';
-    }
+  // Show "Other material" input dynamically
+  document.querySelectorAll('input[name="material"]').forEach((radio) => {
+    radio.addEventListener("change", function () {
+      const otherInput = document.getElementById("other_material");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        otherInput.required = true;
+      } else {
+        otherInput.style.display = "none";
+        otherInput.required = false;
+      }
+    });
+  });
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('book-modal');
-        if (event.target === modal) {
-            closeBookModal();
+  // Get CSRF token from cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
+      }
     }
+    return cookieValue;
+  }
+  const csrftoken = getCookie("csrftoken");
 
-    document.getElementById('booking-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        alert('Your booking for the product is successful. Our team will contact you soon.');
-        
-        setTimeout(() => {
+  // ✅ Handle custom form submit (only one listener)
+  document
+    .getElementById("custom-form")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      fetch("{% url 'save_custom_product' %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": csrftoken },
+        body: new FormData(this),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(
+              "✅ Your request has been saved! Our team will contact you within 24 hours."
+            );
             this.reset();
-            closeBookModal();
-        }, 500);
+            closeCustomModal();
+          } else {
+            alert("❌ Error: " + (data.error || "Something went wrong"));
+          }
+        })
+        .catch((error) => {
+          alert("⚠️ Something went wrong, please try again!");
+        });
     });
 </script>
+
 {% endblock %}

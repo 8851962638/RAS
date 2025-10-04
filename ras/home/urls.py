@@ -20,5 +20,7 @@ urlpatterns = [
     path('my-orders/', views.my_orders, name='my_orders'),
     path('create_razorpay_order/', views.create_razorpay_order, name='create_razorpay_order'),
     path('verify_razorpay_payment/', views.verify_razorpay_payment, name='verify_razorpay_payment'),
+    path("save-custom-product/", views.save_custom_product, name="save_custom_product"),
+
 
 ]

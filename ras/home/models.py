@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+import uuid
+
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)   # Primary key
@@ -59,3 +61,19 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.customer_name} - Review"
 
+
+# models.py
+from django.db import models
+from django.conf import settings
+
+class CustomProduct(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    size = models.CharField(max_length=100, null=True, blank=True)
+    material = models.CharField(max_length=100, null=True, blank=True)
+    other_material = models.CharField(max_length=255, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Custom Product ({self.user})"

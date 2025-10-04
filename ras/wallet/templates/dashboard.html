@@ -1,0 +1,126 @@
+{% extends "base1.html" %}
+{% load static %}
+{% block title %}My Wallet - RColourcraft{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: #f4f6f9;
+  }
+  .wallet-container {
+    width: 70%;
+    margin: 40px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  }
+  .wallet-container h1 {
+    text-align: center;
+    color: #333;
+  }
+  .balance {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #4CAF50;
+  }
+  form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  input[type="number"] {
+    padding: 10px;
+    width: 150px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+  button {
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover {
+    background: #45a049;
+  }
+  .btn-danger {
+    background: #f44336 !important;
+  }
+  .btn-danger:hover {
+    background: #e53935 !important;
+  }
+  .error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  th {
+    background: #4CAF50;
+    color: #fff;
+  }
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+</style>
+
+<div class="wallet-container">
+  <h1>💰 My Wallet</h1>
+  <div class="balance">Current Balance: ₹{{ wallet.balance }}</div>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <!-- Add Money -->
+  <form method="POST" action="{% url 'add_money' %}">
+    {% csrf_token %}
+    <input type="number" name="amount" placeholder="Enter Amount" required min="1">
+    <button type="submit">Add Money</button>
+  </form>
+
+  <!-- Spend Money -->
+  <form method="POST" action="{% url 'spend_money' %}">
+    {% csrf_token %}
+    <input type="number" name="amount" placeholder="Spend Amount" required min="1">
+    <button type="submit" class="btn-danger">Spend Money</button>
+  </form>
+
+  <!-- Transaction History -->
+  <h2>📜 Transaction History</h2>
+  <table>
+    <tr>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+    {% for txn in transactions %}
+    <tr>
+      <td>{{ txn.transaction_type }}</td>
+      <td>₹{{ txn.amount }}</td>
+      <td>{{ txn.created_at|date:"M d, Y H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No transactions yet.</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

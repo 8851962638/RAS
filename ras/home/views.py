@@ -101,7 +101,8 @@ def home(request):
 from django.shortcuts import render
 
 def reviews(request):
-    return render(request, 'reviews.html')
+    all_reviews = Review.objects.all().order_by('-review_date')
+    return render(request, 'reviews.html', {'reviews': all_reviews})
 
 
 
@@ -165,7 +166,7 @@ def save_review(request):
         if not request.user.is_authenticated:
             return JsonResponse({"success": False, "error": "User not authenticated"}, status=401)
 
-        # ✅ Ensure logged-in user is a customer
+        # Ensure logged-in user is a customer
         try:
             customer = Customer.objects.get(user=request.user)
         except Customer.DoesNotExist:
@@ -180,21 +181,27 @@ def save_review(request):
         if not (name and email and rating):
             return JsonResponse({"success": False, "error": "Missing required fields"}, status=400)
 
-        # ✅ Use logged-in customer id
+        # ✅ Convert customer.id to string since customer_id is CharField
         review = Review.objects.create(
-            customer_id=customer.id,  
+            customer_id=str(customer.id),  # Convert to string
             customer_name=name,
             customer_email=email,
-            customer_review=review_text,
-            rating=rating,
+            customer_review=review_text or "",
+            rating=int(rating),  # Ensure integer
             review_image=image
         )
+
+        # Force save and verify
+        review.save()
+        
+        # Debug print
+        print(f"✅ Review saved successfully: {review.id} - {review.customer_name}")
 
         return JsonResponse({
             "success": True,
             "message": "Review submitted successfully!",
             "data": {
-                "customer_id": customer.id,  
+                "customer_id": review.customer_id,
                 "name": review.customer_name,
                 "email": review.customer_email,
                 "customer_review": review.customer_review,
@@ -204,9 +211,14 @@ def save_review(request):
             }
         })
 
+    except ValueError as e:
+        print(f"❌ ValueError: {e}")
+        return JsonResponse({"success": False, "error": f"Invalid rating value: {str(e)}"}, status=400)
     except Exception as e:
+        print(f"❌ Exception: {e}")
+        import traceback
+        traceback.print_exc()
         return JsonResponse({"success": False, "error": str(e)}, status=500)
-
 
 from .models import Booking
 
@@ -300,6 +312,9 @@ def edit_profile_view(request):
             employee.ifsc_code = request.POST.get("ifsc_code")
             employee.role = "employee"
 
+            employee.status = request.POST.get("ready_to_take_orders") == "on"
+
+
             # File fields
             if "passport_photo" in request.FILES:
                 employee.passport_photo = request.FILES["passport_photo"]
@@ -338,6 +353,8 @@ def edit_profile_view(request):
             "bank_account_holder_name": employee.bank_account_holder_name,
             "account_no": employee.account_no,
             "ifsc_code": employee.ifsc_code,
+            "ready_to_take_orders": employee.status,
+
         }
         return render(request, "edit_profile.html", context)
 
@@ -662,3 +679,26 @@ def save_booking(request):
         import traceback
         print(traceback.format_exc())
         return JsonResponse({'success': False, 'message': str(e)})
+    
+
+
+from django.utils.decorators import method_decorator
+from .models import CustomProduct
+
+@csrf_exempt
+@login_required
+def save_custom_product(request):
+    if request.method == "POST":
+        try:
+            CustomProduct.objects.create(
+                user=request.user,
+                name=request.POST.get("product_name"),
+                size=request.POST.get("size"),
+                material=request.POST.get("material"),
+                other_material=request.POST.get("other_material"),
+                message=request.POST.get("message"),
+            )
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Invalid request"})
