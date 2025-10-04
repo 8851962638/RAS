@@ -474,4 +474,70 @@ body {
   }
 }
 </style>
+<script>
+// Get elements
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const closeBtn = document.querySelector(".close");
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+const galleryImgs = document.querySelectorAll(".gallery-img");
+const overlays = document.querySelectorAll(".image-overlay");
+
+let currentIndex = 0;
+
+// Open lightbox
+function openLightbox(index) {
+  currentIndex = index;
+  lightbox.style.display = "block";
+  lightboxImg.src = galleryImgs[currentIndex].src;
+}
+
+// Close lightbox
+function closeLightbox() {
+  lightbox.style.display = "none";
+}
+
+// Navigate images
+function showPrev() {
+  currentIndex = (currentIndex - 1 + galleryImgs.length) % galleryImgs.length;
+  lightboxImg.src = galleryImgs[currentIndex].src;
+}
+
+function showNext() {
+  currentIndex = (currentIndex + 1) % galleryImgs.length;
+  lightboxImg.src = galleryImgs[currentIndex].src;
+}
+
+// Event listeners (image + overlay both clickable)
+galleryImgs.forEach((img, index) => {
+  img.addEventListener("click", () => openLightbox(index));
+});
+
+overlays.forEach((overlay, index) => {
+  overlay.addEventListener("click", () => openLightbox(index));
+});
+
+closeBtn.addEventListener("click", closeLightbox);
+prevBtn.addEventListener("click", showPrev);
+nextBtn.addEventListener("click", showNext);
+
+// Close when clicking outside image
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) {
+    closeLightbox();
+  }
+});
+
+// Keyboard navigation
+document.addEventListener("keydown", (e) => {
+  if (lightbox.style.display === "block") {
+    if (e.key === "ArrowLeft") showPrev();
+    if (e.key === "ArrowRight") showNext();
+    if (e.key === "Escape") closeLightbox();
+  }
+});
+</script>
+
+
 {% endblock %}

@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse   
 def home_view(request):
     return render(request, 'home.html')
 
@@ -21,35 +23,42 @@ from employee.models import ServiceImage  # Make sure to import your model
 
 def explore_service(request, service_type):
     """
-    service_type: '3d-art', 'mural', 'normal-paint'
+    service_type: could be any of the defined service keys.
     """
-    if service_type == '3d-art':
-        heading = "Our 3D Artworks"
-        art_type_filter = "3D"  # Match what you save in form
-        
-    elif service_type == 'mural':
-        heading = "Our Mural Artworks"
-        art_type_filter = "mural"  # Match what you save in form
-        
-    else:  # normal painting
-        heading = "Advertisement Paintings"
-        art_type_filter = "normal"  # Match what you save in form
-
-    # Get database images for this service type
-    db_images = ServiceImage.objects.filter(type_of_art__icontains=art_type_filter).order_by('-id')
-    
-    # Debug - let's see what we have
-    print(f"Service type: {service_type}")
-    print(f"Art type filter: {art_type_filter}")
-    print(f"DB images found: {db_images.count()}")
-    for img in db_images:
-        print(f"- {img.image_name} ({img.type_of_art})")
-    
-    context = {
-        'db_images': db_images,
-        'heading': heading,
+    service_dict = {
+        '3d-art': '3D Art',
+        'mural': 'Mural Art',
+        'normal-paint': 'Normal Painting',
+        'advertisement-art': 'Advertisement Art',
+        'aesthetic-art': 'Aesthetic Art',
+        'madhubani-art': 'Madhubani Art',
+        'cartoon-art': 'Cartoon Art',
+        'nature-art': 'Nature Art',
+        'metro-advertisement': 'Metro Advertisement',
+        'scrap-yard-art': 'Scrap Yard Art',
+        'spray-art': 'Spray Art',
+        'structure-art': 'Structure Art'
     }
-    return render(request, 'explore_service.html', context)
+
+    service_name = service_dict.get(service_type, 'Service')
+
+    # Filter images dynamically based on service_type
+    if service_type in ['3d-art', 'mural', 'normal-paint']:
+        if service_type == "3d-art":
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="3D")
+        elif service_type == "mural":
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="mural")
+        else:
+            db_images = ServiceImage.objects.filter(type_of_art__icontains="normal")
+    else:
+        # For other service types, filter by the service name
+        db_images = ServiceImage.objects.filter(type_of_art__icontains=service_name)
+
+    return render(request, "explore_service.html", {
+        "service_name": service_name,
+        "db_images": db_images
+    })
+
 
 def book_service(request, service_type):
     """
@@ -223,9 +232,22 @@ def save_review(request):
 from .models import Booking
 
 def bookings(request):
-    all_bookings = Booking.objects.all().order_by('-created_at')  
-    return render(request, 'bookings.html', {'bookings': all_bookings})
+    status_filter = request.GET.get('status')  # ?status=pending, ?status=all
+    if status_filter and status_filter.lower() != "all":
+        bookings = Booking.objects.filter(status=status_filter)
+    else:
+        bookings = Booking.objects.all()
 
+    return render(request, 'bookings.html', {'bookings': bookings})
+
+
+def update_booking_status(request, booking_id):
+    if request.method == "POST":
+        new_status = request.POST.get("status")
+        booking = get_object_or_404(Booking, id=booking_id)
+        booking.status = new_status
+        booking.save()
+    return redirect(reverse("bookings"))
 
 from django.http import JsonResponse
 from .models import Booking
