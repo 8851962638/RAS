@@ -4,6 +4,12 @@ import uuid
 
 
 class Booking(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_process', 'In Process'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
     id = models.AutoField(primary_key=True)   # Primary key
     booking_id = models.CharField(max_length=50, unique=True)
     customer_name = models.CharField(max_length=100)
@@ -32,7 +38,8 @@ class Booking(models.Model):
     is_paid = models.BooleanField(default=False)
     razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
-
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

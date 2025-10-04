@@ -292,7 +292,7 @@ footer {
   text-align: center;
   padding: 20px;
   background: #47785e;
-  margin-top: 40px;
+  margin-top: auto;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
 }
 .service-card p {
@@ -333,9 +333,12 @@ footer {
     width: 100%;
     transition: transform 0.3s ease;
     text-align: center; /* center content by default */
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center; /* Center children horizontally */
+    
+    /* ADDED: Margin to create space around each card */
+    margin: 3rem; 
 }
 
 .review-card:hover {
@@ -488,4 +491,162 @@ footer {
 
 .review-card .review-image:hover {
     transform: scale(1.05);
+}
+
+/* --- 1. Background and Base Container Style --- */
+/* --- 1. Refined Background and Base Container Style --- */
+.trending-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    overflow: hidden;
+    /* CHANGE: Muted, elegant gradient for a sophisticated look */
+    background: linear-gradient(135deg, #ffffff, #f8f8f8); 
+    border-radius: 25px; 
+    max-width: 1550px; 
+    margin: 3rem auto;
+    /* Keeping a strong shadow for depth */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); 
+    
+    position: relative;
+    z-index: 1; 
+}
+.trending-heading {
+    /* Font: High-contrast serif (e.g., Didot, Bodoni) for sophistication */
+    font-family: 'Didot', 'Bodoni MT', 'Times New Roman', serif;
+    font-size: 3.2rem;
+    font-weight: 400; /* Lighter weight is more elegant */
+    
+    margin-bottom: 3rem; /* Extra space needed for the accent line below */
+    color: #1a1a1a; /* Very dark, near-black color for high contrast */
+    text-transform: capitalize; 
+    letter-spacing: 3px; /* Wider spacing emphasizes elegance */
+    
+    /* Ensure no residual styles from Option 1 or original CSS remain */
+    text-shadow: none; 
+    background: none;
+    
+    /* Positioning context for the accent line */
+    display: inline-block; 
+    position: relative;
+    text-align: center;
+}
+
+/* The elegant divider line (Accent line) */
+.trending-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Position 10px below the text */
+    left: 50%; /* Start line from the center */
+    transform: translateX(-50%); /* Center the line */
+    width: 60%; /* Line width (adjustable) */
+    max-width: 300px; /* Optional maximum width for large screens */
+    height: 3px; /* Line thickness */
+    background-color: #ff0073; /* Using a vibrant pink/red accent color */
+    border-radius: 2px;
+}
+
+/* Mobile Adjustment */
+@media (max-width: 640px) {
+    .trending-heading {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* ------------------------------------------------------------- */
+/* --- 3. Shimmer Effect Animation (The animation itself remains the same) --- */
+
+
+/* Slider */
+.trending-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  gap: 3rem; /* More space between cards */
+  width: calc(350px * 18);
+  animation: scroll-left 40s linear infinite;
+}
+
+/* Card */
+.trending-card {
+  position: relative;
+  flex-shrink: 0;
+  width: 350px;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.trending-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    /* Reverting hover shadow to match the blue/purple theme */
+    box-shadow: 0 15px 40px rgba(123, 47, 247, 0.5); 
+}
+
+.trending-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease;
+}
+
+.trending-card:hover img {
+  opacity: 0.8;
+}
+
+/* Overlay text */
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.2rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  color: #fff;
+  text-align: left;
+}
+
+.card-overlay h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Also update the price text color for better contrast against the new background */
+.card-overlay p {
+    margin: 0.3rem 0 0;
+    font-size: 1rem;
+    color: #ffd057; /* Keeping a bright accent color that contrasts with the blue */
+    font-weight: 600;
+}
+
+/* Continuous flow animation */
+@keyframes scroll-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+    0% { 
+        color: #4a00e0; /* Start with deep purple */
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 5px #fff;
+    }
+    50% { 
+        /* Mid-point "sparkle" */
+        color: #8c52ff; /* Highlighted purple */
+        text-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 30px #ffed9a;
+    }
+    100% {
+        color: #4a00e0; /* Return to deep purple */
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 5px #fff;
+    }
 }
