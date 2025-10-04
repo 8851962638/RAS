@@ -188,6 +188,49 @@
             height: 150px;
         }
     }
+
+    .toggle-container input[type="checkbox"] {
+    display: none; /* hides the default checkbox */
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+
+.toggle-switch::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: 0.3s;
+}
+
+/* when checkbox is checked, style the toggle */
+input[type="checkbox"]:checked + .toggle-label .toggle-switch {
+    background: #28a745;
+}
+
+input[type="checkbox"]:checked + .toggle-label .toggle-switch::after {
+    left: 21px;
+}
+
 </style>
 
 <main class="edit-profile-page">
@@ -285,6 +328,14 @@
         <div class="upload-file-container">
             <input type="file" id="passport_photo" name="passport_photo">
             <label for="passport_photo" class="upload-btn">Upload New</label>
+             <!-- Ready to Take Orders Toggle -->
+    <div class="toggle-container">
+        <input type="checkbox" id="ready_to_take_orders" name="ready_to_take_orders" {% if ready_to_take_orders %}checked{% endif %}>
+        <label for="ready_to_take_orders" class="toggle-label">
+            <span class="toggle-switch"></span>
+            Ready to Take Orders
+        </label>
+    </div>
         </div>
     </div>
     

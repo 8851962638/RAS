@@ -27,5 +27,7 @@ urlpatterns = [
     # path('panel/', include('myadmin.urls')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('api/', include('api.urls', namespace='api')),
+    path("wallet/", include("wallet.urls")),
+
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
