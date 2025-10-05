@@ -173,7 +173,7 @@ nav ul li a.active::after {
   border-radius: 20px;
   margin: 20px;
   padding: 50px 30px;
-  min-height: 70vh;
+  min-height: 40vh;
 }
 .hero-overlay {
   display: flex;
@@ -212,9 +212,12 @@ nav ul li a.active::after {
   transform: scale(1.05);
 }
 .hero-img img {
-  max-width: 450px;
-  border-radius: 20px;
-  animation: floatImage 4s ease-in-out infinite;
+    max-width: 450px;
+    border-radius: 20px;
+    animation: floatImage 4s ease-in-out infinite;
+    
+    /* ADDED: Pushes the image down slightly */
+    margin-top: 15px; 
 }
 @keyframes floatImage {
   0%, 100% { transform: translateY(0px); }
@@ -649,4 +652,148 @@ footer {
         color: #4a00e0; /* Return to deep purple */
         text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 5px #fff;
     }
+}
+/* --- New Quick Explore Section Styles --- */
+.quick-explore-section {
+    /* Increased bottom padding slightly to give space below the cards */
+    padding: 20px 20px 60px; 
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Container for the items - uses Flexbox to align them horizontally */
+.explore-grid-container {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: flex-start;
+    
+    /* Increased gap slightly more to 50px for better visual separation */
+    gap: 30px; 
+    
+    overflow-x: auto; 
+    padding-bottom: 10px; 
+    
+    /* Hide scrollbar on Chrome/Safari/Opera */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}
+
+.explore-grid-container::-webkit-scrollbar {
+    display: none; 
+}
+
+/* Style for each clickable item */
+.explore-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: #333; 
+    
+    font-size: 1rem;
+    font-weight: 700; 
+    
+    transition: transform 0.3s ease-in-out, color 0.3s;
+    flex-shrink: 0; 
+    
+    /* FIX 2: Increased width significantly to prevent text truncation */
+    width: 130px; 
+    
+    /* FIX 1: Added top margin to ensure space above the item, preventing cutoff on hover */
+    margin-top: 10px; 
+}
+
+/* This is the text under the circle */
+.explore-item p {
+    margin-top: 5px; 
+    font-weight: 700; 
+    
+    white-space: normal; 
+    word-break: break-word; 
+    
+    line-height: 1.2;
+    /* Adjusted height for 2 full lines of text plus a small buffer */
+    min-height: 2.5em; 
+    height: auto; /* Allow height to adjust */
+    
+    /* Removed redundant line-clamp properties since word-wrap and min-height should handle it */
+    display: block; 
+    overflow: visible;
+}
+
+
+.explore-item:hover {
+    color: #4a00e0; 
+    transform: translateY(-5px) scale(1.05); 
+}
+
+/* The circle/container for the image */
+.explore-circle {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%; 
+    background-color: #f0e6ff; 
+    margin-bottom: 8px;
+    border: 3px solid #ffffff; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+    transition: box-shadow 0.3s, border-color 0.3s;
+    overflow: hidden;
+}
+
+.explore-item:hover .explore-circle {
+    box-shadow: 0 8px 15px rgba(74, 0, 224, 0.4); 
+    border-color: #4a00e0;
+}
+
+/* The image inside the circle */
+.explore-circle img {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 50%; 
+}
+
+/* Responsive adjustment for mobile screens */
+@media (max-width: 768px) {
+    .explore-grid-container {
+        justify-content: flex-start; 
+    }
+}
+
+
+
+/* --- New Logo Text Styling --- */
+
+/* Basic container adjustments (if needed, based on your original .logo styles) */
+.logo {
+    display: flex;
+    align-items: center; /* Vertically center the text */
+    height: 100%; /* Assume parent navbar has a height */
+}
+.site-logo-text {
+    /* New Font Style - Bold, rounded, and clean */
+    font-family: 'Inter', 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif;
+    
+    /* Reduced Size */
+    font-size: 1.6rem; 
+    font-weight: 900; /* Extra bold for impact */
+    text-transform: capitalize; /* Capitalize only the first letter, cleaner look */
+    
+    /* Clean Spacing */
+    letter-spacing: -1px; /* Tightly spaced but readable */
+
+    /* CHANGED: Solid Deep Blue replaced with a Shiny Gold Gradient */
+    background-image: linear-gradient(180deg, #FFD700 0%, #FFA500 50%, #FFD700 100%); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Subtle Shadow for Depth */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Increased shadow for a 3D effect */
+    
+    /* Removed unnecessary properties */
+    -webkit-text-stroke: initial;
+
+    margin: 0; 
+    padding: 0;
 }

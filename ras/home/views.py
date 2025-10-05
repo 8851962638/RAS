@@ -20,78 +20,104 @@ def book_service(request, service_name):
 
 from django.shortcuts import render
 from employee.models import ServiceImage  # Make sure to import your model
-
+# ... (imports)
 def explore_service(request, service_type):
     """
-    service_type: could be any of the defined service keys.
+    service_type: could be any of the defined service keys (slugs).
     """
+    # Map the URL slug (service_type) to the exact service name used in the database
     service_dict = {
-        '3d-art': '3D Art',
-        'mural': 'Mural Art',
-        'normal-paint': 'Normal Painting',
-        'advertisement-art': 'Advertisement Art',
-        'aesthetic-art': 'Aesthetic Art',
-        'madhubani-art': 'Madhubani Art',
-        'cartoon-art': 'Cartoon Art',
-        'nature-art': 'Nature Art',
-        'metro-advertisement': 'Metro Advertisement',
-        'scrap-yard-art': 'Scrap Yard Art',
-        'spray-art': 'Spray Art',
-        'structure-art': 'Structure Art'
+        '3d-wall-art': '3D Wall Art',       # <-- Used in HTML
+        '3d-floor-art': '3D Floor Art',     # <-- Used in HTML
+        'mural-art': 'Mural Art',
+        'mural': 'Mural Art',               # <-- Used in HTML
+        'metro-advertisement': 'Metro Advertisement', # <-- Used in HTML
+        'outdoor-advertisement': 'Outdoor Advertisement', # <-- Used in HTML
+        'school-painting': 'School Painting',     # <-- Used in HTML
+        'selfie-painting': 'Selfie Painting',     # <-- Used in HTML
+        'madhubani-painting': 'Madhubani Painting', # <-- Used in HTML
+        'texture-painting': 'Texture Painting',   # <-- Used in HTML
+        'stone-murti': 'Stone Murti',             # <-- Used in HTML
+        'statue': 'Statue',                       # <-- Used in HTML
+        'scrap-animal-art': 'Scrap Animal Art',   # <-- Used in HTML
+        'nature-fountain': 'Nature & Water Fountain', # <-- Used in HTML (or 'fountain-art')
+        'fountain-art': 'Nature & Water Fountain', 
+        'cartoon-painting': 'Cartoon Painting',   # <-- Used in HTML
+        'home-painting': 'Home Painting',         # <-- Used in HTML
     }
 
+    # Get the long service name
     service_name = service_dict.get(service_type, 'Service')
 
-    # Filter images dynamically based on service_type
-    if service_type in ['3d-art', 'mural', 'normal-paint']:
-        if service_type == "3d-art":
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="3D")
-        elif service_type == "mural":
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="mural")
-        else:
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="normal")
-    else:
-        # For other service types, filter by the service name
-        db_images = ServiceImage.objects.filter(type_of_art__icontains=service_name)
+    # Determine a robust query term for database filtering
+    query_term = service_name
+    
+    if service_name == 'Mural Art':
+        query_term = 'Mural' 
+    elif service_name == 'Nature & Water Fountain':
+        query_term = 'Fountain'
+
+    # Filter images based on the specific query term using icontains
+    db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
 
     return render(request, "explore_service.html", {
         "service_name": service_name,
-        "db_images": db_images
+        "db_images": db_images,
+        'service_slug': service_type, 
     })
 
 
+# ... (imports)
 def book_service(request, service_type):
     """
     service_type: could be any of the defined service keys.
     """
+    # Use the comprehensive, consistent slug map
     service_dict = {
-        '3d-art': '3D Art',
+        '3d-wall-art': '3D Wall Art',
+        '3d-floor-art': '3D Floor Art',
+        'mural-art': 'Mural Art',
         'mural': 'Mural Art',
-        'normal-paint': 'Normal Painting',
-        'advertisement-art': 'Advertisement Art',
-        'aesthetic-art': 'Aesthetic Art',
-        'madhubani-art': 'Madhubani Art',
-        'cartoon-art': 'Cartoon Art',
-        'nature-art': 'Nature Art',
         'metro-advertisement': 'Metro Advertisement',
-        'scrap-yard-art': 'Scrap Yard Art',
-        'spray-art': 'Spray Art',
-        'structure-art': 'Structure Art'
+        'outdoor-advertisement': 'Outdoor Advertisement',
+        'school-painting': 'School Painting',
+        'selfie-painting': 'Selfie Painting',
+        'madhubani-painting': 'Madhubani Painting',
+        'texture-painting': 'Texture Painting',
+        'stone-murti': 'Stone Murti',
+        'statue': 'Statue',
+        'scrap-animal-art': 'Scrap Animal Art',
+        'nature-fountain': 'Nature & Water Fountain',
+        'fountain-art': 'Nature & Water Fountain',
+        'cartoon-painting': 'Cartoon Painting',
+        'home-painting': 'Home Painting',
+        
+        # Mapping for any previous, short slugs (optional, but good for backward compatibility)
+        '3d-art': '3D Wall Art',
+        'advertisement-art': 'Metro Advertisement', # Guessing based on common short form
+        'aesthetic-art': 'Outdoor Advertisement',   # Guessing based on common short form
+        'madhubani-art': 'Madhubani Painting',      # Guessing based on common short form
+        'cartoon-art': 'Cartoon Painting',          # Guessing based on common short form
+        'nature-art': 'Nature & Water Fountain',    # Guessing based on common short form
+        'scrap-yard-art': 'Scrap Animal Art',       # Guessing based on common short form
+        'spray-art': 'Statue',                      # Guessing based on context
+        'structure-art': 'Scrap Animal Art',        # Guessing based on context
     }
     
     service_name = service_dict.get(service_type, 'Service')
     
-    # Filter images dynamically based on service_type
-    if service_type in ['3d-art', 'mural', 'normal-paint']:
-        if service_type == "3d-art":
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="3D")
-        elif service_type == "mural":
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="mural")
-        else:
-            db_images = ServiceImage.objects.filter(type_of_art__icontains="normal")
-    else:
-        # For other service types, filter by the service name
-        db_images = ServiceImage.objects.filter(type_of_art__icontains=service_name)
+    # Use robust filtering logic similar to explore_service
+    query_term = service_name
+    
+    if service_name == 'Mural Art':
+        query_term = 'Mural'
+    elif service_name == 'Nature & Water Fountain':
+        query_term = 'Fountain'
+    
+    # Filter images based on the specific query term using icontains
+    # This replaces the entire 'if/elif/else' block for filtering
+    db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
+
 
     if request.method == 'POST':
         # Handle booking form submission if needed

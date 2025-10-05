@@ -26,10 +26,98 @@
       <!-- <button>Explore Services</button> -->
     </div>
     <div class="hero-img">
-      <img src="{% static 'gallery/frog.png' %}" alt="Hero Image">
+      <img src="{% static 'gallery/logohome.png' %}" alt="Hero Image">
     </div>
   </div>
 </div>
+
+<section class="quick-explore-section">
+    <div class="explore-grid-container">
+        
+        <!-- 1. 3D Wall Art (Corrected slug) -->
+        <a href="{% url 'explore_service' '3d-wall-art' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/3d2.jpg' %}" alt="3D Wall Art">
+            </div>
+            <p>3D Wall Art</p>
+        </a>
+
+        
+        <!-- 2. 3D Floor Art (Corrected slug) -->
+        <a href="{% url 'explore_service' '3d-floor-art' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/3d17.jpg' %}" alt="3D Floor Art">
+            </div>
+            <p>3D Floor Art</p>
+        </a>
+
+        <!-- 3. Outdoor Advertisement (Corrected slug) -->
+        <a href="{% url 'explore_service' 'outdoor-advertisement' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/ad.png' %}" alt="Outdoor Advertisement">
+            </div>
+            <p>Outdoor Advertisement</p>
+        </a>
+
+        <!-- 4. Metro Advertisement (Corrected slug) -->
+        <a href="{% url 'explore_service' 'metro-advertisement' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/3d5.jpg' %}" alt="Metro Advertisement">
+            </div>
+            <p>Metro Advertisement</p>
+        </a>
+
+        <!-- 5. School Painting (Corrected slug) -->
+        <a href="{% url 'explore_service' 'school-painting' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/kids.png' %}" alt="School Painting">
+            </div>
+            <p>School Painting</p>
+        </a>
+
+        <!-- 6. Stone Murti (Corrected slug) -->
+        <a href="{% url 'explore_service' 'stone-murti' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/ganeshmurti.jpg' %}" alt="Stone Murti">
+            </div>
+            <p>Stone Murti</p>
+        </a>
+
+        <!-- 7. Statue (Corrected slug) -->
+        <a href="{% url 'explore_service' 'statue' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/ambedkarji.jpg' %}" alt="Statue">
+            </div>
+            <p>Statue</p>
+        </a>
+
+        <!-- 8. Scrap Animal Art (Corrected slug) -->
+        <a href="{% url 'explore_service' 'scrap-animal-art' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/king.png' %}" alt="Scrap Animal Art">
+            </div>
+            <p>Scrap Animal Art</p>
+        </a>
+
+        <!-- 9. Nature & Water Fountain / Fountain Art (Slug: fountain-art) -->
+        <a href="{% url 'explore_service' 'fountain-art' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/fountain.png' %}" alt="Nature and Water Fountain">
+            </div>
+            <p>Fountain Art</p>
+        </a>
+
+        <!-- 10. Home Painting (Corrected slug from 'fountain-art' to 'home-painting') -->
+        <a href="{% url 'explore_service' 'home-painting' %}" class="explore-item">
+            <div class="explore-circle">
+                <img src="{% static 'gallery/paint1.jpg' %}" alt="Home Painting">
+            </div>
+            <p>Home Painting</p>
+        </a>
+    </div>
+</section>
+
+
 
 <!-- Most Trending Designs Section -->
 <section class="trending-section">
@@ -116,132 +204,159 @@
 </section>
 <!-- Services Section -->
 <section>
-  <h1>Our Services</h1>
-  <div class="services-grid">
+    <h1>Our Services</h1>
+    <div class="services-grid">
 
-    <!-- Existing Services -->
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/3dopen.png' %}" alt="3D Art"></div>
-      <h3>3D Art</h3>
-      <p>We create immersive 3D painting experiences that bring your walls and spaces to life.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' '3d-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' '3d-art' %}" class="explore-btn">Explore</a>
-      </div>
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/3d2.jpg' %}" alt="3D Wall Art"></div>
+            <h3>3D Wall Art</h3>
+            <p>We create immersive 3D painting experiences that bring your walls and spaces to life.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' '3d-wall-art' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' '3d-wall-art' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/3d7.jpg' %}" alt="3D Floor Art"></div>
+            <h3>3D Floor Art</h3>
+            <p>Creative 2D artworks tailored for you.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' '3d-floor-art' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' '3d-floor-art' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/art11.jpg' %}" alt="Mural Art"></div>
+            <h3>Mural Art</h3>
+            <p>Creative 2D artworks tailored for you.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'mural' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/3d6.jpg' %}" alt="Metro Advertisement"></div>
+            <h3>Metro Advertisement</h3>
+            <p>A specific way to brand your paint service.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'metro-advertisement' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'metro-advertisement' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/ad.png' %}" alt="Outdoor Advertisement"></div>
+            <h3>Outdoor Advertisement</h3>
+            <p>Creative aesthetic artworks tailored for you.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'outdoor-advertisement' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'outdoor-advertisement' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/schoolpaint.jpg' %}" alt="School Painting"></div>
+            <h3>School Painting</h3>
+            <p>High-quality traditional Madhubani painting.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'school-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'school-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/paintselfie.jpg' %}" alt="Selfie Painting"></div>
+            <h3>Selfie Painting</h3>
+            <p>Fun and creative cartoon artworks for any space.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'selfie-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'selfie-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/madhu.jpg' %}" alt="Madhubani Painting"></div>
+            <h3>Madhubani Painting</h3>
+            <p>Artworks inspired by nature’s beauty.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'madhubani-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'madhubani-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/texture.jpg' %}" alt="Texture Painting"></div>
+            <h3>Texture Painting</h3>
+            <p>Creative ads for metro stations and public spaces.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'texture-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'texture-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/ganeshmurti.jpg' %}" alt="Stone Murti"></div>
+            <h3>Stone Murti</h3>
+            <p>Unique artworks using scrap and recycled materials.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'stone-murti' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'stone-murti' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/statue12.jpg' %}" alt="Statue"></div>
+            <h3>Statue</h3>
+            <p>Modern spray painting techniques for vibrant visuals.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'statue' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'statue' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/scrap.jpg' %}" alt="Scrap Animal Art"></div>
+            <h3>Scrap Animal Art</h3>
+            <p>Artworks focused on architectural and structural designs.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'scrap-animal-art' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'scrap-animal-art' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/fountain.png' %}" alt="Nature & Water Fountain"></div>
+            <h3>Nature & Water Fountain</h3>
+            <p>Artworks focused on architectural and structural designs.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'nature-fountain' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'nature-fountain' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/Cartoon.jpg' %}" alt="Cartoon Painting"></div>
+            <h3>Cartoon Painting</h3>
+            <p>Artworks focused on architectural and structural designs.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'cartoon-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'cartoon-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Home Painting"></div>
+            <h3>Home Painting</h3>
+            <p>Artworks focused on architectural and structural designs.</p>
+            <div class="card-buttons">
+                <a href="{% url 'book_service' 'home-painting' %}" class="book-btn">Book this Service</a>
+                <a href="{% url 'explore_service' 'home-painting' %}" class="explore-btn">Explore</a>
+            </div>
+        </div>
     </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/mural.png' %}" alt="Mural Art"></div>
-      <h3>Mural Art</h3>
-      <p>Creative 2D artworks tailored for you.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'mural' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Normal Painting"></div>
-      <h3>Normal Painting</h3>
-      <p>High-quality indoor & outdoor painting.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'normal-paint' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'normal-paint' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/ad.png' %}" alt="Advertisement Art"></div>
-      <h3>Advertisement Art</h3>
-      <p>A specific way to brand your paint service.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'advertisement-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'advertisement-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/aesthetic.png' %}" alt="Aesthetic Art"></div>
-      <h3>Aesthetic Art</h3>
-      <p>Creative aesthetic artworks tailored for you.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'aesthetic-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'aesthetic-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/normal_paint.png' %}" alt="Madhubani Art"></div>
-      <h3>Madhubani Art</h3>
-      <p>High-quality traditional Madhubani painting.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'madhubani-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'madhubani-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <!-- New Services -->
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/cartoon.png' %}" alt="Cartoon Art"></div>
-      <h3>Cartoon Art</h3>
-      <p>Fun and creative cartoon artworks for any space.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'cartoon-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'cartoon-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/nature.png' %}" alt="Nature Art"></div>
-      <h3>Nature Art</h3>
-      <p>Artworks inspired by nature’s beauty.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'nature-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'nature-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/metro.png' %}" alt="Metro Advertisement"></div>
-      <h3>Metro Advertisement</h3>
-      <p>Creative ads for metro stations and public spaces.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'metro-advertisement' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'metro-advertisement' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/scrap.png' %}" alt="Scrap Yard Art"></div>
-      <h3>Scrap Yard Art</h3>
-      <p>Unique artworks using scrap and recycled materials.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'scrap-yard-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'scrap-yard-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/spray.png' %}" alt="Spray Art"></div>
-      <h3>Spray Art</h3>
-      <p>Modern spray painting techniques for vibrant visuals.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'spray-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'spray-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-    <div class="service-card">
-      <div class="circle"><img src="{% static 'gallery/structure.png' %}" alt="Structure Art"></div>
-      <h3>Structure Art</h3>
-      <p>Artworks focused on architectural and structural designs.</p>
-      <div class="card-buttons">
-        <a href="{% url 'book_service' 'structure-art' %}" class="book-btn">Book this Service</a>
-        <a href="{% url 'explore_service' 'structure-art' %}" class="explore-btn">Explore</a>
-      </div>
-    </div>
-
-  </div>
 </section>
 
 <!-- Reviews Section -->
