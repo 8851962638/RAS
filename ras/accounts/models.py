@@ -74,7 +74,7 @@ class Employee(models.Model):
 
     password = models.CharField(max_length=128, null=True, blank=True) 
     role = models.CharField(max_length=50, null=True, blank=True)
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
 
     class Meta:
         db_table = "Employee"

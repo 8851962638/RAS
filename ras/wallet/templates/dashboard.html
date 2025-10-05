@@ -4,9 +4,7 @@
 
 {% block content %}
 <style>
-  body {
-    background: #f4f6f9;
-  }
+  body { background: #f4f6f9; }
   .wallet-container {
     width: 70%;
     margin: 40px auto;
@@ -26,11 +24,6 @@
     font-weight: bold;
     color: #4CAF50;
   }
-  form {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
   input[type="number"] {
     padding: 10px;
     width: 150px;
@@ -47,20 +40,7 @@
     cursor: pointer;
     font-weight: bold;
   }
-  button:hover {
-    background: #45a049;
-  }
-  .btn-danger {
-    background: #f44336 !important;
-  }
-  .btn-danger:hover {
-    background: #e53935 !important;
-  }
-  .error {
-    color: red;
-    text-align: center;
-    margin-bottom: 10px;
-  }
+  button:hover { background: #45a049; }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -84,43 +64,88 @@
   <h1>💰 My Wallet</h1>
   <div class="balance">Current Balance: ₹{{ wallet.balance }}</div>
 
-  {% if error %}
-    <div class="error">{{ error }}</div>
-  {% endif %}
+  <div style="text-align:center; margin-bottom:20px;">
+    <input type="number" id="walletAmount" placeholder="Enter Amount to Add" min="1">
+    <button id="payBtn">Add Money</button>
+  </div>
 
-  <!-- Add Money -->
-  <form method="POST" action="{% url 'add_money' %}">
-    {% csrf_token %}
-    <input type="number" name="amount" placeholder="Enter Amount" required min="1">
-    <button type="submit">Add Money</button>
-  </form>
-
-  <!-- Spend Money -->
-  <form method="POST" action="{% url 'spend_money' %}">
-    {% csrf_token %}
-    <input type="number" name="amount" placeholder="Spend Amount" required min="1">
-    <button type="submit" class="btn-danger">Spend Money</button>
-  </form>
-
-  <!-- Transaction History -->
   <h2>📜 Transaction History</h2>
   <table>
     <tr>
+      <th>Transaction ID</th>
       <th>Type</th>
       <th>Amount</th>
       <th>Date</th>
     </tr>
     {% for txn in transactions %}
     <tr>
+      <td>{{ txn.transaction_id }}</td>
       <td>{{ txn.transaction_type }}</td>
       <td>₹{{ txn.amount }}</td>
       <td>{{ txn.created_at|date:"M d, Y H:i" }}</td>
     </tr>
     {% empty %}
     <tr>
-      <td colspan="3">No transactions yet.</td>
+      <td colspan="4">No transactions yet.</td>
     </tr>
     {% endfor %}
   </table>
 </div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('payBtn').onclick = function(){
+    let amount = document.getElementById('walletAmount').value;
+    if(amount < 1){ alert('Enter valid amount'); return; }
+
+    fetch("{% url 'create_wallet_order' %}", {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/x-www-form-urlencoded',
+          'X-CSRFToken':'{{ csrf_token }}'
+        },
+        body:`amount=${amount}`
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.success){
+            let options = {
+                "key": data.key_id,
+                "amount": data.amount,
+                "currency": data.currency,
+                "name": "RColourcraft Wallet",
+                "order_id": data.order_id,
+                "handler": function(response){
+                    fetch("{% url 'verify_wallet_payment' %}", {
+                        method:'POST',
+                        headers:{
+                          'Content-Type':'application/json',
+                          'X-CSRFToken':'{{ csrf_token }}'
+                        },
+                        body:JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            amount: amount
+                        })
+                    })
+                    .then(res=>res.json())
+                    .then(resp=>{
+                        if(resp.success){
+                            alert('✅ Wallet credited successfully!');
+                            location.reload();
+                        } else {
+                            alert(resp.error);
+                        }
+                    });
+                },
+                "theme": { "color": "#4CAF50" }
+            };
+            new Razorpay(options).open();
+        } else {
+            alert(data.error);
+        }
+    });
+};
+</script>
 {% endblock %}

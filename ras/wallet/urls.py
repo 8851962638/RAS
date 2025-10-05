@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.wallet_dashboard, name="wallet_dashboard"),
-    path("add/", views.add_money, name="add_money"),
-    path("spend/", views.spend_money, name="spend_money"),
+    path('', views.wallet_dashboard, name='wallet_dashboard'),
+    path('create_order/', views.create_razorpay_order_wallet, name='create_wallet_order'),
+    path('verify_payment/', views.verify_razorpay_payment_wallet, name='verify_wallet_payment'),
 ]
