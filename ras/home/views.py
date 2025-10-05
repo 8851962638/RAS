@@ -288,6 +288,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from accounts.models import Customer, Employee  # assuming you have Employee model
+from decimal import Decimal
+import time
+from decimal import Decimal
+from wallet.models import Wallet, WalletTransaction
 
 @login_required
 def edit_profile_view(request):
@@ -296,6 +300,7 @@ def edit_profile_view(request):
         employee = get_object_or_404(Employee, user=user)
 
         if request.method == "POST":
+            prev_status = employee.status
             employee.fathers_name = request.POST.get("fathers_name")
             employee.dob = request.POST.get("dob")
             employee.gender = request.POST.get("gender")
@@ -311,9 +316,9 @@ def edit_profile_view(request):
             employee.account_no = request.POST.get("account_no")
             employee.ifsc_code = request.POST.get("ifsc_code")
             employee.role = "employee"
-
-            employee.status = request.POST.get("ready_to_take_orders") == "on"
-
+            
+            # Check if ready to take orders
+            is_ready = request.POST.get("ready_to_take_orders") == "on"
 
             # File fields
             if "passport_photo" in request.FILES:
@@ -326,10 +331,49 @@ def edit_profile_view(request):
             # Multi checkbox values (list)
             employee.type_of_work = request.POST.getlist("type_of_work")
 
-            employee.save()
-            return JsonResponse({"success": True, "message": "Profile updated successfully!"})
-            
+            # Handle status change and wallet deduction
+            if not prev_status and is_ready:
+                # User is turning ON the status
+                wallet = Wallet.objects.filter(user=user).first()
 
+                if wallet and wallet.balance >= Decimal("20.00"):
+                    # Sufficient balance - deduct and activate
+                    wallet.balance -= Decimal("20.00")
+                    wallet.save()
+
+                    # Create transaction record
+                    WalletTransaction.objects.create(
+                        wallet=wallet,
+                        transaction_type="DEBIT",
+                        amount=Decimal("20.00"),
+                        razorpay_payment_id=f"ACTIVATION_FEE_{user.id}_{int(time.time())}"
+                    )
+                    
+                    employee.status = True
+                    employee.save()
+                    
+                    print("Deducted ₹20 for activation fee")
+                    return JsonResponse({
+                        "success": True, 
+                        "message": "Profile updated successfully! ₹20 activation fee deducted from your wallet."
+                    })
+                else:
+                    # Insufficient balance - don't activate
+                    employee.status = False
+                    employee.save()
+                    return JsonResponse({
+                        "success": False,
+                        "message": "Insufficient wallet balance. Please add ₹20 to enable 'Ready to Take Orders' feature."
+                    })
+            else:
+                # Either turning OFF or no change in status
+                employee.status = is_ready
+                employee.save()
+                print("Profile saved")
+                return JsonResponse({
+                    "success": True, 
+                    "message": "Profile updated successfully!"
+                })
 
         context = {
             "name": employee.full_name,
@@ -354,7 +398,6 @@ def edit_profile_view(request):
             "account_no": employee.account_no,
             "ifsc_code": employee.ifsc_code,
             "ready_to_take_orders": employee.status,
-
         }
         return render(request, "edit_profile.html", context)
 
@@ -371,7 +414,10 @@ def edit_profile_view(request):
                 customer.customer_photo = request.FILES["customer_photo"]
 
             customer.save()
-            return JsonResponse({"success": True, "message": "Profile updated successfully!"})
+            return JsonResponse({
+                "success": True, 
+                "message": "Profile updated successfully!"
+            })
 
         context = {
             "name": customer.customer_full_name,
@@ -382,9 +428,6 @@ def edit_profile_view(request):
         return render(request, "edit_customers_profile.html", context)
 
     return render(request, "edit_profile.html", {"user": user})
-
-
-
 
 def shop(request):
     # Example products

@@ -329,13 +329,19 @@ input[type="checkbox"]:checked + .toggle-label .toggle-switch::after {
             <input type="file" id="passport_photo" name="passport_photo">
             <label for="passport_photo" class="upload-btn">Upload New</label>
              <!-- Ready to Take Orders Toggle -->
-    <div class="toggle-container">
-        <input type="checkbox" id="ready_to_take_orders" name="ready_to_take_orders" {% if ready_to_take_orders %}checked{% endif %}>
-        <label for="ready_to_take_orders" class="toggle-label">
-            <span class="toggle-switch"></span>
-            Ready to Take Orders
-        </label>
-    </div>
+    <div class="toggle-container" style="margin-top: 20px;">
+    <input type="checkbox" id="ready_to_take_orders" name="ready_to_take_orders"
+           {% if ready_to_take_orders %}checked{% endif %}>
+    <label for="ready_to_take_orders" class="toggle-label">
+        <span class="toggle-switch"></span>
+        Ready to Take Orders
+    </label>
+</div>
+<!-- Info message -->
+<p style="font-size: 13px; color: #666; margin-top: 10px; line-height: 1.5; max-width: 250px; text-align: center;">
+    <strong>Note:</strong> Turning this ON will deduct a one-time <strong style="color: #dc3545;">₹20</strong> activation fee from your wallet.
+</p>
+
         </div>
     </div>
     
@@ -375,6 +381,73 @@ $(document).ready(function() {
             error: function(xhr) {
                 alert("An error occurred. Please try again.");
                 console.log(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let confirmationPending = false;
+    let originalCheckedState = $('#ready_to_take_orders').prop('checked');
+
+    // Handle toggle change with confirmation
+    $('#ready_to_take_orders').on('change', function(e) {
+        const isChecked = $(this).prop('checked');
+        
+        // Only show confirmation when turning ON
+        if (isChecked && !originalCheckedState) {
+            confirmationPending = true;
+            
+            const userConfirmed = confirm(
+                "⚠️ CONFIRMATION REQUIRED\n\n" +
+                "Turning ON 'Ready to Take Orders' will deduct ₹20 from your wallet as a one-time activation fee.\n\n" +
+                "Do you want to continue?"
+            );
+            
+            if (!userConfirmed) {
+                // User cancelled - revert the checkbox
+                $(this).prop('checked', false);
+                confirmationPending = false;
+            }
+        }
+    });
+
+    // Handle form submission
+    $('.edit-profile-container').on('submit', function(e) {
+        e.preventDefault();
+
+        var form = $(this)[0];
+        var formData = new FormData(form);
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+
+        $.ajax({
+            url: "{% url 'edit_profile' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: { "X-CSRFToken": csrftoken },
+            success: function(response) {
+                if (response.success) {
+                    alert("✓ " + (response.message || "Profile updated successfully!"));
+                    // Update the original state after successful save
+                    originalCheckedState = $('#ready_to_take_orders').prop('checked');
+                    // Reload page to reflect changes
+                    location.reload();
+                } else {
+                    alert("✗ " + (response.message || "Something went wrong!"));
+                    // Revert checkbox if operation failed
+                    $('#ready_to_take_orders').prop('checked', originalCheckedState);
+                }
+            },
+            error: function(xhr) {
+                alert("✗ An error occurred. Please try again.");
+                console.log(xhr.responseText);
+                // Revert checkbox on error
+                $('#ready_to_take_orders').prop('checked', originalCheckedState);
             }
         });
     });
