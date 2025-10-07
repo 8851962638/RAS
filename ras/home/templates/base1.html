@@ -7,7 +7,7 @@
   <title>{% block title %}RColourcraft{% endblock %}</title>
   
   <!-- CSS link -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD5Vn0gT8nNq0UdwQ3N3cQ4A8b6rC8L9Tz1Jb1S9/7g56b0lX6T8z8x8x8x8w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -15,31 +15,34 @@
   <link rel="stylesheet" href="{% static 'css/review_page.css' %}">
   
 <style>
- /* Popup box */
   /* Popup box */
-    .popup-menu {
-      display: none;
-      position: absolute;
-      top: 60px;   /* icon ke niche */
-      right: 20px;
-      background-color: #2C61C0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px 0;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-      z-index: 1000;
-      flex-direction: column;
-      min-width: 160px;
-    }
+  .popup-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #2C61C0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    flex-direction: column;
+    min-width: 160px;
+  }
 
-    .popup-menu a {
-      display: block;
-      padding: 10px 15px;
-      text-decoration: none;
-      color: #ffffffff;
-      font-weight: 500;
-    }
-  
+  .popup-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #ffffffff;
+    font-weight: 500;
+  }
+
+  .popup-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
 </style>
 </head>
 <body>
@@ -49,12 +52,18 @@
 
     <div class="left-group">
       <div class="logo">
-        <!-- Replaced the <img> with stylish text -->
         <h1 class="site-logo-text">RColourcraft</h1> 
       </div>
-      <!-- ... rest of your left-group content -->
 
-      <nav class="nav-left">
+      <!-- HAMBURGER MENU BUTTON (visible only on mobile) -->
+      <div class="hamburger-menu" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <!-- NAVIGATION MENU -->
+      <nav class="nav-left" id="navMenu">
         <ul>
           <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
           <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
@@ -66,10 +75,14 @@
           {% if request.user.is_authenticated and request.user.role == "customer" %}
           <li><a href="{% url 'my_orders' %}">My Orders</a></li>
           {% endif %}
+          {% if request.user.is_authenticated and request.user.role == "employee" %}
+                    <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">My Assignments</a></li>
+                    {% endif %}
         </ul>
       </nav>
     </div>
 
+    <!-- USER ICON (stays on the right) -->
     <nav class="nav-right">
       <ul>
         <li>
@@ -78,14 +91,17 @@
           </a>
           <!-- Popup menu -->
           <div id="myPopup" class="popup-menu">
-          <a href="{% url 'wallet_dashboard' %}">Wallet</a>
-          <a href="{% url 'edit_profile' %}">Edit Profile</a>
-          <a href="{% url 'logout' %}">Logout / Login</a>
-        </div>
+            <a href="{% url 'wallet_dashboard' %}">Wallet</a>
+            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+            <a href="{% url 'logout' %}">Logout / Login</a>
+          </div>
         </li>
       </ul>
     </nav>
   </header>
+
+  <!-- OVERLAY FOR MOBILE MENU -->
+  <div class="menu-overlay" id="menuOverlay"></div>
 
   <!-- Main Content -->
   {% block content %}{% endblock %}
@@ -97,7 +113,10 @@
 
   <!-- JS file -->
   <script src="{% static 'js/script.js' %}"></script>
+  
+  <!-- UPDATED JAVASCRIPT -->
   <script>
+    // Popup menu toggle
     function togglePopup() {
       const popup = document.getElementById("myPopup");
       popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
@@ -109,6 +128,55 @@
       const icon = document.querySelector(".nav-icon");
       if (popup && !popup.contains(event.target) && !icon.contains(event.target)) {
         popup.style.display = "none";
+      }
+    });
+
+    // ===== HAMBURGER MENU FUNCTIONALITY =====
+    const hamburger = document.getElementById('hamburgerMenu');
+    const navMenu = document.getElementById('navMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    // Toggle menu when hamburger is clicked
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Close menu when overlay is clicked
+    menuOverlay.addEventListener('click', function() {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close menu when a menu item is clicked
+    const menuLinks = navMenu.querySelectorAll('a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    // Close menu on window resize if open
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 767) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
       }
     });
   </script>

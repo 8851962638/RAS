@@ -871,21 +871,48 @@ def employee_bookings(request):
     return render(request, 'employee_bookings.html', {'bookings': bookings})
 
 
+
 @user_passes_test(is_employee)
 def handle_assignment_response(request, booking_id, action):
     """Employee view to accept or decline an assignment."""
     booking = get_object_or_404(Booking, id=booking_id)
+    employee = request.user  # the logged-in user
 
-    # Security check: Ensure the booking is assigned to the current user
-    if booking.assigned_employee == request.user and booking.assignment_status == 'assigned':
-        if action == 'accept':
-            # Set employee status to accepted. Admin may update main status later.
-            booking.assignment_status = 'accepted'
-        elif action == 'decline':
-            # Set status to declined. Optionally, clear the employee so admin can reassign.
-            booking.assignment_status = 'declined'
-            booking.assigned_employee = None 
-        
+    # Security check
+    if booking.assigned_employee != employee or booking.assignment_status != 'assigned':
+        messages.error(request, "Invalid action or unauthorized access.")
+        return redirect(reverse("employee_bookings"))
+
+    # Accept booking
+    if action == 'accept':
+        # Deduct ₹60 from wallet
+        wallet = Wallet.objects.filter(user=employee).first()
+
+        if wallet and wallet.balance >= Decimal("60.00"):
+            wallet.balance -= Decimal("60.00")
+            wallet.save()
+
+            # Log transaction
+            WalletTransaction.objects.create(
+                wallet=wallet,
+                transaction_type="DEBIT",
+                amount=Decimal("60.00"),
+                # description=f"Assignment fee for booking {booking.booking_id}",
+                razorpay_payment_id=None,
+            )
+
+            booking.assignment_status = "accepted"
+            booking.save()
+            messages.success(request, f"You accepted the assignment. ₹60 has been deducted from your wallet.")
+        else:
+            messages.error(request, "Insufficient wallet balance. You need at least ₹60 to accept this booking.")
+            return redirect(reverse("employee_bookings"))
+
+    # Decline booking
+    elif action == 'decline':
+        booking.assignment_status = "declined"
+        booking.assigned_employee = None
         booking.save()
-    
+        messages.info(request, "You have declined the assignment.")
+
     return redirect(reverse("employee_bookings"))
