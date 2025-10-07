@@ -1,0 +1,196 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block title %}My Assignments{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1 class="page-title employee-view">My Painting Assignments 👷‍♂️</h1>
+
+    <div class="booking-list">
+        {% if bookings %}
+            {% for booking in bookings %}
+                <!-- Use assignment_status to color-code the card -->
+                <div class="booking-card assignment-{{ booking.assignment_status }}">
+                    <div class="booking-header">
+                        <span class="service-name">{{ booking.service_name }}</span>
+                        <span class="booking-id">{{ booking.booking_id }}</span>
+                    </div>
+
+                    <p><strong>Appointment Date:</strong> {{ booking.appointment_date }}</p>
+
+                    <!-- Restricted View (Always visible) -->
+                    <div class="restricted-info">
+                        <p><strong>City:</strong> {{ booking.city }}</p>
+                        <p><strong>Pincode:</strong> {{ booking.pin_code }}</p>
+                    </div>
+
+                    <!-- Full Details - Only visible after acceptance -->
+                    {% if booking.assignment_status == 'accepted' %}
+                    <div class="full-info">
+                        <hr class="detail-divider">
+                        <p><strong>Customer Name:</strong> {{ booking.customer_name }}</p>
+                        <p><strong>Contact:</strong> {{ booking.contact_number }} | {{ booking.email }}</p>
+                        <p><strong>Full Address:</strong> {{ booking.address }}, {{ booking.city }}, {{ booking.state }} - {{ booking.pin_code }}</p>
+                        <div class="row">
+                            <p><strong>Total Walls:</strong> {{ booking.total_walls }}</p>
+                            <p><strong>Total SqFt:</strong> {{ booking.total_sqft }}</p>
+                        </div>
+                        <p><strong>Quoted Price:</strong> ₹{{ booking.total_amount }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="assignment-actions">
+                        {% if booking.assignment_status == 'assigned' %}
+                            <p class="action-prompt">Do you accept this assignment?</p>
+                            <!-- Links call the handle_assignment_response view with 'accept' or 'decline' -->
+                            <a href="{% url 'handle_assignment_response' booking.id 'accept' %}" class="action-btn accept-btn">✅ Accept</a>
+                            <a href="{% url 'handle_assignment_response' booking.id 'decline' %}" class="action-btn decline-btn">❌ Decline</a>
+                        {% else %}
+                            <p class="assignment-final-status">Status: 
+                                <strong class="status-{{ booking.assignment_status }}">
+                                    {{ booking.get_assignment_status_display }}
+                                </strong>
+                            </p>
+                            <!-- If accepted, show the current main status -->
+                            {% if booking.assignment_status == 'accepted' %}
+                                <p class="timestamp">Main Booking Status: <strong>{{ booking.get_status_display }}</strong></p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-data">You have no assignments at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Base Styles for Employee Page */
+.page-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    max-width: 1200px; 
+    margin: auto;
+    background: linear-gradient(to right, #f6e6c1, #e9f7f7); /* Different background color */
+    display: flex;
+    flex-direction: column;
+}
+
+.employee-view {
+    color: #00796b; /* Teal color for the employee page */
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.booking-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+    border-left: 5px solid #00796b; /* Default border color */
+}
+.booking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Color coding based on assignment status */
+.assignment-assigned { border-left-color: #ff9800; } /* Orange */
+.assignment-accepted { border-left-color: #4caf50; } /* Green */
+.assignment-declined { border-left-color: #f44336; } /* Red */
+.assignment-pending_assignment { border-left-color: #9e9e9e; } /* Grey */
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.booking-header .service-name {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00796b;
+}
+.booking-header .booking-id {
+    font-size: 14px;
+    font-weight: bold;
+    color: #777;
+}
+
+/* Info Sections */
+.restricted-info {
+    padding: 10px 15px;
+    background: #e0f2f1; /* Light teal background */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.full-info {
+    margin-top: 15px;
+    padding-top: 15px;
+}
+.detail-divider {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #a7c8c8, rgba(0, 0, 0, 0));
+    margin-bottom: 15px;
+}
+
+/* Actions */
+.assignment-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.action-prompt {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.action-btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.accept-btn {
+    background: #4caf50; /* Green */
+    color: white;
+}
+.decline-btn {
+    background: #f44336; /* Red */
+    color: white;
+}
+.accept-btn:hover {
+    background: #388e3c;
+    transform: scale(1.05);
+}
+.decline-btn:hover {
+    background: #d32f2f;
+    transform: scale(1.05);
+}
+
+.assignment-final-status {
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+.assignment-final-status strong.status-accepted { color: #4caf50; }
+.assignment-final-status strong.status-declined { color: #f44336; }
+.assignment-final-status strong.status-pending_assignment { color: #9e9e9e; }
+.assignment-final-status strong.status-assigned { color: #ff9800; }
+</style>
+{% endblock %}
