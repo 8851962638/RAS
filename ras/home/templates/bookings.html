@@ -5,269 +5,348 @@
 
 {% block content %}
 <div class="page-container">
-  <h1 class="page-title">All Bookings 📋</h1>
-<div class="filters">
-  <a href="?status=pending" class="filter-btn pending">⏳ Pending</a>
-  <a href="?status=in_process" class="filter-btn in-process">⚙️ In Process</a>
-  <a href="?status=completed" class="filter-btn completed">✅ Completed</a>
-  <a href="?status=cancelled" class="filter-btn cancelled">❌ Cancelled</a>
-  <a href="?status=all" class="filter-btn all">📋 All</a>
+    <h1 class="page-title">All Bookings 📋</h1>
+    <div class="filters">
+        <!-- Status Filters (Updated to include assignment status terms for better filtering) -->
+        <a href="?status=pending" class="filter-btn pending">⏳ Pending</a>
+        <a href="?status=assigned" class="filter-btn assigned-awaiting">👤 Assigned (Awaiting)</a>
+        <a href="?status=accepted" class="filter-btn accepted">✅ Accepted by Emp</a>
+        <a href="?status=in_process" class="filter-btn in-process">⚙️ In Process</a>
+        <a href="?status=completed" class="filter-btn completed">🏆 Completed</a>
+        <a href="?status=cancelled" class="filter-btn cancelled">❌ Cancelled</a>
+        <a href="?status=declined" class="filter-btn declined">🚫 Declined by Emp</a>
+        <a href="?status=all" class="filter-btn all">📋 All</a>
+    </div>
 
-</div>
 
+    <div class="booking-list">
+        {% if bookings %}
+            {% for booking in bookings %}
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <span class="service-name">{{ booking.service_name }}</span>
+                        <span class="booking-id">{{ booking.booking_id }}</span>
+                    </div>
 
-<div class="booking-list">
-  {% if bookings %}
-    {% for booking in bookings %}
-      <div class="booking-card">
-        <div class="booking-header">
-          <span class="service-name">{{ booking.service_name }}</span>
-          <span class="booking-id">{{ booking.booking_id }}</span>
-        </div>
+                    <div class="row">
+                        <p><strong>Customer Name:</strong> {{ booking.customer_name }}</p>
+                        <p><strong>Contact:</strong> {{ booking.contact_number }} | {{ booking.email }}</p>
+                    </div>
 
-        <div class="row">
-          <p><strong>Customer Name:</strong> {{ booking.customer_name }}</p>
-          <p><strong>Contact:</strong> {{ booking.contact_number }} | {{ booking.email }}</p>
-        </div>
+                    <div class="row">
+                        <p><strong>Address:</strong> {{ booking.address }}, {{ booking.city }}, {{ booking.state }} - {{ booking.pin_code }}</p>
+                    </div>
 
-        <div class="row">
-          <p><strong>Address:</strong> {{ booking.address }}, {{ booking.city }}, {{ booking.state }} - {{ booking.pin_code }}</p>
-        </div>
+                    <div class="row">
+                        <p><strong>Total Walls:</strong> {{ booking.total_walls }}</p>
+                        <p><strong>Square Ft:</strong> {{ booking.width }} × {{ booking.height }} = {{ booking.total_sqft }}</p>
+                    </div>
 
-        <div class="row">
-          <p><strong>Total Walls:</strong> {{ booking.total_walls }}</p>
-          <p><strong>Square Ft:</strong> {{ booking.width }} × {{ booking.height }} = {{ booking.total_sqft }}</p>
-        </div>
+                    <div class="row">
+                        <p><strong>Appointment Date:</strong> {{ booking.appointment_date }}</p>
+                        <p class="timestamp">📅 Booked on {{ booking.created_at|date:"d M Y, H:i A" }}</p>
+                    </div>
 
-        <div class="row">
-          <p><strong>Appointment Date:</strong> {{ booking.appointment_date }}</p>
-          <p class="timestamp">📅 Booked on {{ booking.created_at|date:"d M Y, H:i A" }}</p>
-        </div>
-
-        <!-- Status Form -->
-        <div class="status-container">
-          <form method="post" action="{% url 'update_booking_status' booking.id %}" class="status-form">
-            {% csrf_token %}
-            <label for="status-{{ booking.id }}" class="status-label">Change Status:</label>
-            <select name="status" id="status-{{ booking.id }}" class="status-dropdown">
-              <option value="pending" {% if booking.status == "pending" %}selected{% endif %}>⏳ Pending</option>
-              <option value="in_process" {% if booking.status == "in_process" %}selected{% endif %}>⚙️ In Process</option>
-              <option value="completed" {% if booking.status == "completed" %}selected{% endif %}>✅ Completed</option>
-              <option value="cancelled" {% if booking.status == "cancelled" %}selected{% endif %}>❌ Cancelled</option>
-            </select>
-            <button type="submit" class="update-btn">Update</button>
-          </form>
-        </div>
-      </div>
-    {% endfor %}
-  {% else %}
-    <p class="no-data">No bookings found.</p>
-  {% endif %}
-</div>
-
+                    <!-- Employee Assignment Form (NEW) -->
+                    <div class="assignment-container">
+                        <form method="post" action="{% url 'assign_booking' booking.id %}" class="assignment-form">
+                            {% csrf_token %}
+                            <label for="employee-{{ booking.id }}" class="assignment-label">Assign Employee:</label>
+                            <select name="employee_id" id="employee-{{ booking.id }}" class="employee-dropdown" required>
+                                <option value="">Select Employee</option>
+                                {% for employee in employees %}
+                                    <option value="{{ employee.id }}" {% if booking.assigned_employee.id == employee.id %}selected{% endif %}>
+                                        {{ employee.full_name }} ({{ employee.email }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="assign-btn">
+                                {% if booking.assigned_employee %}Reassign{% else %}Assign{% endif %}
+                            </button>
+                        </form>
+                        {% if booking.assigned_employee %}
+                        <p class="assignment-status-text">
+                            Current Employee: <strong>{{ booking.assigned_employee.full_name }}</strong> | Status: <strong class="status-{{ booking.assignment_status }}">{{ booking.get_assignment_status_display }}</strong>
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Status Form (EXISTING) -->
+                    <div class="status-container">
+                        <form method="post" action="{% url 'update_booking_status' booking.id %}" class="status-form">
+                            {% csrf_token %}
+                            <label for="status-{{ booking.id }}" class="status-label">Change Main Status:</label>
+                            <select name="status" id="status-{{ booking.id }}" class="status-dropdown">
+                                <option value="pending" {% if booking.status == "pending" %}selected{% endif %}>⏳ Pending</option>
+                                <option value="in_process" {% if booking.status == "in_process" %}selected{% endif %}>⚙️ In Process</option>
+                                <option value="completed" {% if booking.status == "completed" %}selected{% endif %}>✅ Completed</option>
+                                <option value="cancelled" {% if booking.status == "cancelled" %}selected{% endif %}>❌ Cancelled</option>
+                            </select>
+                            <button type="submit" class="update-btn">Update</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-data">No bookings found.</p>
+        {% endif %}
+    </div>
 </div>
 
 <style>
+/* Resetting/Cleaning up previous styles */
+/* Note: The non-breaking spaces ( ) have been replaced with standard spaces */
+
 .page-container {
-  min-height: 100vh;             /* full screen */
-  padding: 40px 20px;
-  max-width: 1700px;
-  margin: auto;
-  background: linear-gradient(to right, #c1f0f6, #d9f7e9);
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    padding: 40px 20px;
+    max-width: 1700px;
+    margin: auto;
+    background: linear-gradient(to right, #c1f0f6, #d9f7e9);
+    display: flex;
+    flex-direction: column;
 }
 
-
-
 .page-title {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 30px;
-  color: #2c3e50;
-  font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-weight: bold;
 }
 
 .booking-list {
-  flex: 1;                        /* expand naturally */
-  overflow: visible;              /* do NOT scroll here */
-  padding-right: 10px;
+    flex: 1;
+    overflow: visible;
+    padding-right: 10px;
 }
-
 
 .booking-card {
-  position: relative; /* so hover shadows don’t get cut */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 22px;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  transition: all 0.3s ease-in-out;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transform-origin: center;  /* grow evenly */
+    position: relative; 
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transform-origin: center;
 }
 .booking-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
-  z-index: 10; /* put card above neighbors so text never clips */
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+    z-index: 10;
 }
-
 
 /* Header styles */
 .booking-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
 }
 .booking-header .service-name {
-  font-size: 22px;
-  font-weight: bold;
-  color: #e74c3c;
+    font-size: 22px;
+    font-weight: bold;
+    color: #e74c3c;
 }
 .booking-header .booking-id {
-  font-size: 18px;
-  font-weight: bold;
-  color: #2980b9;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2980b9;
 }
 
 /* Row styling */
 .row {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 .booking-card p {
-  margin: 0;
-  font-size: 16px;
-  color: #2c3e50;
+    margin: 0;
+    font-size: 16px;
+    color: #2c3e50;
+    flex: 1 1 45%; /* Ensure two columns layout on wider screens */
 }
 .timestamp {
-  font-size: 14px;
-  color: #666;
-  font-style: italic;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
 }
 
 .no-data {
-  text-align: center;
-  color: #777;
-  font-weight: bold;
-  font-size: 18px;
+    text-align: center;
+    color: #777;
+    font-weight: bold;
+    font-size: 18px;
 }
 
 /* Filter buttons */
 .filters {
-  text-align: center;
-  margin-bottom: 25px;
+    text-align: center;
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .filter-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    font-size: 14px;
 }
 
 .filter-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 
-/* Different colors */
+/* Filter colors (Updated for new assignment statuses) */
 .filter-btn.pending { background: #3498db; color: white; }
+.filter-btn.assigned-awaiting { background: #9b59b6; color: white; } /* NEW */
+.filter-btn.accepted { background: #2ecc71; color: white; } /* NEW */
+.filter-btn.declined { background: #f1c40f; color: #2c3e50; } /* NEW */
 .filter-btn.in-process { background: #f39c12; color: white; }
 .filter-btn.completed { background: #27ae60; color: white; }
 .filter-btn.cancelled { background: #e74c3c; color: white; }
 .filter-btn.all { background: #8e44ad; color: white; }
 
-/* Dropdown + Update button */
-
-/* 
-.update-btn {
-  background: #2c3e50;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  margin-left: 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-} */
-/* 
-.update-btn:hover {
-  background: #34495e;
-} */
-/* Fix layout for status row */
-.status-row {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
+/* Status Form */
 .status-container {
-  margin-top: 15px;
-  padding: 12px;
-  background: linear-gradient(to right, #eef8ff, #eafdea);
-  border-radius: 10px;
-  border: 1px solid #dcdcdc;
+    margin-top: 15px;
+    padding: 12px;
+    background: linear-gradient(to right, #eef8ff, #eafdea);
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
 }
 
-/* Form alignment */
 .status-form {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
 }
 .status-label {
-  font-weight: 600;
-  color: #2c3e50;
-  white-space: nowrap;
+    font-weight: 600;
+    color: #2c3e50;
+    white-space: nowrap;
 }
-
-/* Stylish dropdown */
 .status-dropdown {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 2px solid #3498db;
-  font-size: 14px;
-  background: #fff;
-  color: #2c3e50;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid #3498db;
+    font-size: 14px;
+    background: #fff;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 .status-dropdown:focus {
-  border-color: #2ecc71;
-  box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+    border-color: #2ecc71;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
 }
-
-.status-dropdown option {
-  padding: 10px;
-  font-size: 14px;
-}
-
-/* Update button aligned */
 .update-btn {
-  background: linear-gradient(135deg, #3498db, #2ecc71);
-  color: white;
-  border: none;
-  padding: 8px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.25s ease-in-out;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.25s ease-in-out;
 }
 .update-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* NEW: Assignment Form Styles */
+.assignment-container {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: linear-gradient(to right, #fff8e1, #ffe0b2); /* Light orange background */
+    border-radius: 10px;
+    border: 1px solid #ffcc80;
+}
+.assignment-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.assignment-label {
+    font-weight: 600;
+    color: #d35400; /* Darker orange */
+    white-space: nowrap;
+}
+.employee-dropdown {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid #f39c12;
+    font-size: 14px;
+    background: #fff;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    flex-grow: 1;
+    min-width: 200px;
+}
+.assign-btn {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.25s ease-in-out;
+}
+.assign-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.assignment-status-text {
+    margin: 0;
+    font-size: 14px;
+    padding-top: 5px;
+    color: #333;
+}
+/* Assignment Status Colors */
+.status-assigned { color: #9b59b6; font-weight: bold; }
+.status-accepted { color: #2ecc71; font-weight: bold; }
+.status-declined { color: #e74c3c; font-weight: bold; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .booking-card p {
+        flex: 1 1 100%;
+        font-size: 15px;
+    }
+    .assignment-form, .status-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .employee-dropdown, .status-dropdown, .assign-btn, .update-btn {
+        width: 100%;
+        margin-left: 0;
+    }
 }
 </style>
 {% endblock %}

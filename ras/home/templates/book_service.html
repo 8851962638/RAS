@@ -358,11 +358,8 @@
     <div class="circle">1</div>
     Booking
   </div>
-  <div class="step" id="step2">
-    <div class="circle">2</div>
-    Payment
-  </div>
 </div>
+
 
 
     <div class="slide active" id="booking-slide">
@@ -454,13 +451,14 @@
                 </div>
                 <input type="hidden" name="total_amount" id="total_amount_input">
 
-                <button type="button" onclick="saveBooking()">Next → Payment</button>
+                <button type="button" onclick="saveBooking()">Book Now</button>
+
             </form>
         </div>
     </div>
 
     <!-- PAYMENT SLIDE -->
-    <div class="slide" id="payment-slide">
+     <!-- <div class="slide" id="payment-slide">
         <div class="booking-container">
             <form class="booking-form" id="paymentForm">
                 {% csrf_token %}
@@ -470,12 +468,11 @@
                 <select name="payment_mode" id="payment_mode" required>
                     <option value="razorpay">Online Payment</option>
                     <option value="cash">Cash on Service</option>
-                </select>
+                </select> -->
+<label style="display:none;">Amount</label>
+<input type="text" id="booking_amount" name="booking_amount" value="0" readonly style="display:none;">
 
-                <label>Amount</label>
-                <input type="text" id="booking_amount" name="booking_amount" value="0" readonly>
-
-                            <div id="cash-note-box" style="display:none; margin-top: 1rem;">
+                            <!-- <div id="cash-note-box" style="display:none; margin-top: 1rem;">
                 <p style="color: red; font-weight: 600;">
                     💡 Note: At least 40% of the total amount must be paid now rest after service completion.
                 </p>
@@ -490,19 +487,19 @@
                 </button>
             </form>
         </div>
-    </div>
+    </div>  -->
 
     <div class="slide" id="confirmation-slide">
-    <div class="confirmation-box">
-        <h3>🎉 Booking Confirmed!</h3>
-        <p>
-            Your booking for <strong>{{ service_name }}</strong> is successful.<br>
-            ✅ Payment received successfully!<br>
-            We got the confirmation. Our team will get in touch with you within 24 hrs.
-        </p>
-        <button onclick="goHome()">Go to Home</button>
-    </div>
+  <div class="confirmation-box">
+      <h3>🎉 Booking Confirmed!</h3>
+      <p>
+          Your booking for <strong>{{ service_name }}</strong> is successful.<br>
+          ✅ Our team will get in touch with you within 24 hrs.
+      </p>
+      <button onclick="goHome()">Go to Home</button>
+  </div>
 </div>
+
 </div>
 <div id="designPopup" class="design-popup">
   <div class="design-popup-content">
@@ -523,7 +520,7 @@
 <!-- SCRIPTS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
 
 <script>
     let currentSlide = 0;
@@ -533,7 +530,7 @@
         slides.forEach((s, i) => s.classList.toggle('active', i === index));
         currentSlide = index;
         document.getElementById("step1").classList.toggle("active", index === 0);
-        document.getElementById("step2").classList.toggle("active", index === 1);
+        // document.getElementById("step2").classList.toggle("active", index === 1);
     }
 
     const SERVICE_BASE_RATES = {
@@ -625,215 +622,189 @@ function calcSqftAndPrice() {
     });
 
     // Save Booking → Move to Payment
-    function saveBooking() {
-        
-        // Validate amount before proceeding
-        let amount = document.getElementById('booking_amount').value;
-        if (!amount || parseFloat(amount) <= 0) {
-            alert('Please enter width and height to calculate the price.');
-            return;
-        }
-
-        let form = $('#bookingForm')[0];
-        let formData = new FormData(form);
-
-        $.ajax({
-            url: '/home/save_booking/',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
-            },
-            success: function(resp) {
-                console.log('Response:', resp);
-                
-                // Handle different response types
-                if (typeof resp === 'string') {
-                    try {
-                        resp = JSON.parse(resp);
-                    } catch (e) {
-                        console.error('Invalid JSON response:', resp);
-                        // If not JSON, proceed anyway
-                        showSlide(1);
-                        return;
-                    }
-                }
-                
-                if (resp && resp.success) {
-                    showSlide(1); // Go to Payment
-                } else if (resp && resp.message) {
-                    alert("Error: " + resp.message);
-                } else {
-                    // If no proper response structure, just proceed
-                    console.warn('No proper response structure, proceeding anyway');
-                    showSlide(1); // Go to Payment
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', xhr.responseText, status, error);
-                // For now, proceed even if there's an error (you can remove this later)
-                alert("Booking saved locally, proceeding to payment.");
-                showSlide(1);
-            }
-        });
-    }
-
-// Handle payment mode change
-document.getElementById("payment_mode").addEventListener("change", function() {
-    const mode = this.value;
-    const totalAmount = parseFloat(document.getElementById("booking_amount").value) || 0;
-
-    if (mode === "cash") {
-        // Show note box
-        document.getElementById("cash-note-box").style.display = "block";
-
-        // Calculate 40%
-        let advance = (totalAmount * 0.40).toFixed(2);
-        document.getElementById("cash_advance").value = advance;
-
-    } else {
-        // Hide note box for Online payment
-        document.getElementById("cash-note-box").style.display = "none";
-        document.getElementById("cash_advance").value = "";
-    }
-});
-
-    // PAYMENT FUNCTIONS
-   function initiatePayment() {
-    const paymentMode = document.getElementById('payment_mode').value;
-    let amount = parseFloat(document.getElementById('booking_amount').value);
-
-    if (paymentMode === 'cash') {
-        // Take only 40% for Razorpay
-        const advance = parseFloat(document.getElementById('cash_advance').value);
-        if (!advance || advance <= 0) {
-            alert("Invalid advance amount calculation.");
-            return;
-        }
-        amount = advance; // override amount
-    }
-
-    if (paymentMode === 'cash') {
-        startRazorpayPayment(amount); // pay only advance
-    } else if (paymentMode === 'razorpay') {
-        startRazorpayPayment(amount); // pay full amount
-    }
-}
-
-    function startRazorpayPayment(amount) {
-    if (!amount || amount <= 0) {
-        alert('Invalid amount. Please check the booking amount.');
+function saveBooking() {
+    let amount = document.getElementById('booking_amount').value;
+    if (!amount || parseFloat(amount) <= 0) {
+        alert('Please enter width and height to calculate the price.');
         return;
     }
 
-    showPaymentLoading(true);
+    let form = $('#bookingForm')[0];
+    let formData = new FormData(form);
 
     $.ajax({
-        url: '/create_razorpay_order/',
+        url: '/home/save_booking/',
         type: 'POST',
-        data: {
-            'amount': amount, // send only advance if cash
-            'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
         },
-        success: function(response) {
-            showPaymentLoading(false);
-            if (response.success) {
-                openRazorpayCheckout(response);
-            } else {
-                alert('Error creating payment order: ' + response.error);
-            }
+        success: function(resp) {
+            showSlide(1); // Go directly to confirmation
         },
-        error: function(xhr, status, error) {
-            showPaymentLoading(false);
-            alert('Something went wrong while creating payment order: ' + error);
+        error: function() {
+            alert("Something went wrong, but booking saved.");
+            showSlide(1); // Still show confirmation
         }
     });
 }
 
+// // Handle payment mode change
+// document.getElementById("payment_mode").addEventListener("change", function() {
+//     const mode = this.value;
+//     const totalAmount = parseFloat(document.getElementById("booking_amount").value) || 0;
 
-    function openRazorpayCheckout(orderData) {
-        // Get customer details from booking form
-        const contactNumber = document.querySelector('input[name="contact_number"]').value;
-        const email = document.querySelector('input[name="email"]').value;
-        const customerName = "Customer";
+//     if (mode === "cash") {
+//         // Show note box
+//         document.getElementById("cash-note-box").style.display = "block";
 
-        const options = {
-            "key": orderData.key_id,
-            "amount": orderData.amount,
-            "currency": orderData.currency,
-            "name": "Home Services", // Replace with your business name
-            "description": "Service Booking Payment",
-            "order_id": orderData.order_id,
-            "handler": function (response) {
-                verifyPayment(response);
-            },
-            "prefill": {
-                "name": customerName,
-                "email": email,
-                "contact": contactNumber
-            },
-            "notes": {
-                "service": "{{ service_name }}"
-            },
-            "theme": {
-                "color": "#7b2ff7"
-            },
-            "modal": {
-                "ondismiss": function(){
-                    showPaymentLoading(false);
-                    alert('Payment was cancelled');
-                }
-            }
-        };
+//         // Calculate 40%
+//         let advance = (totalAmount * 0.40).toFixed(2);
+//         document.getElementById("cash_advance").value = advance;
+
+//     } else {
+//         // Hide note box for Online payment
+//         document.getElementById("cash-note-box").style.display = "none";
+//         document.getElementById("cash_advance").value = "";
+//     }
+// });
+
+//     // PAYMENT FUNCTIONS
+//    function initiatePayment() {
+//     const paymentMode = document.getElementById('payment_mode').value;
+//     let amount = parseFloat(document.getElementById('booking_amount').value);
+
+//     if (paymentMode === 'cash') {
+//         // Take only 40% for Razorpay
+//         const advance = parseFloat(document.getElementById('cash_advance').value);
+//         if (!advance || advance <= 0) {
+//             alert("Invalid advance amount calculation.");
+//             return;
+//         }
+//         amount = advance; // override amount
+//     }
+
+//     if (paymentMode === 'cash') {
+//         startRazorpayPayment(amount); // pay only advance
+//     } else if (paymentMode === 'razorpay') {
+//         startRazorpayPayment(amount); // pay full amount
+//     }
+// }
+
+    // function startRazorpayPayment(amount) {
+    // if (!amount || amount <= 0) {
+    //     alert('Invalid amount. Please check the booking amount.');
+    //     return;
+    // }
+
+    // showPaymentLoading(true);
+
+//     $.ajax({
+//         url: '/create_razorpay_order/',
+//         type: 'POST',
+//         data: {
+//             'amount': amount, // send only advance if cash
+//             'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()
+//         },
+//         success: function(response) {
+//             showPaymentLoading(false);
+//             if (response.success) {
+//                 openRazorpayCheckout(response);
+//             } else {
+//                 alert('Error creating payment order: ' + response.error);
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             showPaymentLoading(false);
+//             alert('Something went wrong while creating payment order: ' + error);
+//         }
+//     });
+// }
+
+
+    // function openRazorpayCheckout(orderData) {
+    //     // Get customer details from booking form
+    //     const contactNumber = document.querySelector('input[name="contact_number"]').value;
+    //     const email = document.querySelector('input[name="email"]').value;
+    //     const customerName = "Customer";
+
+    //     const options = {
+    //         "key": orderData.key_id,
+    //         "amount": orderData.amount,
+    //         "currency": orderData.currency,
+    //         "name": "Home Services", // Replace with your business name
+    //         "description": "Service Booking Payment",
+    //         "order_id": orderData.order_id,
+    //         "handler": function (response) {
+    //             verifyPayment(response);
+    //         },
+    //         "prefill": {
+    //             "name": customerName,
+    //             "email": email,
+    //             "contact": contactNumber
+    //         },
+    //         "notes": {
+    //             "service": "{{ service_name }}"
+    //         },
+    //         "theme": {
+    //             "color": "#7b2ff7"
+    //         },
+    //         "modal": {
+    //             "ondismiss": function(){
+    //                 showPaymentLoading(false);
+    //                 alert('Payment was cancelled');
+    //             }
+    //         }
+    //     };
         
-        const rzp = new Razorpay(options);
-        rzp.open();
-    }
+    //     const rzp = new Razorpay(options);
+    //     rzp.open();
+    // }
 
-    function verifyPayment(response) {
-        showPaymentLoading(true);
+    // function verifyPayment(response) {
+    //     showPaymentLoading(true);
         
-        $.ajax({
-            url: '/verify_razorpay_payment/',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                'razorpay_order_id': response.razorpay_order_id,
-                'razorpay_payment_id': response.razorpay_payment_id,
-                'razorpay_signature': response.razorpay_signature
-            }),
-            headers: {
-                "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
-            },
-            success: function(verifyResponse) {
-                showPaymentLoading(false);
-                if (verifyResponse.success) {
-                    // Payment successful - go to confirmation
-                    showSlide(2);
-                } else {
-                    alert('Payment verification failed: ' + verifyResponse.error);
-                }
-            },
-            error: function() {
-                showPaymentLoading(false);
-                alert('Error verifying payment!');
-            }
-        });
-    }
+    //     $.ajax({
+    //         url: '/verify_razorpay_payment/',
+    //         type: 'POST',
+    //         contentType: 'application/json',
+    //         data: JSON.stringify({
+    //             'razorpay_order_id': response.razorpay_order_id,
+    //             'razorpay_payment_id': response.razorpay_payment_id,
+    //             'razorpay_signature': response.razorpay_signature
+    //         }),
+    //         headers: {
+    //             "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function(verifyResponse) {
+    //             showPaymentLoading(false);
+    //             if (verifyResponse.success) {
+    //                 // Payment successful - go to confirmation
+    //                 showSlide(2);
+    //             } else {
+    //                 alert('Payment verification failed: ' + verifyResponse.error);
+    //             }
+    //         },
+    //         error: function() {
+    //             showPaymentLoading(false);
+    //             alert('Error verifying payment!');
+    //         }
+    //     });
+    // }
 
-    function showPaymentLoading(show) {
-        if (show) {
-            document.getElementById('payment-btn-text').style.display = 'none';
-            document.getElementById('payment-loader').style.display = 'inline';
-            document.getElementById('payment-btn').disabled = true;
-        } else {
-            document.getElementById('payment-btn-text').style.display = 'inline';
-            document.getElementById('payment-loader').style.display = 'none';
-            document.getElementById('payment-btn').disabled = false;
-        }
-    }
+    // function showPaymentLoading(show) {
+    //     if (show) {
+    //         document.getElementById('payment-btn-text').style.display = 'none';
+    //         document.getElementById('payment-loader').style.display = 'inline';
+    //         document.getElementById('payment-btn').disabled = true;
+    //     } else {
+    //         document.getElementById('payment-btn-text').style.display = 'inline';
+    //         document.getElementById('payment-loader').style.display = 'none';
+    //         document.getElementById('payment-btn').disabled = false;
+    //     }
+    // }
 
     function goHome() {
         window.location.href = "{% url 'home' %}";

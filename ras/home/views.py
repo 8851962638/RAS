@@ -257,23 +257,29 @@ def save_review(request):
 
 from .models import Booking
 
-def bookings(request):
-    status_filter = request.GET.get('status')  # ?status=pending, ?status=all
-    if status_filter and status_filter.lower() != "all":
-        bookings = Booking.objects.filter(status=status_filter)
-    else:
-        bookings = Booking.objects.all()
+# def bookings(request):
+#     status_filter = request.GET.get('status')  # ?status=pending, ?status=all
+#     if status_filter and status_filter.lower() != "all":
+#         bookings = Booking.objects.filter(status=status_filter)
+#     else:
+#         bookings = Booking.objects.all()
 
-    return render(request, 'bookings.html', {'bookings': bookings})
+#     return render(request, 'bookings.html', {'bookings': bookings})
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from .models import Booking
+from accounts.models import CustomUser # Assuming CustomUser is in accounts app
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
 
 
-def update_booking_status(request, booking_id):
-    if request.method == "POST":
-        new_status = request.POST.get("status")
-        booking = get_object_or_404(Booking, id=booking_id)
-        booking.status = new_status
-        booking.save()
-    return redirect(reverse("bookings"))
+# def update_booking_status(request, booking_id):
+#     if request.method == "POST":
+#         new_status = request.POST.get("status")
+#         booking = get_object_or_404(Booking, id=booking_id)
+#         booking.status = new_status
+#         booking.save()
+#     return redirect(reverse("bookings"))
 
 from django.http import JsonResponse
 from .models import Booking
@@ -793,3 +799,93 @@ def save_custom_product(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Invalid request"})
+
+
+def is_admin(user):
+    # Assuming staff/superuser status denotes an admin for booking management
+    return user.is_authenticated and user.is_staff 
+
+def is_employee(user):
+    # Assuming 'role' = 'employee' is set in CustomUser for workers
+    return user.is_authenticated and user.role == 'employee'
+
+
+# --- Admin/Manager Views ---
+
+@user_passes_test(is_admin)
+def bookings(request):
+    """Admin view to list all bookings and employees."""
+    status_filter = request.GET.get('status') 
+    
+    if status_filter and status_filter.lower() != "all":
+        # Also filter by assignment_status if you want to group them
+        bookings = Booking.objects.filter(Q(status=status_filter) | Q(assignment_status=status_filter)).order_by('-created_at')
+    else:
+        bookings = Booking.objects.all().order_by('-created_at')
+
+    # Fetch users who can be assigned (employees)
+    employees = CustomUser.objects.filter(role='employee').order_by('full_name')
+
+    context = {
+        'bookings': bookings,
+        'employees': employees, # Passed for the assignment dropdown
+    }
+    return render(request, 'bookings.html', context)
+
+
+@user_passes_test(is_admin)
+def update_booking_status(request, booking_id):
+    """Admin view to change the main booking status (pending, in_process, etc.)."""
+    if request.method == "POST":
+        new_status = request.POST.get("status")
+        booking = get_object_or_404(Booking, id=booking_id)
+        booking.status = new_status
+        booking.save()
+    return redirect(reverse("bookings"))
+
+
+@user_passes_test(is_admin)
+def assign_booking(request, booking_id):
+    """Admin view to assign a booking to a specific employee."""
+    if request.method == "POST":
+        employee_id = request.POST.get("employee_id")
+        booking = get_object_or_404(Booking, id=booking_id)
+        employee = get_object_or_404(CustomUser, id=employee_id)
+        
+        # Assign the employee and set status to 'assigned' (awaiting response)
+        booking.assigned_employee = employee
+        booking.assignment_status = 'assigned' 
+        booking.save()
+        
+    return redirect(reverse("bookings"))
+
+
+# --- Employee Views ---
+
+@user_passes_test(is_employee)
+def employee_bookings(request):
+    """Employee view to see all assigned bookings."""
+    # Only show bookings assigned to the currently logged-in user
+    bookings = Booking.objects.filter(assigned_employee=request.user).order_by('-created_at')
+    
+    return render(request, 'employee_bookings.html', {'bookings': bookings})
+
+
+@user_passes_test(is_employee)
+def handle_assignment_response(request, booking_id, action):
+    """Employee view to accept or decline an assignment."""
+    booking = get_object_or_404(Booking, id=booking_id)
+
+    # Security check: Ensure the booking is assigned to the current user
+    if booking.assigned_employee == request.user and booking.assignment_status == 'assigned':
+        if action == 'accept':
+            # Set employee status to accepted. Admin may update main status later.
+            booking.assignment_status = 'accepted'
+        elif action == 'decline':
+            # Set status to declined. Optionally, clear the employee so admin can reassign.
+            booking.assignment_status = 'declined'
+            booking.assigned_employee = None 
+        
+        booking.save()
+    
+    return redirect(reverse("employee_bookings"))

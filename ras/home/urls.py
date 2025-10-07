@@ -16,12 +16,18 @@ urlpatterns = [
     path("artists/", views.artists, name="artists"),
     path('bookings/', views.bookings, name='bookings'),
     path("bookings/update-status/<int:booking_id>/", views.update_booking_status, name="update_booking_status"),
+    path('admin/bookings/<int:booking_id>/assign/', views.assign_booking, name='assign_booking'),
+
+    path('employee/assignments/', views.employee_bookings, name='employee_bookings'),
+    path('employee/assignments/<int:booking_id>/<str:action>/', views.handle_assignment_response, name='handle_assignment_response'),
+
     path('home/save_booking/', views.save_booking, name='save_booking'), 
     path('shop/', views.shop, name='shop'),
     path('my-orders/', views.my_orders, name='my_orders'),
     path('create_razorpay_order/', views.create_razorpay_order, name='create_razorpay_order'),
     path('verify_razorpay_payment/', views.verify_razorpay_payment, name='verify_razorpay_payment'),
     path("save-custom-product/", views.save_custom_product, name="save_custom_product"),
+    path('assign/<int:booking_id>/', views.assign_booking, name='assign_booking'), # New URL
 
 
 ]

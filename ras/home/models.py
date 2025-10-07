@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
+from django.conf import settings
 
 
 class Booking(models.Model):
@@ -38,9 +39,19 @@ class Booking(models.Model):
     is_paid = models.BooleanField(default=False)
     razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
-    
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    ASSIGNMENT_STATUS_CHOICES = [
+        ('assigned', 'Assigned'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
+    
+    assigned_employee = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,blank=True,related_name='assigned_bookings')
+    assignment_status = models.CharField(max_length=20,choices=ASSIGNMENT_STATUS_CHOICES,default='assigned')
+
 
     class Meta:
         db_table = "booking"
