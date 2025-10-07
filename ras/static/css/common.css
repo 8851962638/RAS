@@ -797,3 +797,619 @@ footer {
     margin: 0; 
     padding: 0;
 }
+
+
+
+/* ========================================
+   RESPONSIVE STYLES FOR RCOLOURCRAFT
+   Add these styles to your common.css file
+   ======================================== */
+
+/* ============================================
+   TABLET STYLES (768px - 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+  /* Header adjustments */
+  header {
+    padding: 15px 20px;
+    height: auto;
+    flex-wrap: wrap;
+  }
+
+  .left-group {
+    gap: 20px;
+  }
+
+  .site-logo-text {
+    font-size: 1.4rem;
+  }
+
+  /* Navigation */
+  nav ul {
+    gap: 15px;
+  }
+
+  nav ul li a {
+    font-size: 0.9rem;
+  }
+
+  /* Services Grid - 2 columns */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-left: 20px;
+  }
+
+  .service-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* Hero Section */
+  .hero-overlay {
+    padding: 0 20px;
+    gap: 30px;
+  }
+
+  .glass-card h1 {
+    font-size: 40px;
+  }
+
+  .hero-img img {
+    max-width: 350px;
+  }
+
+  /* Trending Section */
+  .trending-heading {
+    font-size: 2.5rem;
+  }
+
+  .trending-card {
+    width: 300px;
+    height: 220px;
+  }
+
+  /* Reviews */
+  .reviews-container {
+    gap: 40px;
+  }
+
+  .review-card {
+    max-width: 350px;
+    margin: 2rem;
+  }
+}
+
+/* ============================================
+   HAMBURGER MENU STYLES (for mobile)
+   ============================================ */
+
+/* Hamburger Button - Hidden by default, shown on mobile */
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+.hamburger-menu span {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+/* Hamburger Animation when active */
+.hamburger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ============================================
+   MOBILE STYLES (481px - 767px)
+   ============================================ */
+@media (max-width: 767px) {
+  body {
+    padding-top: 60px;
+  }
+
+  /* Header - Mobile Menu */
+  header {
+    height: 60px;
+    padding: 10px 15px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0 0 15px 15px;
+  }
+
+  .left-group {
+    width: auto;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .logo {
+    margin-right: 0;
+  }
+
+  .site-logo-text {
+    font-size: 1.3rem;
+  }
+
+  /* Show Hamburger Menu */
+  .hamburger-menu {
+    display: flex;
+    position: relative;
+    z-index: 1002;
+  }
+
+  /* Hide regular navigation by default */
+  .nav-left {
+    position: fixed;
+    top: 60px;
+    left: -100%;
+    width: 280px;
+    height: calc(100vh - 60px);
+    background: linear-gradient(135deg, #2f71eb, #2a5298);
+    padding: 20px 0;
+    transition: left 0.3s ease-in-out;
+    z-index: 999;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+  }
+
+  /* Show menu when active */
+  .nav-left.active {
+    left: 0;
+  }
+
+  /* Navigation - Stacked Vertically */
+  .nav-left ul {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+
+  .nav-left ul li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-left ul li a {
+    display: block;
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .nav-left ul li a::after {
+    display: none; /* Remove underline animation in mobile menu */
+  }
+
+  /* Keep user icon visible */
+  .nav-right {
+    position: relative;
+    margin-left: 0;
+  }
+
+  /* Popup Menu Adjustment */
+  .popup-menu {
+    top: 50px;
+    right: 0;
+  }
+
+  /* Overlay when menu is open */
+  .menu-overlay {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .menu-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 30px 15px;
+    margin: 20px 10px;
+    border-radius: 15px;
+  }
+
+  .hero-overlay {
+    flex-direction: column;
+    padding: 0 15px;
+    gap: 25px;
+  }
+
+  .glass-card {
+    padding: 25px;
+    max-width: 100%;
+  }
+
+  .glass-card h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .glass-card p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .glass-card button {
+    padding: 12px 25px;
+    font-size: 15px;
+  }
+
+  .hero-img img {
+    max-width: 100%;
+    margin-top: 10px;
+  }
+
+  /* Section Headings */
+  section h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  /* Services Grid - 1 column */
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-left: 0;
+    padding: 0 15px;
+  }
+
+  .service-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem 1rem 1rem 6rem;
+    min-height: 250px;
+  }
+
+  .circle {
+    width: 120px;
+    height: 120px;
+    left: -40px;
+  }
+
+  .card-buttons {
+    left: 6rem;
+    flex-direction: column;
+  }
+
+  .book-btn, .explore-btn {
+    width: 100%;
+  }
+
+  /* Quick Explore Section */
+  .quick-explore-section {
+    padding: 20px 10px 40px;
+  }
+
+  .explore-grid-container {
+    gap: 20px;
+    justify-content: flex-start;
+    padding: 0 10px;
+  }
+
+  .explore-item {
+    width: 100px;
+  }
+
+  .explore-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .explore-item p {
+    font-size: 0.85rem;
+  }
+
+  /* Trending Section */
+  .trending-section {
+    padding: 2rem 0.5rem;
+    margin: 2rem 10px;
+    border-radius: 20px;
+  }
+
+  .trending-heading {
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .trending-card {
+    width: 280px;
+    height: 200px;
+  }
+
+  .slider-track {
+    gap: 2rem;
+  }
+
+  .card-overlay h3 {
+    font-size: 1.2rem;
+  }
+
+  .card-overlay p {
+    font-size: 0.9rem;
+  }
+
+  /* Reviews Section */
+  .reviews-section {
+    padding: 30px 10px;
+  }
+
+  .reviews-section h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .reviews-container {
+    gap: 30px;
+    padding: 0 10px;
+  }
+
+  .review-card {
+    max-width: 100%;
+    min-height: auto;
+    margin: 1.5rem 0;
+    padding: 20px;
+  }
+
+  .review-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .review-meta {
+    align-items: center;
+    text-align: center;
+  }
+
+  .review-text-inline {
+    text-align: center;
+  }
+
+  .review-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .review-image {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Review Form */
+  .review-form {
+    margin-top: 30px;
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  .review-form input,
+  .review-form textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .file-upload-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Footer */
+  footer {
+    padding: 15px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE STYLES (320px - 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  .site-logo-text {
+    font-size: 1.2rem;
+  }
+
+  .nav-left ul li a {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .glass-card h1 {
+    font-size: 28px;
+  }
+
+  .glass-card p {
+    font-size: 15px;
+  }
+
+  section h1 {
+    font-size: 1.8rem;
+  }
+
+  .service-card {
+    padding: 1.5rem 1rem 1rem 5.5rem;
+    min-height: 230px;
+  }
+
+  .circle {
+    width: 100px;
+    height: 100px;
+    left: -35px;
+  }
+
+  .card-buttons {
+    left: 5.5rem;
+  }
+
+  .explore-item {
+    width: 90px;
+  }
+
+  .explore-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .explore-item p {
+    font-size: 0.8rem;
+  }
+
+  .trending-heading {
+    font-size: 1.8rem;
+  }
+
+  .trending-card {
+    width: 250px;
+    height: 180px;
+  }
+
+  .card-overlay h3 {
+    font-size: 1.1rem;
+  }
+
+  .reviews-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .review-card {
+    padding: 15px;
+  }
+
+  .review-meta h3 {
+    font-size: 1.1rem;
+  }
+
+  label.star {
+    font-size: 24px;
+    padding: 8px;
+  }
+}
+
+/* ============================================
+   LANDSCAPE MOBILE ORIENTATION
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    padding: 20px 15px;
+  }
+
+  .hero-overlay {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .glass-card h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .glass-card p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .hero-img img {
+    max-width: 300px;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES FOR RESPONSIVE IMAGES
+   ============================================ */
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hide elements on mobile if needed */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+@media (max-width: 767px) {
+  /* Increase touch target sizes */
+  button,
+  a,
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better form spacing on mobile */
+  .review-form input,
+  .review-form textarea {
+    margin: 10px 0;
+  }
+}
+
+/* ============================================
+   HORIZONTAL SCROLL FIX
+   ============================================ */
+* {
+  max-width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Ensure containers don't overflow */
+.container,
+.hero,
+.services-grid,
+.trending-section {
+  max-width: 100%;
+  overflow: hidden;
+}
+@media (max-width: 480px) {
+    .circle {
+        width: 100px;
+        height: 100px;
+        left: -19px;
+    }
+}
