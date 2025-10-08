@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from django.core.mail import send_mail
-
-
+import os
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'employee',
     'home',
     'accounts',
-
+    'rest_framework',
+    'api',
+    'wallet',
 ]
 
 LOGIN_REDIRECT_URL = 'home:landing'
@@ -92,6 +94,14 @@ DATABASES = {
         'PORT': '5432',                             
     }
 }
+
+DATABASES["default"] = dj_database_url.parse("postgresql://neeraj:if7nqYvblvhsvOfc6sjZWVWimTScwuMD@dpg-d3im16mr433s73c6jumg-a.singapore-postgres.render.com/rccdb")
+
+
+# external
+# postgresql://neeraj:if7nqYvblvhsvOfc6sjZWVWimTScwuMD@dpg-d3im16mr433s73c6jumg-a.singapore-postgres.render.com/rccdb
+
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -118,7 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-
+RAZORPAY_KEY_ID = "rzp_test_RMViGxvSb9tRoJ"  # Test key
+RAZORPAY_KEY_SECRET = "aCpEmJSMaKuSI16uEaftaD1O"   # Test secret
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -134,7 +145,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
