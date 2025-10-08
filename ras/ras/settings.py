@@ -39,13 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ras.myadmin',
-    'ras.employee',
-    'ras.home',
-    'ras.accounts',
+    'ras.myadmin.apps.MyadminConfig',
+    'ras.employee.apps.EmployeeConfig',
+    'ras.home.apps.HomeConfig',
+    'ras.accounts.apps.AccountsConfig',
     'rest_framework',
-    'ras.api',
-    'ras.wallet',
+    'ras.api.apps.ApiConfig',
+    'ras.wallet.apps.WalletConfig',
+    'ras.user.apps.UserConfig',
 ]
 
 LOGIN_REDIRECT_URL = 'home:landing'
