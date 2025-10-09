@@ -95,3 +95,36 @@ class CustomProduct(models.Model):
 
     def __str__(self):
         return f"Custom Product ({self.user})"
+from django.db import models
+from django.conf import settings
+import uuid
+
+class BookingOrder(models.Model):
+    # ✅ Primary key (automatically created as `id` by Django, but you can define explicitly)
+    id = models.BigAutoField(primary_key=True)
+
+    # ✅ External reference ID (useful for Razorpay or tracking)
+    query_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='booking_orders'
+    )
+    product_name = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    razorpay_order_id = models.CharField(max_length=200, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=200, blank=True, null=True)
+    status = models.CharField(max_length=20, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.product_name} - ₹{self.amount} ({self.status})"
+
+    class Meta:
+        db_table = "booking_order"  # ✅ table name in pgAdmin
+        verbose_name = "Booking Order"  # ✅ display name in Django admin
+        verbose_name_plural = "Booking Orders"  # ✅ plural name in Django admin
+        ordering = ['-created_at']  # ✅ latest first

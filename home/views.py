@@ -618,47 +618,45 @@ def create_razorpay_order(request):
             'error': str(e)
         })
 
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def verify_razorpay_payment(request):
     try:
-        # Parse JSON data
         data = json.loads(request.body)
-        
-        # Extract payment details
+
         razorpay_order_id = data.get('razorpay_order_id')
         razorpay_payment_id = data.get('razorpay_payment_id')
         razorpay_signature = data.get('razorpay_signature')
-        
-        # Verify payment signature
+        product_name = data.get('product_name')
+        amount = data.get('amount')
+
         params_dict = {
             'razorpay_order_id': razorpay_order_id,
             'razorpay_payment_id': razorpay_payment_id,
             'razorpay_signature': razorpay_signature
         }
-        
-        # This will raise an exception if signature is invalid
+
+        # Verify signature
         razorpay_client.utility.verify_payment_signature(params_dict)
-        
-      
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Payment verified successfully',
-            'payment_id': razorpay_payment_id
-        })
-        
+
+        # 📝 Save booking/order
+        from .models import BookingOrder  # or your booking model
+        BookingOrder.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            product_name=product_name,
+            amount=amount,
+            razorpay_payment_id=razorpay_payment_id,
+            razorpay_order_id=razorpay_order_id,
+            status='PAID'
+        )
+
+        return JsonResponse({'success': True, 'message': 'Payment verified successfully'})
+
     except razorpay.errors.SignatureVerificationError:
-        return JsonResponse({
-            'success': False,
-            'error': 'Payment signature verification failed'
-        })
+        return JsonResponse({'success': False, 'error': 'Payment signature verification failed'})
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
-    
+        return JsonResponse({'success': False, 'error': str(e)})
 
 # Add this to your views.py or update your existing save_bookings view
 

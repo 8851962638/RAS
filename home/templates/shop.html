@@ -257,7 +257,9 @@ RColourcraft{% endblock %} {% block content %}
     gap: 15px;
     margin-bottom: 10px;
   }
+  
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <div class="shop-container">
   <h2 class="section-title">Masterpieces</h2>
@@ -275,7 +277,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 4,500</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Stone Ganesha Murti', 4500)">Book Now</button>
       </div>
     </div>
 
@@ -288,7 +290,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 1,800</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Marble Durga Murti', 1800)">Book Now</button>
       </div>
     </div>
 
@@ -304,7 +306,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 5,999</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Dr. B. R. Ambedkar Statue', 5999)">Book Now</button>
       </div>
     </div>
   </div>
@@ -320,7 +322,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 299</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Canvas Portrait', 299)">Book Now</button>
       </div>
     </div>
 
@@ -330,7 +332,7 @@ RColourcraft{% endblock %} {% block content %}
       <p class="description">Beauty and strength, artfully rendered..</p>
       <p class="price">₹ 399</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Brushing portrait', 399)">Book Now</button>
       </div>
     </div>
 
@@ -343,7 +345,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 199</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Oil Pastels', 199)">Book Now</button>
       </div>
     </div>
 
@@ -359,7 +361,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 2,500</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Mini Pottery Wheel', 2500)">Book Now</button>
       </div>
     </div>
 
@@ -375,7 +377,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 1,200</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Stone Carving Set', 1200)">Book Now</button>
       </div>
     </div>
 
@@ -388,7 +390,7 @@ RColourcraft{% endblock %} {% block content %}
       </p>
       <p class="price">₹ 1,500</p>
       <div class="card-actions">
-        <button class="btn-primary" onclick="openBookModal()">Book Now</button>
+        <button class="btn-primary" onclick="startPayment('Wooden Art Easel', 1500)">Book Now</button>
       </div>
     </div>
   </div>
@@ -471,6 +473,94 @@ RColourcraft{% endblock %} {% block content %}
     </form>
   </div>
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const csrftoken = getCookie("csrftoken");  // already defined in your code
+
+  function startPayment(productName, amount) {
+    fetch("{% url 'create_razorpay_order' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrftoken,
+      },
+      body: new URLSearchParams({
+        amount: amount,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          const options = {
+            key: data.key_id,
+            amount: data.amount,
+            currency: data.currency,
+            name: "E Paint Shop",
+            description: productName,
+            order_id: data.order_id,
+            handler: function (response) {
+              verifyPayment(response, productName, amount);
+            },
+            prefill: {
+              name: "{{ request.user.get_full_name }}",
+              email: "{{ request.user.email }}",
+            },
+            theme: {
+              color: "#3399cc",
+            },
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } else {
+          alert("❌ Failed to create order: " + data.error);
+        }
+      });
+  }
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+  function verifyPayment(response, productName, amount) {
+    fetch("{% url 'verify_razorpay_payment' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify({
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature,
+        product_name: productName,
+        amount: amount
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          alert("✅ Payment successful! Your booking has been placed.");
+        } else {
+          alert("❌ " + data.error);
+        }
+      })
+      .catch(() => {
+        alert("⚠️ Payment verification failed. Please try again.");
+      });
+  }
+</script>
 
 <script>
   // Open/Close Custom Modal
@@ -510,7 +600,7 @@ RColourcraft{% endblock %} {% block content %}
     }
     return cookieValue;
   }
-  const csrftoken = getCookie("csrftoken");
+  {% comment %} const csrftoken = getCookie("csrftoken"); {% endcomment %}
 
   // ✅ Handle custom form submit (only one listener)
   document
