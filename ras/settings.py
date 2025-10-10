@@ -27,7 +27,11 @@ SECRET_KEY = 'django-insecure-am_fw1vlm_u(2pqj*8k7fv=8*+l9!ync@fa&#5x-$u6)k)-!$r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ras-s6ke.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'rcolorcraft.com',      # Your root domain
+    'www.rcolorcraft.com',  # Your www domain
+    'ras-s6ke.onrender.com' # Your Render subdomain
+]
 
 
 # Application definition
