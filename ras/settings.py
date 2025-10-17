@@ -188,10 +188,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'in-v3.mailjet.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '4655d14820cb1cb2738ebb9cfa49d8f5'
+EMAIL_HOST_PASSWORD = '3df78cbaa9d32361bc5248ddee82f768'
+DEFAULT_FROM_EMAIL = 'info@rcolorcraft.com'
 
-EMAIL_HOST_USER = 'surjeetgautam82@gmail.com'          # your Gmail
-EMAIL_HOST_PASSWORD = 'ujik hnfo gdfc dhme'   # 16-char app password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
