@@ -9,6 +9,9 @@ from django.urls import reverse
 def home_view(request):
     return render(request, 'home.html')
 
+def contact_us(request):
+    return render(request, 'contact_us.html')
+
 # def edit_profile(request):
 #     return render(request, "edit_profile.html")
 
@@ -211,7 +214,7 @@ def save_review(request):
         email = request.POST.get("email")
         review_text = request.POST.get("customer_review")
         rating = request.POST.get("rating")
-        image = request.FILES.get("image")
+        review_image = request.FILES.get("image")
 
         if not (name and email and rating):
             return JsonResponse({"success": False, "error": "Missing required fields"}, status=400)
@@ -223,7 +226,7 @@ def save_review(request):
             customer_email=email,
             customer_review=review_text or "",
             rating=int(rating),  # Ensure integer
-            review_image=image
+            review_image=review_image
         )
 
         # Force save and verify
@@ -231,6 +234,7 @@ def save_review(request):
         
         # Debug print
         print(f"✅ Review saved successfully: {review.id} - {review.customer_name}")
+        profile_pic_url = customer.customer_photo.url if customer.customer_photo else None
 
         return JsonResponse({
             "success": True,
@@ -241,6 +245,7 @@ def save_review(request):
                 "email": review.customer_email,
                 "customer_review": review.customer_review,
                 "rating": review.rating,
+                "profile_pic": profile_pic_url,
                 "image": review.review_image.url if review.review_image else None,
                 "created_at": review.review_date.strftime("%Y-%m-%d %H:%M"),
             }

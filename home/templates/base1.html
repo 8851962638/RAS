@@ -44,6 +44,399 @@
     color: #fff;
   }
 </style>
+<style>
+  /* Popup box */
+  .popup-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #2C61C0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    flex-direction: column;
+    min-width: 160px;
+  }
+
+  .popup-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #ffffffff;
+    font-weight: 500;
+  }
+
+  .popup-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  /* ========== LARGE ORDER BUTTON STYLES ========== */
+  
+  /* Mobile Large Order Button Container */
+  .mobile-large-order {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  /* Mobile Large Order Button - Floating Action Button Style */
+  .large-order-btn-mobile {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+  }
+
+  .large-order-btn-mobile:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.7);
+  }
+
+  .large-order-btn-mobile:active {
+    transform: scale(0.95);
+  }
+
+  /* Pulse animation for attention */
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    50% {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.8), 0 0 0 10px rgba(102, 126, 234, 0.1);
+    }
+  }
+
+  /* Desktop - Large Order Button in Nav */
+  .large-order-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    margin-left: 10px;
+  }
+
+  .large-order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Make button work inside nav list */
+  .nav-left ul li {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* ========== POPUP OVERLAY STYLES ========== */
+  
+  /* Popup Overlay */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .popup-overlay.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Popup Content */
+  .popup {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.4s ease;
+    z-index: 1;
+  }
+
+  .popup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .popup-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  }
+
+  .popup-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+  }
+
+  .popup h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .popup-subtitle {
+    color: #667eea;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .popup-content {
+    text-align: center;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .contact-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .contact-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #667eea;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #f0f0f0;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .close-btn:hover {
+    background: #e0e0e0;
+    transform: rotate(90deg);
+  }
+
+  .close-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+    pointer-events: none;
+  }
+
+  .cta-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ========== RESPONSIVE STYLES ========== */
+  
+  /* Mobile View */
+  @media (max-width: 767px) {
+    /* Show floating button on mobile */
+    .mobile-large-order {
+      display: block;
+    }
+    
+    /* Style button in hamburger menu */
+    .nav-left .large-order-btn {
+      margin: 10px 0;
+      width: calc(100% - 20px);
+      display: block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+    }
+    
+    .nav-left ul li {
+      display: block;
+    }
+
+    .popup {
+      padding: 2rem;
+      width: 95%;
+    }
+
+    .popup h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Tablet View */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .large-order-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      margin-left: 5px;
+    }
+  }
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .large-order-btn {
+        margin: 10px 0;
+        width: 100%;
+        display: block;
+    }
+    
+    .nav-left ul li {
+        display: block;
+    }
+}
+@media screen and (max-width: 600px) {
+  .nav-icon {
+   /* A smaller size for mobile */
+    margin-top: 6px; /* Adjusting the margin for better alignment */
+    margin-left: 122px;
+  }
+}
+@media (max-width: 480px) {
+    .card-buttons {
+        max-width: 150px;
+        margin-left: 90px;
+    }
+}
+
+/* Add this CSS to your existing styles (update the .contact-item class) */
+
+.contact-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+}
+
+/* Updated Contact Item - Now clickable */
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Contact Link Styles */
+.contact-link {
+    text-decoration: none;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.contact-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    transform: translateX(5px);
+}
+
+.contact-link:active {
+    transform: scale(0.98);
+}
+
+.contact-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #667eea;
+    transition: all 0.3s ease;
+}
+
+.contact-link:hover svg {
+    fill: #764ba2;
+    transform: scale(1.1);
+}
+    </style>
 </head>
 <body>
   <!-- Header -->
@@ -56,11 +449,12 @@
       </div>
 
       <!-- HAMBURGER MENU BUTTON (visible only on mobile) -->
-      <div class="hamburger-menu" id="hamburgerMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+       <!-- <div class="hamburger-menu" id="hamburgerMenu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div> -->
+      
 
       <!-- NAVIGATION MENU -->
       <nav class="nav-left" id="navMenu">
@@ -74,6 +468,12 @@
 
           {% if request.user.is_authenticated and request.user.role == "customer" %}
           <li><a href="{% url 'my_orders' %}">My Orders</a></li>
+          <li><a href="{% url 'contact_us' %}">Contact us</a></li>
+          <li>
+          <button class="large-order-btn" onclick="openPopup()">
+                Large Order? 📦
+            </button>
+            </li>
           {% endif %}
           {% if request.user.is_authenticated and request.user.role == "employee" %}
                     <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">My Assignments</a></li>
@@ -81,6 +481,104 @@
         </ul>
       </nav>
     </div>
+
+<div class="mobile-large-order">
+  <button class="large-order-btn-mobile" onclick="openPopup()">
+    📦
+  </button>
+</div>
+
+
+
+     <!-- Replace your popup-overlay section with this updated version -->
+
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+    <div class="popup" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closePopup()">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+
+        <div class="popup-header">
+            <div class="popup-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-6 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l-1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                </svg>
+            </div>
+            <h2>Bulk Orders Welcome!</h2>
+            <p class="popup-subtitle">We're here to help with your large orders</p>
+        </div>
+
+        <div class="popup-content">
+            <p>Thank you for considering us for your bulk order needs! We offer special pricing and dedicated support for large quantity purchases.</p>
+        </div>
+
+        <div class="contact-info">
+            <a href="mailto:rcolorcraft@gmail.com" class="contact-item contact-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                <span>rcolorcraft@gmail.com</span>
+            </a>
+            <a href="tel:+919759013133" class="contact-item contact-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <span>+91 97590 13133</span>
+            </a>
+        </div>
+
+        <button class="cta-button" onclick="closePopup()">
+            Get in Touch
+        </button>
+    </div>
+</div>
+
+    <script>
+        // Replace your existing popup script with this updated version
+
+function openPopup() {
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closePopup(event) {
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay) {
+        // Close if clicking overlay background OR if called directly (close button)
+        if (!event || event.target === overlay || event.currentTarget.classList.contains('close-btn')) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    }
+}
+
+// Close popup with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const overlay = document.getElementById('popupOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+            closePopup();
+        }
+    }
+});
+
+// Ensure close button works - add this after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.querySelector('.close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closePopup();
+        });
+    }
+});
+    </script>
 
     <!-- USER ICON (stays on the right) -->
     <nav class="nav-right">
@@ -98,6 +596,11 @@
         </li>
       </ul>
     </nav>
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
   </header>
 
   <!-- OVERLAY FOR MOBILE MENU -->
@@ -180,5 +683,6 @@
       }
     });
   </script>
+  
 </body>
 </html>

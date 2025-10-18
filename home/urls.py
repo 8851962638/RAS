@@ -24,6 +24,7 @@ urlpatterns = [
     path('home/save_booking/', views.save_booking, name='save_booking'), 
     path('shop/', views.shop, name='shop'),
     path('my-orders/', views.my_orders, name='my_orders'),
+    path('contact_us/', views.contact_us, name='contact_us'),
     path('create_razorpay_order/', views.create_razorpay_order, name='create_razorpay_order'),
     path('verify_razorpay_payment/', views.verify_razorpay_payment, name='verify_razorpay_payment'),
     path("save-custom-product/", views.save_custom_product, name="save_custom_product"),

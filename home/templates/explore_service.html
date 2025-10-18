@@ -16,7 +16,8 @@
     <div class="gallery-container">
       {% for img in db_images %}
         <div class="artwork-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
-          <div class="image-wrapper">
+          <!-- Make the entire image wrapper clickable -->
+          <div class="image-wrapper gallery-item">
             <img src="{{ img.image.url }}" alt="{{ img.image_name }}" class="gallery-img" data-index="{{ forloop.counter0 }}">
             <div class="image-overlay">
               <div class="overlay-content">
@@ -54,18 +55,202 @@
   {% endif %}
 </section>
 
+<!-- Modal HTML must come BEFORE the script -->
+<div id="imageModal" class="modal">
+  <!-- <span class="close-btn">&times;</span> -->
+  <a class="prev-btn">&#10094;</a>
+  <a class="next-btn">&#10095;</a>
+  <img class="modal-content" id="modalImage">
+  <div id="caption"></div>
+</div>
+<script>
+  // This ensures the code only runs after the whole HTML page is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- Element Selection ---
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.querySelector('.close-btn');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const galleryImages = document.querySelectorAll('.gallery-img');
+    let currentIndex;
+
+    // --- Safety Check ---
+    if (!modal || !modalImg || !closeBtn) {
+        console.error('Modal components not found! Check your HTML IDs and class names.');
+        return;
+    }
+
+    console.log('Modal initialized successfully'); // Debug message
+
+    // --- Functions ---
+    const showImage = (index) => {
+      if (index >= 0 && index < galleryImages.length) {
+        const imgElement = galleryImages[index];
+        modal.style.display = 'block';
+        modalImg.src = imgElement.src;
+        currentIndex = index;
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      }
+    };
+    
+    const closeModal = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restore scrolling
+      console.log('Modal closed'); // Debug message
+    };
+
+    // --- Event Listeners ---
+    galleryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const img = this.querySelector('.gallery-img');
+        const index = parseInt(img.dataset.index);
+        showImage(index);
+      });
+    });
+
+    // Close button click event
+    closeBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Close button clicked'); // Debug message
+      closeModal();
+    });
+
+    // Click outside modal to close
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Next/Previous buttons
+    nextBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextIndex = (currentIndex + 1) % galleryImages.length;
+      showImage(nextIndex);
+    });
+
+    prevBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      showImage(prevIndex);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (modal.style.display === 'block') {
+            if (event.key === 'ArrowRight') {
+              const nextIndex = (currentIndex + 1) % galleryImages.length;
+              showImage(nextIndex);
+            }
+            if (event.key === 'ArrowLeft') {
+              const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+              showImage(prevIndex);
+            }
+            if (event.key === 'Escape') closeModal();
+        }
+    });
+
+  });
+</script>
 <!-- Floating Book Button -->
 <a href="{% url 'book_service' service_slug %}" class="floating-book">
   Book Now
 </a>
 <!-- Modal for Image Viewer -->
-<div id="lightbox" class="lightbox">
-  <span class="close">&times;</span>
-  <img class="lightbox-content" id="lightbox-img">
-  <a class="prev">&#10094;</a>
-  <a class="next">&#10095;</a>
-</div>
 
+<style>
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    padding-top: 50px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+
+  /* Modal Content (the image) */
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 85%;
+    max-height: 85vh;
+    animation-name: zoom;
+    animation-duration: 0.4s;
+  }
+
+  /* Animation */
+  @keyframes zoom {
+    from {transform: scale(0.4)}
+    to {transform: scale(1)}
+  }
+
+  /* The Close Button */
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  .close-btn:hover,
+  .close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Next & previous buttons */
+  .prev-btn, .next-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.3s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Position the "next button" to the right */
+  .next-btn {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  
+  .prev-btn {
+    left: 0;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .prev-btn:hover, .next-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Make image wrappers clickable */
+  .gallery-item {
+      cursor: pointer;
+  }
+
+</style>
 <style>
 * {
   box-sizing: border-box;
@@ -473,4 +658,6 @@ body {
   }
 }
 </style>
+
+
 {% endblock %}
