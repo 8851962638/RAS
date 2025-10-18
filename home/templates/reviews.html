@@ -221,6 +221,18 @@
             border-radius: 8px;
             text-align: center;
         }
+        .review-card img.profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-card .review-img {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+}
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -267,29 +279,36 @@
         </div>
       </div>
       {% for r in reviews %}
-        <div class="review-card">
-          {% if r.review_image %}
-            <img src="{{ r.review_image.url }}" alt="{{ r.customer_name }}">
-          {% else %}
-            <img src="{% static 'gallery/default-user.png' %}" alt="User">
-          {% endif %}
-          <div class="review-content">
-            <h3>{{ r.customer_name }}
-              <span class="stars">
-                {% for i in "12345"|make_list %}
-                  {% if forloop.counter <= r.rating %}
-                    ⭐
-                  {% else %}
-                    ☆
-                  {% endif %}
-                {% endfor %}
-              </span>
-            </h3>
-            <p>"{{ r.customer_review }}"</p>
-          </div>
-        </div>
-      {% empty %}
-        {% endfor %}
+  <div class="review-card">
+    <!-- Profile picture from customer account -->
+    {% if r.customer.customer_photo %}
+      <img src="{{ r.customer.customer_photo.url }}" alt="{{ r.customer_name }}">
+    {% else %}
+      <img src="{% static 'gallery/default-user.png' %}" alt="User">
+    {% endif %}
+    
+    <div class="review-content">
+      <h3>{{ r.customer_name }}
+        <span class="stars">
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= r.rating %}
+              ⭐
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </span>
+      </h3>
+      <p>"{{ r.customer_review }}"</p>
+      
+      <!-- Review image (uploaded with review) -->
+      {% if r.review_image %}
+        <img src="{{ r.review_image.url }}" alt="Review Image" class="review-img" style="max-width: 100%; margin-top: 10px; border-radius: 8px;">
+      {% endif %}
+    </div>
+  </div>
+{% empty %}
+{% endfor %}
     </div>
   </section>
 
@@ -345,7 +364,7 @@ function submitReview() {
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
   $.ajax({
-    url: "{% url 'save_review' %}",   // ✅ use Django reverse
+    url: "{% url 'save_review' %}",
     type: "POST",
     data: formData,
     processData: false,
@@ -354,17 +373,27 @@ function submitReview() {
     success: function(data){
       if (data.success) {
         $("#response").html(`<div style='color:green; margin-bottom:8px'>${data.message}</div>`);
-        const imgSrc = data.data.image ? data.data.image : "{% static 'gallery/default-user.png' %}";
+        
+        // ✅ Profile pic comes from customer account
+        const profilePic = data.data.profile_pic ? data.data.profile_pic : "{% static 'gallery/default-user.png' %}";
+        
+        // ✅ Review image is the uploaded image (optional)
+        const reviewImage = data.data.image ? data.data.image : null;
+        
         const stars = "⭐".repeat(Number(data.data.rating || 0));
         const reviewText = data.data.customer_review || "";
+        
+        // ✅ Create review card with profile pic (not review image)
         const newCard = `
           <div class="review-card">
-            <img src="${imgSrc}" alt="${data.data.name}">
+            <img src="${profilePic}" alt="${data.data.name}">
             <div class="review-content">
               <h3>${data.data.name} <span class="stars">${stars}</span></h3>
               <p>"${reviewText}"</p>
+              ${reviewImage ? `<img src="${reviewImage}" alt="Review Image" class="review-img" style="max-width: 100%; margin-top: 10px; border-radius: 8px;">` : ''}
             </div>
           </div>`;
+        
         $("#reviewsGrid").prepend(newCard);
         $("#reviewForm")[0].reset();
         $("#file-name-display").text("No file chosen");
@@ -380,7 +409,7 @@ function submitReview() {
       }
     },
     error: function(xhr){
-      console.log("AJAX error", xhr.status, xhr.responseText);   // ✅ show what failed
+      console.log("AJAX error", xhr.status, xhr.responseText);
       let msg = "Something went wrong.";
       try { const err = JSON.parse(xhr.responseText); if (err.error) msg = err.error; } catch(e){}
       $("#response").html(`<div style='color:red'>${msg}</div>`);
@@ -401,15 +430,8 @@ $(document).ready(function(){
     $("#file-name-display").text(fileName);
   });
 });
-
-
-  function updateFileName() {
-    const input = document.getElementById('image');
-    const fileNameDisplay = document.getElementById('file-name-display');
-    fileNameDisplay.textContent = input.files.length > 0 ? input.files[0].name : "No file chosen";
-  }
-
 </script>
+
 <style>
   .gallery-section {
     padding: 50px 20px;
