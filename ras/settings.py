@@ -187,11 +187,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'in-v3.mailjet.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = '4655d14820cb1cb2738ebb9cfa49d8f5'
-EMAIL_HOST_PASSWORD = '3df78cbaa9d32361bc5248ddee82f768'
-DEFAULT_FROM_EMAIL = 'info@rcolorcraft.com'
+# settings.py
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# 1. SMTP Host: GoDaddy's Outgoing Server Address
+EMAIL_HOST = 'smtpout.secureserver.net' 
+
+# 2. SMTP Port: Standard port for TLS/STARTTLS
+EMAIL_PORT = 587 
+
+# 3. Connection Security: Recommended for port 587
+EMAIL_USE_TLS = True 
+# EMAIL_USE_SSL = False # (Only set this to True if you use Port 465)
+
+# 4. Authentication: Your GoDaddy Email Login
+EMAIL_HOST_USER = 'info@rcolorcraft.com' 
+# **CRITICAL**: Replace 'your_godaddy_password' with the actual password for info@rcolorcraft.com
+# For security, it is highly recommended to use environment variables for the password.
+EMAIL_HOST_PASSWORD = 'Craft@2151' 
+
+# 5. Default Sender Address
+DEFAULT_FROM_EMAIL = 'info@rcolorcraft.com'
