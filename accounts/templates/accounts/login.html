@@ -28,32 +28,42 @@
 
       <!-- Submit button -->
       <button type="button" class="btn" onclick="loginUser()">Login</button>
-    <p class="switch-text">
-  Forgot your password? 
-  <a href="javascript:void(0)" onclick="openForgotPasswordModal()">Reset here</a>
-</p>
+      
+      <p class="switch-text">
+        Forgot your password? 
+        <a href="javascript:void(0)" onclick="openForgotPasswordModal()">Reset here</a>
+      </p>
 
-<p class="switch-text">
-  Don't have an account? 
-  <a href="javascript:void(0)" onclick="openSignupModal()">Sign Up</a>
-</p>
-
+      <p class="switch-text">
+        Don't have an account? 
+        <a href="javascript:void(0)" onclick="openSignupModal()">Sign Up</a>
+      </p>
     </form>
+  </div>
+</div>
+
+<!-- Custom Alert -->
+<div id="customAlert" class="custom-alert"></div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <p class="loader-text">Logging in...</p>
   </div>
 </div>
 
 <div class="bubbles">
   <span></span><span></span><span></span><span></span><span></span>
 </div>
-<!-- Signup Choice Modal -->
+
 <!-- Signup Choice Modal -->
 <div id="signupChoiceModal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeSignupModal()">&times;</span>
     <h2>Choose Signup Type</h2>
-    <a href="{% url 'accounts:signup_employee' %}" class="signup-option">Sign Up as Employee</a>
-<a href="{% url 'accounts:signup_customer' %}" class="signup-option">Sign Up as Customer</a>
-
+    <a href="{% url 'accounts:signup_employee' %}" class="signup-option">Sign Up as Artist</a>
+    <a href="{% url 'accounts:signup_customer' %}" class="signup-option">Sign Up as Customer</a>
   </div>
 </div>
 
@@ -62,7 +72,7 @@
   <div class="modal-content">
     <span class="close-btn" onclick="closeForgotPasswordModal()">&times;</span>
     <h2>Reset Password</h2>
-    <p>Enter your email and we’ll send you a reset link.</p>
+    <p>Enter your email and we'll send you a reset link.</p>
 
     <form id="forgotPasswordForm">
       {% csrf_token %}
@@ -77,17 +87,99 @@
   </div>
 </div>
 
+<style>
+/* Loading Overlay */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.loader-container {
+  text-align: center;
+  background: white;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Spinner Animation */
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Alert Styles */
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+  max-width: 90%;
+  text-align: center;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  z-index: 10000;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  animation: fadeInOut 4s ease forwards;
+}
+
+/* Alert Variants */
+.custom-alert.success { background: #28a745; }
+.custom-alert.error   { background: #dc3545; }
+.custom-alert.warning { background: #ffc107; color: #000; }
+.custom-alert.info    { background: #17a2b8; }
+
+/* Animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -20px); }
+  10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+</style>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
-
 function loginUser() {
     const email = $('#email').val();
     const password = $('#password').val();
     const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 
+    // Show loader
+    $('#loadingOverlay').css("display", "flex");
+    $('#loginError').text('');
+
     $.ajax({
-        url: "{% url 'accounts:loginauth' %}",   // AJAX posts to loginauth
+        url: "{% url 'accounts:loginauth' %}",
         type: "POST",
         headers: {
             "X-CSRFToken": csrfToken
@@ -97,37 +189,46 @@ function loginUser() {
             password: password
         },
         success: function(response) {
+            // Hide loader
+            $('#loadingOverlay').hide();
+
             if (response.success) {
-                window.location.href = "{% url 'home' %}";  // redirect after login
+                // Show message if profile needs completion
+                if (response.message) {
+                    showAlert(response.message, 'warning');
+                } else {
+                    showAlert('Login successful! Redirecting...', 'success');
+                }
+                
+                // Use redirect_url from backend or default to home
+                const redirectUrl = response.redirect_url || "{% url 'home' %}";
+                
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000);
             } else {
+                showAlert(response.error, 'error');
                 $('#loginError').text(response.error);
             }
         },
         error: function(xhr) {
+            // Hide loader
+            $('#loadingOverlay').hide();
+            
+            showAlert('Something went wrong! Please try again.', 'error');
             $('#loginError').text("Something went wrong! Please try again.");
             console.error(xhr.responseText);
         }
     });
 }
 
-
-
 function openSignupModal() {
   document.getElementById("signupChoiceModal").style.display = "flex";
 }
+
 function closeSignupModal() {
   document.getElementById("signupChoiceModal").style.display = "none";
 }
-
-// Close modal if clicked outside
-window.onclick = function(event) {
-  let modal = document.getElementById("signupChoiceModal");
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
-}
-
-
 
 function openForgotPasswordModal() {
   document.getElementById("forgotPasswordModal").style.display = "flex";
@@ -141,8 +242,12 @@ function submitForgotPassword() {
   const email = $('#reset_email').val();
   const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 
+  // Show loader
+  $('#loadingOverlay').css("display", "flex");
+  $('.loader-text').text('Sending reset link...');
+
   $.ajax({
-      url: "{% url 'accounts:password_reset_ajax' %}",  // custom view
+      url: "{% url 'accounts:password_reset_ajax' %}",
       type: "POST",
       headers: {
           "X-CSRFToken": csrfToken
@@ -151,20 +256,48 @@ function submitForgotPassword() {
           email: email
       },
       success: function(response) {
+          // Hide loader
+          $('#loadingOverlay').hide();
+          $('.loader-text').text('Logging in...');
+
           if (response.success) {
+              showAlert('Reset link sent to your email!', 'success');
               $('#forgotPasswordMsg').text("✅ Reset link sent to your email.");
               $('#forgotPasswordError').text("");
+              
+              // Close modal after 2 seconds
+              setTimeout(() => {
+                  closeForgotPasswordModal();
+                  $('#reset_email').val('');
+                  $('#forgotPasswordMsg').text('');
+              }, 2000);
           } else {
+              showAlert(response.error, 'error');
               $('#forgotPasswordError').text(response.error);
               $('#forgotPasswordMsg').text("");
           }
       },
       error: function(xhr) {
+          // Hide loader
+          $('#loadingOverlay').hide();
+          $('.loader-text').text('Logging in...');
+          
+          showAlert('Something went wrong. Try again.', 'error');
           $('#forgotPasswordError').text("Something went wrong. Try again.");
           $('#forgotPasswordMsg').text("");
           console.error(xhr.responseText);
       }
   });
+}
+
+function showAlert(message, type="info") {
+  const alertBox = $("#customAlert");
+  alertBox.removeClass().addClass("custom-alert " + type);
+  alertBox.text(message).fadeIn();
+
+  setTimeout(() => {
+    alertBox.fadeOut();
+  }, 3500);
 }
 
 // Close modal when clicking outside
@@ -179,6 +312,5 @@ window.onclick = function(event) {
     forgotModal.style.display = "none";
   }
 }
-
 </script>
 {% endblock %}

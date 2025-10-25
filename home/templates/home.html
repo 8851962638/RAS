@@ -34,7 +34,7 @@
       padding: 20px 15px;
       position: relative;
       z-index: 1;
-      min-height: 380px;
+      min-height: 354px;
       transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
@@ -42,7 +42,7 @@
       text-align: center;
     }
     
-    .service-card:before {
+    /* .service-card:before {
       content: '';
       position: absolute;
       background: rgb(85 108 214 / 5%);
@@ -56,7 +56,7 @@
       border-radius: 35px;
       transition: all 0.7s ease;
     }
-    
+     */
     .service-card:hover {
       background: linear-gradient(135deg, #309df0 0%, #2d8fd9 100%);
       color: #fff;
@@ -120,6 +120,7 @@
       transition: 0.7s;
     }
     
+   
     .service-card:hover h3,
     .service-card:hover p {
       color: #fff;
@@ -227,7 +228,7 @@
             Welcome Back
           {% endif %}
         </h1>
-        <p>At RColourcraft, we specialize in stunning murals, creative paintings, and artistic designs that transform your space.</p>
+        <p>At RColorcraft, we specialize in stunning murals, creative paintings, and artistic designs that transform your space.</p>
         <!-- <button>Explore Services</button> -->
       </div>
       <div class="hero-img">
@@ -411,8 +412,8 @@
         <div class="circle">
           <img src="{% static 'gallery/3d2.jpg' %}" alt="3D Wall Art" />
         </div>
-        <h3>3D Wall Art</h3>
-        <p>Our immersive 3D painting experiences transform ordinary walls into extraordinary spaces, making your surroundings vibrant, interactive, and unforgettable.</p>
+        <h3 style="padding-bottom: 12px;"> <b>3D Wall Art</b></h3>
+        <p>Our immersive 3D painting experiences transform ordinary walls into extraordinary spaces, making your surroundings vibrant, interactive and unforgettable.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' '3d-wall-art' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' '3d-wall-art' %}" class="explore-btn">Explore</a>
@@ -423,9 +424,8 @@
         <div class="circle">
           <img src="{% static 'gallery/3d7.jpg' %}" alt="3D Floor Art" />
         </div>
-        <h3>3D Floor Art</h3>
-        <p>We create immersive 3D Floor paintings experiences that bring your Floo and spaces to life.
-Elaborated: Step into a world where art escapes the canvas</p>
+        <h3 style="padding-bottom: 12px;"> <b>3D Floor Art</b></h3>
+        <p>We create immersive 3D Floor paintings experiences that bring your floors and spaces to life.Step into a world where art escapes the canvas.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' '3d-floor-art' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' '3d-floor-art' %}" class="explore-btn">Explore</a>
@@ -436,7 +436,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/art11.jpg' %}" alt="Mural Art" />
         </div>
-        <h3>Mural Art</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Mural Art</b></h3>
         <p>We design beautiful and expressive Mural artworks that perfectly match your personality, style, and space. Every brushstroke is crafted to make your walls a true reflection of you.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'mural' %}" class="book-btn">Book this Service</a>
@@ -448,8 +448,8 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/3d6.jpg' %}" alt="Metro Advertisement" />
         </div>
-        <h3>Metro Advertisement</h3>
-        <p>Transform high-traffic areas into stunning visual experiences. Our large-scale creative artworks and ads are perfect for metro stations, public spaces, and commercial zones..</p>
+        <h3 style="padding-bottom: 12px;"> <b>Metro Advertisement</b></h3>
+        <p>Transform high-traffic areas into stunning visual experiences. Our large-scale creative artworks and ads are perfect for metro stations, public spaces, and commercial zones.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'metro-advertisement' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' 'metro-advertisement' %}" class="explore-btn">Explore</a>
@@ -460,8 +460,8 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/ad.png' %}" alt="Outdoor Advertisement" />
         </div>
-        <h3>Outdoor Advertisement</h3>
-        <p>From soft minimalism to bold statements, our aesthetic artworks are thoughtfully crafted to enhance the beauty and energy of your space—designed exclusively for your taste</p>
+        <h3 style="padding-bottom: 12px;"> <b>Outdoor Advertisement</b></h3>
+        <p>From soft minimalism to bold statements, our aesthetic artworks are thoughtfully crafted to enhance the beauty and energy of your space.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'outdoor-advertisement' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' 'outdoor-advertisement' %}" class="explore-btn">Explore</a>
@@ -472,8 +472,8 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/schoolpaint.jpg' %}" alt="School Painting" />
         </div>
-        <h3>School Painting</h3>
-        <p> Make learning spaces lively and inspiring! Our school paintings bring classrooms, corridors, and playgrounds to life with color, fun characters, and motivational messages.</p>
+        <h3 style="padding-bottom: 12px;"> <b>School Painting</b></h3>
+        <p> Make learning spaces lively and inspiring! Our school paintings bring classrooms, corridors and playgrounds to life with color, fun characters, and motivational messages.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'school-painting' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' 'school-painting' %}" class="explore-btn">Explore</a>
@@ -484,8 +484,8 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/paintselfie.jpg' %}" alt="Selfie Painting" />
         </div>
-        <h3>Selfie Painting</h3>
-        <p>perfect for photo lovers and Instagram-worthy clicks. Ideal for cafés, studios, events, and public spaces.</p>
+        <h3 style="padding-bottom: 12px;"> <b>Selfie Painting</b></h3>
+        <p>Perfect for photo lovers and Instagram-worthy clicks. Ideal for cafés, studios, events, and public spaces.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'selfie-painting' %}" class="book-btn">Book this Service</a>
           <a href="{% url 'explore_service' 'selfie-painting' %}" class="explore-btn">Explore</a>
@@ -496,7 +496,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/madhu.jpg' %}" alt="Madhubani Painting" />
         </div>
-        <h3>Madhubani Painting</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Madhubani Painting</b></h3>
         <p> Our hand-painted Madhubani artworks reflect India’s rich cultural heritage with intricate patterns, vibrant colors, and meaningful storytelling</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'madhubani-painting' %}" class="book-btn">Book this Service</a>
@@ -508,7 +508,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/texture.jpg' %}" alt="Texture Painting" />
         </div>
-        <h3>Texture Painting</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Texture Painting</b></h3>
         <p>Give your walls a touch of elegance and depth with our premium texture painting</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'texture-painting' %}" class="book-btn">Book this Service</a>
@@ -520,7 +520,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/ganeshmurti.jpg' %}" alt="Stone Murti" />
         </div>
-        <h3>Stone Murti</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Stone Murti</b></h3>
         <p>Our hand-carved stone murtis capture divine energy and artistic excellence, perfect for temples, gardens, and home décor that radiates peace and grace.</p>
         <div class="card-buttons">
           {% comment %} <a href="{% url 'book_service' 'stone-murti' %}" class="book-btn">Customize Product</a> {% endcomment %}
@@ -532,7 +532,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/statue12.jpg' %}" alt="Statue" />
         </div>
-        <h3>Statue</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Statue</b></h3>
         <p>Add grandeur and character to your surroundings with our beautifully crafted statues. Each piece is designed with precision, making it a timeless centerpiece for homes, offices, and public spaces.</p>
         <div class="card-buttons">
           {% comment %} <a href="{% url 'book_service' 'statue' %}" class="book-btn">Customize Product</a> {% endcomment %}
@@ -544,7 +544,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/scrap.jpg' %}" alt="Scrap Animal Art" />
         </div>
-        <h3>Scrap Animal Art</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Scrap Animal Art</b></h3>
         <p>Where creativity meets sustainability. We transform recycled scrap materials into stunning animal sculptures that celebrate wildlife while promoting eco-friendly art. Unique, bold, and full of personality</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'scrap-animal-art' %}" class="book-btn">Book this Service</a>
@@ -556,7 +556,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/fountain.png' %}" alt="Nature & Water Fountain" />
         </div>
-        <h3>Nature & Water Fountain</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Nature & Water Fountain</b></h3>
         <p>We blend the harmony of architecture with the elegance of nature. These artworks create a balanced and sophisticated ambiance in any space.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'nature-fountain' %}" class="book-btn">Book this Service</a>
@@ -568,7 +568,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/Cartoon.jpg' %}" alt="Cartoon Painting" />
         </div>
-        <h3>Cartoon Painting</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Cartoon Painting</b></h3>
         <p>Perfect for kids, schools, play areas, and creative corners — our cartoon and fun-themed designs bring smiles, laughter, and a touch of whimsy to your walls.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'cartoon-painting' %}" class="book-btn">Book this Service</a>
@@ -580,7 +580,7 @@ Elaborated: Step into a world where art escapes the canvas</p>
         <div class="circle">
           <img src="{% static 'gallery/normal_paint.png' %}" alt="Home Painting" />
         </div>
-        <h3>Home Painting</h3>
+        <h3 style="padding-bottom: 12px;"> <b>Home Painting</b></h3>
         <p>Transform your house into a warm and artistic home. Our customized home painting solutions blend creativity, color, and comfort to reflect your personal style.</p>
         <div class="card-buttons">
           <a href="{% url 'book_service' 'home-painting' %}" class="book-btn">Book this Service</a>

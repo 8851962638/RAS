@@ -437,6 +437,252 @@
     transform: scale(1.1);
 }
     </style>
+    <style>
+       
+        
+      
+
+        footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            padding: 60px 20px 20px;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-section ul li a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        } */
+
+        /* .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        } */
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .footer-bottom .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            footer {
+                padding: 40px 20px 20px;
+            }
+        }
+    </style>
+    <style>
+      
+    /* Social Media Section */
+    .social-section {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+        text-align: center;
+    }
+
+    .social-section h2 {
+        color: #0277bd;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .social-section p {
+        color: #546e7a;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .social-link {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-link:hover {
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-link svg {
+        width: 35px;
+        height: 35px;
+        fill: white;
+    }
+
+    .social-facebook {
+        background: linear-gradient(135deg, #1877f2, #0d5fc9);
+    }
+
+    .social-instagram {
+        background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .social-twitter {
+        background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+    }
+
+    .social-linkedin {
+        background: linear-gradient(135deg, #0077b5, #005885);
+    }
+
+    .social-whatsapp {
+        background: linear-gradient(135deg, #25d366, #1da851);
+    }
+
+  
+
+    
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+       
+
+        .social-links {
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+        }
+
+    </style>
 </head>
 <body>
   <!-- Header -->
@@ -460,15 +706,25 @@
       <nav class="nav-left" id="navMenu">
         <ul>
           <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-          <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
-          <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
+          {# Only visible to admin #}
+{% if user.is_authenticated and user.role == 'admin' %}
+    <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
+    <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
+{% endif %}
+
           <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
           <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li>
-          <li><a href="{% url 'service_images' %}">Art Images</a></li>
+{% if user.is_authenticated and user.role == 'admin' or user.is_authenticated and user.role == 'employee' %}
+    <li><a href="{% url 'service_images' %}">Art Images</a></li>
+{% endif %}
+
 
           {% if request.user.is_authenticated and request.user.role == "customer" %}
           <li><a href="{% url 'my_orders' %}">My Orders</a></li>
-          <li><a href="{% url 'contact_us' %}">Contact us</a></li>
+          {% if user.is_authenticated and user.role == 'customer' or user.is_authenticated and user.role == 'employee' %}
+            <li><a href="{% url 'contact_us' %}">Contact us</a></li>
+        {% endif %}
+
           <li>
           <button class="large-order-btn" onclick="openPopup()">
                 Large Order? 📦
@@ -614,6 +870,12 @@ document.addEventListener('DOMContentLoaded', function() {
     <p>© 2025 RColorcraft. All Rights Reserved.</p>
   </footer>
 
+            </div>
+            <br></br>
+                <p>© 2025 RColourcraft. All Rights Reserved. | Made with <span class="heart">♥</span> in India</p>
+            </div>
+        </div>
+    </footer>
   <!-- JS file -->
   <script src="{% static 'js/script.js' %}"></script>
   
