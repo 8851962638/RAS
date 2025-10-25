@@ -27,7 +27,11 @@ SECRET_KEY = 'django-insecure-am_fw1vlm_u(2pqj*8k7fv=8*+l9!ync@fa&#5x-$u6)k)-!$r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'rcolorcraft.com',      # Your root domain
+    'www.rcolorcraft.com',  # Your www domain
+    'ras-s6ke.onrender.com' # Your Render subdomain
+]
 
 
 # Application definition
@@ -54,6 +58,7 @@ LOGOUT_REDIRECT_URL = 'home:landing'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,18 +90,25 @@ WSGI_APPLICATION = 'ras.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',   
+#         'NAME': 'rasdb',                           
+#         'USER': 'postgres',                              
+#         'PASSWORD': '12345678',                          
+#         'HOST': 'localhost',                        
+#         'PORT': '5432',                             
+#     }
+# }
+
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgres://postgres:12345678@localhost:5432/rasdb')
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',   
-        'NAME': 'rasdb',                           
-        'USER': 'postgres',                              
-        'PASSWORD': '12345678',                          
-        'HOST': 'localhost',                        
-        'PORT': '5432',                             
-    }
+    'default': dj_database_url.parse(DATABASE_URL)
 }
 
-DATABASES["default"] = dj_database_url.parse("postgresql://neeraj:if7nqYvblvhsvOfc6sjZWVWimTScwuMD@dpg-d3im16mr433s73c6jumg-a.singapore-postgres.render.com/rccdb")
+# DATABASES["default"] = dj_database_url.parse("postgresql://neeraj:if7nqYvblvhsvOfc6sjZWVWimTScwuMD@dpg-d3im16mr433s73c6jumg-a.singapore-postgres.render.com/rccdb")
 
 
 # external
@@ -147,16 +159,43 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ✅ Static files (CSS, JS, Images)
 STATIC_URL = '/static/'
 
+# Folder where 'collectstatic' will put all static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Optional: keep this only if you have a 'static' folder in your project
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Enable WhiteNoise compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ✅ Media files (user uploads)
+# S3 media storage
+INSTALLED_APPS += ['storages']
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'ap-south-1')
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+# Use S3 for uploaded files (media)
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Public file settings (simplest to start)
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False  # if you want public, unsigned URLs
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+
+# Media URL should point to S3, not /media/
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -166,11 +205,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# settings.py
 
-EMAIL_HOST_USER = 'surjeetgautam82@gmail.com'          # your Gmail
-EMAIL_HOST_PASSWORD = 'ujik hnfo gdfc dhme'   # 16-char app password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# 1. SMTP Host: GoDaddy's Outgoing Server Address
+EMAIL_HOST = 'smtpout.secureserver.net' 
+
+# 2. SMTP Port: Standard port for TLS/STARTTLS
+EMAIL_PORT = 587 
+
+# 3. Connection Security: Recommended for port 587
+EMAIL_USE_TLS = True 
+# EMAIL_USE_SSL = False # (Only set this to True if you use Port 465)
+
+# 4. Authentication: Your GoDaddy Email Login
+EMAIL_HOST_USER = 'info@rcolorcraft.com' 
+# **CRITICAL**: Replace 'your_godaddy_password' with the actual password for info@rcolorcraft.com
+# For security, it is highly recommended to use environment variables for the password.
+EMAIL_HOST_PASSWORD = 'Craft@2151' 
+
+# 5. Default Sender Address
+DEFAULT_FROM_EMAIL = 'info@rcolorcraft.com'
