@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # app_name = "home"
 
@@ -29,6 +31,8 @@ urlpatterns = [
     path('verify_razorpay_payment/', views.verify_razorpay_payment, name='verify_razorpay_payment'),
     path("save-custom-product/", views.save_custom_product, name="save_custom_product"),
     path('assign/<int:booking_id>/', views.assign_booking, name='assign_booking'), # New URL
+    path('approve-service-image/', views.approve_service_image, name='approve_service_image'),
+    path('delete_service_image/', views.delete_service_image, name='delete_service_image'),
 
 
 ]

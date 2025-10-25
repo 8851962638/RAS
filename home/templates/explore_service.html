@@ -1,7 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 
-{% block title %}{{ heading }} - RColourcraft{% endblock %}
+{% block title %}{{ heading }} - RColorcraft{% endblock %}
 
 {% block content %}
 <section class="hero-section">
@@ -16,9 +16,9 @@
     <div class="gallery-container">
       {% for img in db_images %}
         <div class="artwork-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
-          <!-- Make the entire image wrapper clickable -->
-          <div class="image-wrapper gallery-item">
+          <div class="image-wrapper gallery-item" style="position: relative;">
             <img src="{{ img.image.url }}" alt="{{ img.image_name }}" class="gallery-img" data-index="{{ forloop.counter0 }}">
+
             <div class="image-overlay">
               <div class="overlay-content">
                 <i class="fas fa-search-plus"></i>
@@ -26,8 +26,22 @@
               </div>
             </div>
           </div>
+
           <div class="card-content">
             <h3 class="artwork-title">{{ img.image_name }}</h3>
+
+            <!-- ✅ Approve button (only visible to admin for unverified images) -->
+            <div class="action-btn">
+              {% if request.user.is_staff %}
+                {% if not img.is_verified_pic %}
+                  <button class="approve-btn" data-id="{{ img.id }}">✅</button>
+                {% endif %}
+                <button class="delete-btn" data-id="{{ img.id }}">❌</button>
+              {% elif img.userupload_id == request.user.id %}
+                <button class="delete-btn" data-id="{{ img.id }}">❌</button>
+              {% endif %}
+            </div>
+
             <div class="artwork-details">
               <span class="price-tag">₹{{ img.price }}</span>
               <span class="art-type">{{ img.type_of_art }}</span>
@@ -41,28 +55,34 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="empty-state">
-      <div class="empty-icon">
-        <i class="fas fa-palette"></i>
-      </div>
-      <h3>No Artworks Yet</h3>
-      <p>Be the first to share your amazing {{ heading|lower }} with our community!</p>
-      <a href="{% url 'service_images' %}" class="cta-button">
-        <i class="fas fa-plus"></i>
-        Upload Your Art
-      </a>
-    </div>
+    {% if request.user.is_authenticated %}
+      {% if request.user.is_staff or request.user.role == "employee" %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3>No Artworks Yet</h3>
+          <p>Be the first to share your amazing {{ heading|lower }} with our community!</p>
+          <a href="{% url 'service_images' %}" class="cta-button">
+            <i class="fas fa-plus"></i>
+            Upload Your Art
+          </a>
+        </div>
+      {% endif %}
+    {% endif %}
   {% endif %}
 </section>
 
-<!-- Modal HTML must come BEFORE the script -->
+
+<!-- Modal (same as before) -->
 <div id="imageModal" class="modal">
-  <!-- <span class="close-btn">&times;</span> -->
   <a class="prev-btn">&#10094;</a>
   <a class="next-btn">&#10095;</a>
   <img class="modal-content" id="modalImage">
   <div id="caption"></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   // This ensures the code only runs after the whole HTML page is loaded
   document.addEventListener('DOMContentLoaded', function() {
@@ -92,7 +112,7 @@
         modal.style.display = 'block';
         modalImg.src = imgElement.src;
         currentIndex = index;
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden'; 
       }
     };
     
@@ -155,8 +175,120 @@
             if (event.key === 'Escape') closeModal();
         }
     });
+  
+
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const imgId = this.dataset.id;
+
+      fetch("{% url 'approve_service_image' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: imgId })
+      })
+      .then(response => response.json())
+      .then(data => {
+  if (data.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Approved Successfully!",
+      text: "The artwork has been approved.",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      background: "#ffffff",
+      color: "#333",
+      backdrop: `
+        rgba(0,0,0,0.3)
+        left top
+        no-repeat
+      `
+    });
+
+    // Slight delay before reload (for smoothness)
+    setTimeout(() => {
+      location.reload();
+    }, 1600);
+
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops!",
+      text: data.message || "Something went wrong!",
+      confirmButtonColor: "#d33"
+    });
+  }
+})
+
+      .catch(err => {
+        console.error(err);
+        alert("❌ Something went wrong!");
+      });
+    });
+  });
 
   });
+
+// --- DELETE FUNCTIONALITY ---
+document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const imgId = this.dataset.id;
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This image will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("{% url 'delete_service_image' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: imgId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "The image has been deleted.",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            setTimeout(() => location.reload(), 1600);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: data.message || "Something went wrong."
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Failed to delete the image."
+          });
+        });
+      }
+    });
+  });
+});
+
 </script>
 <!-- Floating Book Button -->
 <a href="{% url 'book_service' service_slug %}" class="floating-book">
@@ -313,10 +445,11 @@ body {
 }
 
 .gallery-section {
-  padding: 4rem 2rem;
+  padding: 4rem 2rem;     /* ↓ reduces side & vertical space */
   background: #f8fafc;
   min-height: 60vh;
 }
+
 
 .gallery-container {
   display: grid;
@@ -325,6 +458,8 @@ body {
   max-width: 1400px;
   margin: 0 auto;
 }
+
+
 
 .artwork-card {
   background: white;
@@ -342,10 +477,11 @@ body {
 
 .image-wrapper {
   position: relative;
-  height: 280px;
+  height: 350px; /* Increased for more image area */
   overflow: hidden;
   background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
 }
+
 
 .gallery-img {
   width: 100%;
@@ -396,8 +532,9 @@ body {
 }
 
 .card-content {
-  padding: 2rem;
+  padding: 1.2rem 1.5rem; /* reduced padding to shrink white space */
 }
+
 
 .artwork-title {
   font-size: 1.4rem;
@@ -657,6 +794,43 @@ body {
     align-items: flex-start;
   }
 }
+
+/* Common button styles */
+.action-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.action-btn button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+.action-btn button.delete-btn {
+  background-color: #dc3545;
+}
+
+.action-btn button:hover {
+  transform: scale(1.1);
+}
+
+.action-btn button.delete-btn:hover {
+  background-color: #c82333;
+}
+
+
 </style>
 
 

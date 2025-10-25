@@ -24,50 +24,112 @@ def book_service(request, service_name):
 from django.shortcuts import render
 from employee.models import ServiceImage  # Make sure to import your model
 # ... (imports)
+from django.db.models import Q
+
+# views.py
 def explore_service(request, service_type):
-    """
-    service_type: could be any of the defined service keys (slugs).
-    """
-    # Map the URL slug (service_type) to the exact service name used in the database
     service_dict = {
-        '3d-wall-art': '3D Wall Art',       # <-- Used in HTML
-        '3d-floor-art': '3D Floor Art',     # <-- Used in HTML
+        '3d-wall-art': '3D Wall Art',
+        '3d-floor-art': '3D Floor Art',
         'mural-art': 'Mural Art',
-        'mural': 'Mural Art',               # <-- Used in HTML
-        'metro-advertisement': 'Metro Advertisement', # <-- Used in HTML
-        'outdoor-advertisement': 'Outdoor Advertisement', # <-- Used in HTML
-        'school-painting': 'School Painting',     # <-- Used in HTML
-        'selfie-painting': 'Selfie Painting',     # <-- Used in HTML
-        'madhubani-painting': 'Madhubani Painting', # <-- Used in HTML
-        'texture-painting': 'Texture Painting',   # <-- Used in HTML
-        'stone-murti': 'Stone Murti',             # <-- Used in HTML
-        'statue': 'Statue',                       # <-- Used in HTML
-        'scrap-animal-art': 'Scrap Animal Art',   # <-- Used in HTML
-        'nature-fountain': 'Nature & Water Fountain', # <-- Used in HTML (or 'fountain-art')
-        'fountain-art': 'Nature & Water Fountain', 
-        'cartoon-painting': 'Cartoon Painting',   # <-- Used in HTML
-        'home-painting': 'Home Painting',         # <-- Used in HTML
+        'mural': 'Mural Art',
+        'metro-advertisement': 'Metro Advertisement',
+        'outdoor-advertisement': 'Outdoor Advertisement',
+        'school-painting': 'School Painting',
+        'selfie-painting': 'Selfie Painting',
+        'madhubani-painting': 'Madhubani Painting',
+        'texture-painting': 'Texture Painting',
+        'stone-murti': 'Stone Murti',
+        'statue': 'Statue',
+        'scrap-animal-art': 'Scrap Animal Art',
+        'nature-fountain': 'Nature & Water Fountain',
+        'fountain-art': 'Nature & Water Fountain',
+        'cartoon-painting': 'Cartoon Painting',
+        'home-painting': 'Home Painting',
     }
 
-    # Get the long service name
     service_name = service_dict.get(service_type, 'Service')
-
-    # Determine a robust query term for database filtering
     query_term = service_name
-    
+
     if service_name == 'Mural Art':
-        query_term = 'Mural' 
+        query_term = 'Mural'
     elif service_name == 'Nature & Water Fountain':
         query_term = 'Fountain'
 
-    # Filter images based on the specific query term using icontains
-    db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
+    # ✅ Updated logic
+    if request.user.is_authenticated and request.user.is_staff:
+        # Admins see everything
+        db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
+    elif request.user.is_authenticated:
+        # Employees see their own + verified ones
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term
+        ).filter(
+            Q(is_verified_pic=True) | Q(userupload_id=request.user.id)
+        )
+    else:
+        # Guests see only verified ones
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term,
+            is_verified_pic=True
+        )
 
     return render(request, "explore_service.html", {
         "service_name": service_name,
         "db_images": db_images,
-        'service_slug': service_type, 
+        "service_slug": service_type,
     })
+
+
+@csrf_exempt
+def approve_service_image(request):
+    if request.method == "POST":
+        if not request.user.is_authenticated or not request.user.is_staff:
+            return JsonResponse({"success": False, "message": "Permission denied."})
+        
+        try:
+            data = json.loads(request.body)
+            image_id = data.get("id")
+            image = ServiceImage.objects.get(id=image_id)
+            image.is_verified_pic = True
+            image.save()
+            return JsonResponse({"success": True, "message": "Image approved successfully!"})
+        except ServiceImage.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Image not found."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    
+    return JsonResponse({"success": False, "message": "Invalid request."})
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from employee.models import ServiceImage
+
+@csrf_exempt
+def delete_service_image(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            image_id = data.get("id")
+            image = ServiceImage.objects.get(id=image_id)
+
+            user = request.user
+
+            # Admin can delete any image
+            if user.is_staff or image.userupload_id == user.id:
+                image.delete()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "message": "Permission denied."})
+
+        except ServiceImage.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Image not found."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+
+    return JsonResponse({"success": False, "message": "Invalid request."})
 
 
 # ... (imports)
