@@ -41,6 +41,11 @@
     font-weight: bold;
   }
   button:hover { background: #45a049; }
+  .min-note {
+    color: #666;
+    font-size: 13px;
+    margin-left: 10px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -65,8 +70,9 @@
   <div class="balance">Current Balance: ₹{{ wallet.balance }}</div>
 
   <div style="text-align:center; margin-bottom:20px;">
-    <input type="number" id="walletAmount" placeholder="Enter Amount to Add" min="1">
+    <input type="number" id="walletAmount" placeholder="Enter Amount to Add" min="200">
     <button id="payBtn">Add Money</button>
+    <div class="min-note">Minimum amount: ₹200</div>
   </div>
 
   <h2>📜 Transaction History</h2>
@@ -96,7 +102,17 @@
 <script>
 document.getElementById('payBtn').onclick = function(){
     let amount = document.getElementById('walletAmount').value;
-    if(amount < 1){ alert('Enter valid amount'); return; }
+    
+    // Check minimum amount of 200
+    if(amount < 200){ 
+        alert('Minimum amount to add is ₹200'); 
+        return; 
+    }
+    
+    if(amount < 1){ 
+        alert('Enter valid amount'); 
+        return; 
+    }
 
     fetch("{% url 'create_wallet_order' %}", {
         method:'POST',

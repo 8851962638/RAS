@@ -40,6 +40,13 @@
 
 <div id="customAlert" class="custom-alert"></div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <p class="loader-text">Sending OTP...</p>
+  </div>
+</div>
 
 <!-- OTP Modal -->
 <div id="otpModal" class="custom-modal">
@@ -56,6 +63,52 @@
 </div>
 
 <style>
+/* Loading Overlay */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.loader-container {
+  text-align: center;
+  background: white;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Spinner Animation */
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
 /* Modal Background */
 .custom-modal {
   display: none;
@@ -130,16 +183,16 @@
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
-/* {% comment %} neww {% endcomment %} */
+
 /* Alert Styles */
 .custom-alert {
   display: none;
   position: fixed;
-  top: 20px;                  /* stays at the top */
-  left: 38%;                  /* move to middle */
-  transform: translateX(-50%); /* adjust to be exactly centered */
+  top: 20px;
+  left: 38%;
+  transform: translateX(-50%);
   min-width: 300px;
-  max-width: 90%;              /* responsive */
+  max-width: 90%;
   text-align: center;
   padding: 15px 20px;
   border-radius: 8px;
@@ -151,10 +204,10 @@
 }
 
 /* Alert Variants */
-.custom-alert.success { background: #28a745; }  /* Green */
-.custom-alert.error   { background: #dc3545; }  /* Red */
-.custom-alert.warning { background: #ffc107; color: #000; }  /* Yellow */
-.custom-alert.info    { background: #ff6b6b; }  /* Blue */
+.custom-alert.success { background: #ff6b6b; }
+.custom-alert.error   { background: #dc3545; }
+.custom-alert.warning { background: #ffc107; color: #000; }
+.custom-alert.info    { background: #ff6b6b; }
 
 /* Animation */
 @keyframes fadeInOut {
@@ -162,7 +215,6 @@
   10%, 90% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-20px); }
 }
-
 </style>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -177,10 +229,13 @@ function sendOTP() {
     if(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!emailRegex.test(email)) {
-            showAlert("Please enter a valid email");
+            showAlert("Please enter a valid email", "error");
             return;
         }
     }
+
+    // Show loader
+    $('#loadingOverlay').css("display", "flex");
 
     $.ajax({
         url: '/accounts/save_customer_signup/',
@@ -189,38 +244,54 @@ function sendOTP() {
         processData: false,
         contentType: false,
         success: function(response) {
+            // Hide loader
+            $('#loadingOverlay').hide();
+            
             if(response.success) {
-                showAlert(response.message);
-                currentCustomerId = response.customer_id; // optional, can remove if not needed
+                showAlert(response.message, "success");
+                currentCustomerId = response.customer_id;
                 $('#otpModal').css("display", "flex");
             } else {
-                showAlert('Error: ' + response.error);
+                showAlert('Error: ' + response.error, "error");
             }
         },
         error: function(xhr) {
-            showAlert('Something went wrong!');
+            // Hide loader
+            $('#loadingOverlay').hide();
+            showAlert('Something went wrong!', "error");
         }
     });
 }
 
-
 function verifyOTP() {
     const otp = $('#otpInput').val();
+
+    // Show loader
+    $('#loadingOverlay').css("display", "flex");
+    $('.loader-text').text('Verifying OTP...');
 
     $.ajax({
         url: '/accounts/verify_customer_otp/',
         type: 'POST',
         data: {otp: otp},
         success: function(response) {
+            $('#loadingOverlay').hide();
+            
             if(response.success) {
+                showAlert('Verification successful!', "success");
                 closeOtpModal();
-                window.location.href = '/accounts/login/';
+                setTimeout(() => {
+                    window.location.href = '/accounts/login/';
+                }, 1000);
             } else {
-                showAlert('Invalid OTP. Please try again.');
+                showAlert('Invalid OTP. Please try again.', "error");
+                $('.loader-text').text('Sending OTP...');
             }
         },
         error: function(xhr) {
-            showAlert('Something went wrong!');
+            $('#loadingOverlay').hide();
+            showAlert('Something went wrong!', "error");
+            $('.loader-text').text('Sending OTP...');
         }
     });
 }
@@ -229,7 +300,6 @@ function closeOtpModal() {
     $('#otpModal').hide();
 }
 
-// {% comment %} alrert ui better  {% endcomment %}
 function showAlert(message, type="info") {
     const alertBox = $("#customAlert");
     alertBox.removeClass().addClass("custom-alert " + type);
@@ -239,6 +309,5 @@ function showAlert(message, type="info") {
         alertBox.fadeOut();
     }, 3500);
 }
-
 </script>
 {% endblock %}

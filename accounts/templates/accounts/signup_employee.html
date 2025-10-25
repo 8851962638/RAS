@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}Signup - Painting{% endblock %}
 
 {% block content %}
@@ -19,24 +18,6 @@
         <input type="text" id="full_name" name="full_name" required>
       </div>
 
-      <!-- Father's Name -->
-      <!-- <div class="input-group">
-        <label for="fathers_name">Father's Name</label>
-        <input type="text" id="fathers_name" name="fathers_name" required>
-      </div>
-
-      
-      <div class="input-group">
-        <label for="dob">Date of Birth</label>
-        <input type="date" id="dob" name="dob" required>
-      </div> -->
-
-      <!-- Gender -->
-      <!-- <div class="input-group">
-        <label for="gender">Gender</label>
-        <input type="text" id="gender" name="gender" placeholder="Male/Female/Other" required>
-      </div> -->
-
       <!-- Mobile -->
       <div class="input-group">
         <label for="mobile">Mobile</label>
@@ -49,129 +30,31 @@
         <input type="email" id="email_address" name="email_address" required>
       </div>
 
-
-<div class="input-group" style="position: relative;">
-  <label for="password">Password</label>
-  <input type="password" id="password" name="password" required> <!-- add padding so text doesn't overlap the icon -->
-
-  <img id="togglePassword" src="{% static 'gallery/hide.png' %}" 
-       alt="Toggle Password"
-       style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%);
-              width: 24px; height: 24px; cursor: pointer;"
-       onclick="togglePassword()">
-</div>
-
-      <!-- Address -->
-      <!-- <div class="input-group">
-        <label for="house_no">House No</label>
-        <input type="text" id="house_no" name="house_no" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="village">Village</label>
-        <input type="text" id="village" name="village" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="city">City</label>
-        <input type="text" id="city" name="city" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="state">State</label>
-        <input type="text" id="state" name="state" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="pincode">Pincode</label>
-        <input type="text" id="pincode" name="pincode" required>
-      </div> -->
-
-      <!-- Aadhaar -->
-      <!-- <div class="input-group">
-        <label for="aadhar_card_no">Aadhar Card No</label>
-        <input type="text" id="aadhar_card_no" name="aadhar_card_no" required>
+      <!-- Password -->
+      <div class="input-group" style="position: relative;">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <img id="togglePassword" src="{% static 'gallery/hide.png' %}" 
+             alt="Toggle Password"
+             style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%);
+                    width: 24px; height: 24px; cursor: pointer;"
+             onclick="togglePassword()">
       </div>
 
-      <div class="input-group">
-        <label for="aadhar_card_image_front">Aadhar Card (Front)</label>
-        <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front" required>
-      </div>
-
-      <div class="input-group">
-        <label for="aadhar_card_image_back">Aadhar Card (Back)</label>
-        <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back" required>
-      </div> -->
-
-      <!-- Experience -->
-      <!-- <div class="input-group">
-        <label for="experience">Experience(years)</label>
-        <input type="number" id="experience" name="experience" min="0" required>
-      </div> -->
-
-      <!-- Type of Work (Checkboxes) -->
-      <!-- <div class="input-group">
-        <label>Type of Work</label>
-        <div>
-          <input type="checkbox" id="work_3d" name="type_of_work" value="3D Art">
-          <label for="work_3d">3D Art</label>
-        </div>
-        <div>
-          <input type="checkbox" id="work_mural" name="type_of_work" value="Mural Art">
-          <label for="work_mural">Mural Art</label>
-        </div>
-        <div>
-          <input type="checkbox" id="work_normal" name="type_of_work" value="Normal Paint">
-          <label for="work_normal">Normal Paint</label>
-        </div>
-        <div>
-          <input type="checkbox" id="work_2d" name="type_of_work" value="2D Art">
-          <label for="work_2d">2D Art</label>
-        </div>
-        <div>
-          <input type="checkbox" id="work_digital" name="type_of_work" value="Digital Art">
-          <label for="work_digital">Digital Art</label>
-        </div>
-      </div> -->
-
-      <!-- Preferred Work Location -->
-      <!-- <div class="input-group">
-        <label for="preferred_work_location">Preferred Work Location</label>
-        <input type="text" id="preferred_work_location" name="preferred_work_location" required>
-      </div> -->
-      
-      <!-- Working Area -->
-       <!-- <div class="input-group">
-         <label for="working_area">Working Area (in km)</label>
-         <input type="number" id="working_area" name="working_area" placeholder="Enter kilometers" min="1" required>
-       </div> -->
-
-
-      <!-- Passport Photo -->
-      <!-- <div class="input-group">
-        <label for="passport_photo">Passport Photo</label>
-        <input type="file" id="passport_photo" name="passport_photo" required>
-      </div> -->
-<!-- 
-       Bank Details -->
-      <!-- <div class="input-group">
-        <label for="bank_account_holder_name">Bank Account Holder Name</label>
-        <input type="text" id="bank_account_holder_name" name="bank_account_holder_name" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="account_no">Account No</label>
-        <input type="text" id="account_no" name="account_no" required>
-      </div> -->
-
-      <!-- <div class="input-group">
-        <label for="ifsc_code">IFSC Code</label>
-        <input type="text" id="ifsc_code" name="ifsc_code" required>
-      </div> --> 
-
-<button type="button" class="btn" onclick="sendEmployeeOTP()">Sign Up</button>
+      <button type="button" class="btn" onclick="sendEmployeeOTP()">Sign Up</button>
       <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
     </form>
+  </div>
+</div>
+
+<!-- Custom Alert -->
+<div id="customAlert" class="custom-alert"></div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <p class="loader-text">Sending OTP...</p>
   </div>
 </div>
 
@@ -189,124 +72,263 @@
   </div>
 </div>
 
-
-
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script>
-
-
-
-  document.addEventListener("DOMContentLoaded", function() {
-    const passwordInput = document.getElementById("password");
-    const toggleIcon = document.getElementById("togglePassword");
-
-    toggleIcon.addEventListener("click", function() {
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        toggleIcon.src = "{% static 'gallery/views.png' %}";
-      } else {
-        passwordInput.type = "password";
-        toggleIcon.src = "{% static 'gallery/hide.png' %}";
-      }
-    });
-  });
-
-
-   
-  function sendEmployeeOTP() {
-    const form = $('#signupForm')[0];
-    const formData = new FormData(form);
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    $.ajax({
-        url: '/accounts/save_employee_signup/',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: { "X-CSRFToken": csrftoken },
-        xhrFields: { withCredentials: true },   // 👈 important
-        success: function(response) {
-            if(response.success) {
-                alert(response.message);
-                $('#employeeOtpModal').css("display", "flex");
-            } else {
-                alert('Error: ' + response.error);
-            }
-        },
-        error: function(xhr) {
-            alert('Something went wrong!');
-        }
-    });
-}
-
-function verifyEmployeeOTP() {
-    const otp = $('#employeeOtpInput').val();
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    $.ajax({
-        url: '/accounts/verify_employee_otp/',
-        type: 'POST',
-        data: { otp: otp },
-        headers: { "X-CSRFToken": csrftoken },
-        xhrFields: { withCredentials: true },
-        success: function(response) {
-            if(response.success) {
-                alert(response.message);
-                closeEmployeeOtpModal();
-                window.location.href = '/accounts/login/';
-            } else {
-
-                alert('Error: ' + response.error);
-            }
-        },
-        error: function(xhr) {
-            alert('Something went wrong!');
-        }
-    });
-}
-
-
-
-
-function closeEmployeeOtpModal() {
-    $('#employeeOtpModal').hide();
-}
-
-
-
-</script>
 <style>
-  /* Employee OTP Modal */
-#employeeOtpModal {
-  display: none;              /* 🔹 Hidden by default */
+/* Loading Overlay */
+.loading-overlay {
+  display: none;
   position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.loader-container {
+  text-align: center;
+  background: white;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Spinner Animation */
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Alert Styles */
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+  max-width: 90%;
+  text-align: center;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  z-index: 10000;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  animation: fadeInOut 4s ease forwards;
+}
+
+/* Alert Variants */
+.custom-alert.success { background: #ff6b6b; }
+.custom-alert.error   { background: #dc3545; }
+.custom-alert.warning { background: #ffc107; color: #000; }
+.custom-alert.info    { background: #ff6b6b; }
+
+/* Animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -20px); }
+  10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+/* Employee OTP Modal */
+.custom-modal {
+  display: none;
+  position: fixed;
+  z-index: 1050;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6); /* overlay */
+  background: rgba(0,0,0,0.6);
   justify-content: center;
   align-items: center;
 }
 
-#employeeOtpModal .custom-modal-content {
+.custom-modal-content {
   background: #fff;
   padding: 25px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 350px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
 }
 
-#employeeOtpModal .close-btn {
+/* Close Button */
+.close-btn {
   position: absolute;
-  right: 15px;
-  top: 10px;
+  right: 12px;
+  top: 8px;
   font-size: 20px;
+  font-weight: bold;
+  color: #555;
   cursor: pointer;
 }
+.close-btn:hover {
+  color: #000;
+}
 
+/* OTP Input */
+.otp-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  text-align: center;
+  margin: 15px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.otp-input:focus {
+  border-color: #007bff;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.modal-actions .btn {
+  flex: 1;
+  margin: 0 5px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
 </style>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const passwordInput = document.getElementById("password");
+  const toggleIcon = document.getElementById("togglePassword");
+
+  toggleIcon.addEventListener("click", function() {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleIcon.src = "{% static 'gallery/views.png' %}";
+    } else {
+      passwordInput.type = "password";
+      toggleIcon.src = "{% static 'gallery/hide.png' %}";
+    }
+  });
+});
+
+function sendEmployeeOTP() {
+  const form = $('#signupForm')[0];
+  const formData = new FormData(form);
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  // Show loader
+  $('#loadingOverlay').css("display", "flex");
+
+  $.ajax({
+    url: '/accounts/save_employee_signup/',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: { "X-CSRFToken": csrftoken },
+    xhrFields: { withCredentials: true },
+    success: function(response) {
+      // Hide loader
+      $('#loadingOverlay').hide();
+
+      if(response.success) {
+        showAlert(response.message, 'success');
+        $('#employeeOtpModal').css("display", "flex");
+      } else {
+        showAlert('Error: ' + response.error, 'error');
+      }
+    },
+    error: function(xhr) {
+      // Hide loader
+      $('#loadingOverlay').hide();
+      showAlert('Something went wrong!', 'error');
+    }
+  });
+}
+
+function verifyEmployeeOTP() {
+  const otp = $('#employeeOtpInput').val();
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  // Show loader
+  $('#loadingOverlay').css("display", "flex");
+  $('.loader-text').text('Verifying OTP...');
+
+  $.ajax({
+    url: '/accounts/verify_employee_otp/',
+    type: 'POST',
+    data: { otp: otp },
+    headers: { "X-CSRFToken": csrftoken },
+    xhrFields: { withCredentials: true },
+    success: function(response) {
+      // Hide loader
+      $('#loadingOverlay').hide();
+
+      if(response.success) {
+        showAlert(response.message, 'success');
+        closeEmployeeOtpModal();
+        setTimeout(() => {
+          window.location.href = '/accounts/login/';
+        }, 1000);
+      } else {
+        showAlert('Error: ' + response.error, 'error');
+        $('.loader-text').text('Sending OTP...');
+      }
+    },
+    error: function(xhr) {
+      // Hide loader
+      $('#loadingOverlay').hide();
+      showAlert('Something went wrong!', 'error');
+      $('.loader-text').text('Sending OTP...');
+    }
+  });
+}
+
+function closeEmployeeOtpModal() {
+  $('#employeeOtpModal').hide();
+}
+
+function showAlert(message, type="info") {
+  const alertBox = $("#customAlert");
+  alertBox.removeClass().addClass("custom-alert " + type);
+  alertBox.text(message).fadeIn();
+
+  setTimeout(() => {
+    alertBox.fadeOut();
+  }, 3500);
+}
+</script>
+
 {% endblock %}
