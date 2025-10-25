@@ -416,6 +416,16 @@ from wallet.models import Wallet, WalletTransaction
 
 @login_required
 def edit_profile_view(request):
+    # List of all 29 Indian states
+    INDIAN_STATES = [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+        "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+        "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+        "Uttar Pradesh", "Uttarakhand", "West Bengal", "Delhi"
+    ]
+    
     user = request.user
     if user.role == "employee":
         employee = get_object_or_404(Employee, user=user)
@@ -432,7 +442,11 @@ def edit_profile_view(request):
             employee.pincode = request.POST.get("pincode")
             employee.aadhar_card_no = request.POST.get("aadhar_card_no")
             employee.experience = request.POST.get("experience")
-            employee.preferred_work_location = request.POST.get("preferred_work_location")
+            
+            # Get multiple selected locations and join them
+            selected_locations = request.POST.getlist("preferred_work_location")
+            employee.preferred_work_location = ", ".join(selected_locations)
+            
             employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
             employee.account_no = request.POST.get("account_no")
             employee.ifsc_code = request.POST.get("ifsc_code")
@@ -454,15 +468,12 @@ def edit_profile_view(request):
 
             # Handle status change and wallet deduction
             if not prev_status and is_ready:
-                # User is turning ON the status
                 wallet = Wallet.objects.filter(user=user).first()
 
                 if wallet and wallet.balance >= Decimal("20.00"):
-                    # Sufficient balance - deduct and activate
                     wallet.balance -= Decimal("20.00")
                     wallet.save()
 
-                    # Create transaction record
                     WalletTransaction.objects.create(
                         wallet=wallet,
                         transaction_type="DEBIT",
@@ -479,7 +490,6 @@ def edit_profile_view(request):
                         "message": "Profile updated successfully! ₹20 activation fee deducted from your wallet."
                     })
                 else:
-                    # Insufficient balance - don't activate
                     employee.status = False
                     employee.save()
                     return JsonResponse({
@@ -487,7 +497,6 @@ def edit_profile_view(request):
                         "message": "Insufficient wallet balance. Please add ₹20 to enable 'Ready to Take Orders' feature."
                     })
             else:
-                # Either turning OFF or no change in status
                 employee.status = is_ready
                 employee.save()
                 print("Profile saved")
@@ -495,6 +504,10 @@ def edit_profile_view(request):
                     "success": True, 
                     "message": "Profile updated successfully!"
                 })
+
+        # ✅ FIX: Move this OUTSIDE the POST block (for GET requests)
+        stored_locations = employee.preferred_work_location or ""
+        selected_locations = [loc.strip() for loc in stored_locations.split(",")] if stored_locations else []
 
         context = {
             "name": employee.full_name,
@@ -515,6 +528,8 @@ def edit_profile_view(request):
             "experience": employee.experience,
             "type_of_work": employee.type_of_work or [],
             "preferred_work_location": employee.preferred_work_location,
+            "INDIAN_STATES": INDIAN_STATES,
+            "selected_locations": selected_locations,
             "bank_account_holder_name": employee.bank_account_holder_name,
             "account_no": employee.account_no,
             "ifsc_code": employee.ifsc_code,
@@ -549,6 +564,7 @@ def edit_profile_view(request):
         return render(request, "edit_customers_profile.html", context)
 
     return render(request, "edit_profile.html", {"user": user})
+
 
 def shop(request):
     # Example products

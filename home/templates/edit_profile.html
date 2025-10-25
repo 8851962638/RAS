@@ -368,7 +368,354 @@
         }
     }
 </style>
+<style>
+    /* ============================================
+   SELECT2 MULTI-SELECT - ULTRA CLEAN DESIGN
+   ============================================ */
 
+/* Base Select2 Container */
+.form-multi-select {
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+/* Main Selection Box - Clean & Modern */
+.select2-container--default .select2-selection--multiple {
+    border: 2px solid #e8ecef;
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-height: 28px;
+    background: #ffffff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+
+
+
+
+/* ============================================
+   SELECTED TAGS/CHIPS - PREMIUM DESIGN
+   ============================================ */
+   .select2-container--default .select2-selection--multiple {
+    background-color: #f8f9fa;
+    /* background-color: white; */
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: text;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    position: relative;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin: 4px 6px 4px 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+    letter-spacing: 0.3px;
+}
+
+
+
+/* Remove/Close Button on Tags */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: rgba(255, 255, 255, 0.9);
+    /* margin-right: 6px; */
+    margin-left: 4px;
+    margin-top: 4px;
+    /* margin-bottom: 4px; */
+    font-size: 10px;
+    font-weight: 600;
+    /* border: none; */
+    background: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+/* .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+} */
+
+/* ============================================
+   DROPDOWN CONTAINER - ELEGANT DESIGN
+   ============================================ */
+/* 
+.select2-dropdown {
+    border: 2px solid #e8ecef;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-top: 8px;
+    overflow: hidden;
+    background: #ffffff;
+} */
+
+
+/* Search Input in Dropdown */
+
+
+
+
+
+/* .select2-search--dropdown .select2-search__field::placeholder {
+    padding-bottom: 28px;
+    color: #95a5a6;
+    
+} */
+
+/* ============================================
+   DROPDOWN OPTIONS - CLEAN LIST DESIGN
+   ============================================ */
+
+.select2-results {
+    max-height: 300px;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 14px 20px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    color: #2c3e50;
+    font-weight: 400;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+}
+
+/* Hover State */
+
+/* Selected State */
+.select2-container--default .select2-results__option[aria-selected=true] {
+    /* background: linear-gradient(90deg, #e8f5e9 0%, #f1f8f4 100%); */
+    /* color: #1b5e20; */
+    font-weight: 600;
+    /* border-left-color: #4CAF50; */
+    position: relative;
+}
+
+
+
+@keyframes checkFade {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Disabled State */
+
+/* ============================================
+   SCROLLBAR - MODERN CUSTOM DESIGN
+   ============================================ */
+
+
+
+.select2-results__options::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+.select2-results__options::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #c5cdd4 0%, #95a5a6 100%);
+    border-radius: 10px;
+    border: 2px solid #f8f9fa;
+}
+
+.select2-results__options::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+/* ============================================
+   MESSAGES & STATES
+   ============================================ */
+
+.select2-results__message {
+    padding: 20px;
+    text-align: center;
+    color: #7f8c8d;
+    font-style: normal;
+    font-size: 14px;
+}
+
+.select2-results__option--loading {
+    padding: 20px;
+    text-align: center;
+    color: #7f8c8d;
+}
+
+/* Clear Button */
+.select2-selection__clear {
+    
+    color: #95a5a6;
+    font-size: 20px;
+    margin-right: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+
+.select2-container--default.select2-container--open .select2-selection--multiple {
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+/* ============================================
+   LABEL STYLING
+   ============================================ */
+
+label[for="preferred_work_location"] {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    letter-spacing: 0.3px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .select2-container--default .select2-selection--multiple {
+        min-height: 54px;
+        padding: 10px 14px;
+        border-radius: 10px;
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        font-size: 13px;
+        padding: 6px 12px;
+        margin: 3px 5px 3px 0;
+        border-radius: 7px;
+    }
+    
+    .select2-container--default .select2-results__option {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .select2-dropdown {
+        border-radius: 10px;
+    }
+    
+    .select2-search--dropdown .select2-search__field {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .select2-container--default .select2-selection--multiple {
+        min-height: 50px;
+        padding: 8px 12px;
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.select2-container--default .select2-results__option--loading {
+    position: relative;
+}
+
+.select2-container--default .select2-results__option--loading::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4CAF50;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   PLACEHOLDER STYLING
+   ============================================ */
+
+.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #95a5a6;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+/* ============================================
+   FOCUS VISIBLE (Accessibility)
+   ============================================ */
+
+.select2-container--default.select2-container--focus .select2-selection--multiple:focus-visible {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+/* ============================================
+   ARROW ICON CUSTOMIZATION
+   ============================================ */
+
+.select2-container--default .select2-selection--multiple .select2-selection__arrow {
+    display: none; /* Hide default arrow for cleaner look */
+}
+
+/* Custom dropdown indicator */
+.select2-container--default.select2-container--below .select2-selection--multiple::after {
+    content: '▼';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    font-size: 12px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple::after {
+    transform: translateY(-50%) rotate(180deg);
+    color: #4CAF50;
+}
+</style>
 <main class="edit-profile-page">
     {% if not fathers_name or not dob or not aadhar_card_no or not passport_photo %}
     <div class="warning-alert">
@@ -399,83 +746,83 @@
             </div>
 
             <div>
-                <label for="fathers_name">Father's Name</label>
+                <label for="fathers_name">Father's Name <span style="color: red;">*</span></label>
                 <input type="text" id="fathers_name" name="fathers_name" value="{{ fathers_name|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="dob">Date of Birth</label>
+                <label for="dob">Date of Birth <span style="color: red;">*</span></label>
                 <input type="date" id="dob" name="dob" value="{{ dob|date:'Y-m-d' }}" required>
             </div>
 
             <div>
-                <label for="gender">Gender</label>
-                <input type="text" id="gender" name="gender" value="{{ gender|default_if_none:'' }}" placeholder="Male/Female/Other">
+                <label for="gender">Gender <span style="color: red;">*</span></label>
+                <input type="text" id="gender" name="gender" value="{{ gender|default_if_none:'' }}" placeholder="Male/Female/Other" required>
             </div>
 
             <div>
-                <label for="house_no">House No</label>
-                <input type="text" id="house_no" name="house_no" value="{{ house_no|default_if_none:'' }}">
+                <label for="house_no">House No <span style="color: red;">*</span></label>
+                <input type="text" id="house_no" name="house_no" value="{{ house_no|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="village">Village</label>
-                <input type="text" id="village" name="village" value="{{ village|default_if_none:'' }}">
+                <label for="village">Village <span style="color: red;">*</span></label>
+                <input type="text" id="village" name="village" value="{{ village|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="city">City</label>
-                <input type="text" id="city" name="city" value="{{ city|default_if_none:'' }}">
+                <label for="city">City <span style="color: red;">*</span></label>
+                <input type="text" id="city" name="city" value="{{ city|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="state">State</label>
-                <input type="text" id="state" name="state" value="{{ state|default_if_none:'' }}">
+                <label for="state">State <span style="color: red;">*</span></label>
+                <input type="text" id="state" name="state" value="{{ state|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="pincode">Pincode</label>
-                <input type="text" id="pincode" name="pincode" value="{{ pincode|default_if_none:'' }}">
+                <label for="pincode">Pincode <span style="color: red;">*</span></label>
+                <input type="text" id="pincode" name="pincode" value="{{ pincode|default_if_none:'' }}" required>
             </div>
 
             <div>
-                <label for="aadhar_card_no">Aadhar Card No</label>
+                <label for="aadhar_card_no">Aadhar Card No <span style="color: red;">*</span></label>
                 <input type="text" id="aadhar_card_no" name="aadhar_card_no" value="{{ aadhar_card_no|default_if_none:'' }}" required>
             </div>
 
             <div class="aadhar-section">
                 <div class="aadhar-item">
-                    <label>Aadhar Card (Front)</label>
+                    <label>Aadhar Card (Front) <span style="color: red;">*</span></label>
                     <div class="aadhar-image-display">
                         {% if aadhar_card_image_front %}
                         <img src="{{ aadhar_card_image_front }}" alt="Aadhar Front">
                         {% endif %}
                         <div class="aadhar-file-group">
-                            <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front" accept="image/*">
+                            <input type="file" id="aadhar_card_image_front" name="aadhar_card_image_front" accept="image/*" {% if not aadhar_card_image_front %}required{% endif %}>
                         </div>
                     </div>
                 </div>
 
                 <div class="aadhar-item">
-                    <label>Aadhar Card (Back)</label>
+                    <label>Aadhar Card (Back) <span style="color: red;">*</span></label>
                     <div class="aadhar-image-display">
                         {% if aadhar_card_image_back %}
                         <img src="{{ aadhar_card_image_back }}" alt="Aadhar Back">
                         {% endif %}
                         <div class="aadhar-file-group">
-                            <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back" accept="image/*">
+                            <input type="file" id="aadhar_card_image_back" name="aadhar_card_image_back" accept="image/*" {% if not aadhar_card_image_back %}required{% endif %}>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div>
-                <label for="experience">Experience (years)</label>
-                <input type="number" id="experience" name="experience" value="{{ experience|default_if_none:'' }}" min="0">
+                <label for="experience">Experience (years) <span style="color: red;">*</span></label>
+                <input type="number" id="experience" name="experience" value="{{ experience|default_if_none:'' }}" min="0" required>
             </div>
 
             <div class="full-width">
-                <label>Type of Work</label>
+                <label>Type of Work <span style="color: red;">*</span></label>
                 <div class="checkbox-group">
                     <label><input type="checkbox" name="type_of_work" value="3D Wall Art" {% if '3D Wall Art' in type_of_work %}checked{% endif %}> 3D Wall Art</label>
                     <label><input type="checkbox" name="type_of_work" value="3D Floor Art" {% if '3D Floor Art' in type_of_work %}checked{% endif %}> 3D Floor Art</label>
@@ -495,9 +842,16 @@
                 </div>
             </div>
 
+            <!-- UPDATED PREFERRED WORK LOCATION SECTION -->
             <div class="full-width">
-                <label for="preferred_work_location">Preferred Work Location</label>
-                <input type="text" id="preferred_work_location" name="preferred_work_location" value="{{ preferred_work_location|default_if_none:'' }}">
+                <label for="preferred_work_location">Preferred Work Location <span style="color: red;">*</span></label>
+                <select id="preferred_work_location" name="preferred_work_location" class="form-multi-select" multiple="multiple" required>
+                    {% for state in INDIAN_STATES %}
+                        <option value="{{ state }}" {% if state in selected_locations %}selected{% endif %}>
+                            {{ state }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div>
@@ -542,7 +896,132 @@
     </form>
 </main>
 
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- Add Select2 CSS and JS at the bottom of your template -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 with enhanced options
+        $('#preferred_work_location').select2({
+            placeholder: '🔍 Search and select states...',
+            allowClear: true,
+            closeOnSelect: false,
+            width: '100%',
+            maximumSelectionLength: 15,
+            tags: false,
+            language: {
+                noResults: function() {
+                    return "😕 No states found";
+                },
+                searching: function() {
+                    return "🔍 Searching...";
+                },
+                maximumSelected: function(args) {
+                    return "⚠️ You can only select " + args.maximum + " states";
+                }
+            },
+            templateResult: formatState,
+            templateSelection: formatStateSelection
+        });
+
+        // Custom formatting for dropdown options
+        function formatState(state) {
+            if (!state.id) {
+                return state.text;
+            }
+            
+            var $state = $(
+                '<div class="select2-result-item">' +
+                    '<span class="state-name">' + state.text + '</span>' +
+                '</div>'
+            );
+            return $state;
+        }
+
+        // Custom formatting for selected items
+        function formatStateSelection(state) {
+            return state.text;
+        }
+
+        // Form validation
+        $('form.edit-profile-container').on('submit', function(e) {
+            var selectedLocations = $('#preferred_work_location').val();
+            if (!selectedLocations || selectedLocations.length === 0) {
+                e.preventDefault();
+                
+                // Add error state
+                $('#preferred_work_location').next('.select2-container').addClass('error-border');
+                
+                // Show custom alert
+                showCustomAlert('⚠️ Please select at least one preferred work location.');
+                
+                // Scroll to the field
+                $('html, body').animate({
+                    scrollTop: $('#preferred_work_location').offset().top - 100
+                }, 500);
+                
+                return false;
+            }
+        });
+
+        // Remove error border when selection is made
+        $('#preferred_work_location').on('change', function() {
+            $(this).next('.select2-container').removeClass('error-border');
+        });
+
+        // Custom alert function
+        function showCustomAlert(message) {
+            // Remove existing alert if any
+            $('.custom-alert').remove();
+            
+            // Create and show new alert
+            var alertHtml = '<div class="custom-alert">' +
+                '<span class="alert-icon">⚠️</span>' +
+                '<span class="alert-message">' + message + '</span>' +
+                '<button class="alert-close">&times;</button>' +
+                '</div>';
+            
+            $('body').append(alertHtml);
+            
+            // Fade in
+            setTimeout(function() {
+                $('.custom-alert').addClass('show');
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(function() {
+                $('.custom-alert').removeClass('show');
+                setTimeout(function() {
+                    $('.custom-alert').remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Close alert on click
+        $(document).on('click', '.alert-close', function() {
+            $('.custom-alert').removeClass('show');
+            setTimeout(function() {
+                $('.custom-alert').remove();
+            }, 300);
+        });
+
+        // Add selection counter (optional)
+        $('#preferred_work_location').on('change', function() {
+            var count = $(this).val() ? $(this).val().length : 0;
+            var counterText = count > 0 ? count + ' state' + (count > 1 ? 's' : '') + ' selected' : '';
+            
+            // Remove existing counter
+            $('.selection-counter').remove();
+            
+            if (count > 0) {
+                $(this).next('.select2-container').after(
+                    '<span class="selection-counter">' + counterText + '</span>'
+                );
+            }
+        });
+    });
+</script>
 <script>
 $(document).ready(function() {
     let originalCheckedState = $('#ready_to_take_orders').prop('checked');
