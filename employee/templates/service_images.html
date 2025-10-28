@@ -84,7 +84,7 @@ document.getElementById("serviceImageForm").addEventListener("submit", function(
     .then(data => {
         let msgDiv = document.getElementById("responseMessage");
         if (data.success) {
-            msgDiv.innerHTML = `<p class="success-msg">✅ ${data.message}</p>`;
+            msgDiv.innerHTML = `<p class="success-msg">${data.message}</p>`;
             form.reset();
         } else {
             msgDiv.innerHTML = `<p class="error-msg">❌ ${data.message}</p>`;
