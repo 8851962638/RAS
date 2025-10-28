@@ -868,6 +868,20 @@ label[for="preferred_work_location"] {
                 <label for="ifsc_code">IFSC Code</label>
                 <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ifsc_code|default_if_none:'' }}">
             </div>
+            <div>
+                <label for="pan_card">PAN Card Number</label>
+                <input type="text" id="pan_card" name="pan_card" value="{{ pan_card|default_if_none:'' }}" placeholder="ABCDE1234F" maxlength="10">
+            </div>
+
+            <!-- <div>
+                <label for="gst_no">GST Number</label>
+                <input type="text" id="gst_no" name="gst_no" value="{{ gst_no|default_if_none:'' }}" placeholder="22AAAAA0000A1Z5" maxlength="15">
+            </div>
+
+            <div>
+                <label for="organization_name">Organization Name</label>
+                <input type="text" id="organization_name" name="organization_name" value="{{ organization_name|default_if_none:'' }}" placeholder="Company/Organization Name">
+            </div> -->
         </div>
 
         <div class="profile-picture">
