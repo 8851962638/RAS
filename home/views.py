@@ -450,6 +450,12 @@ def edit_profile_view(request):
             employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
             employee.account_no = request.POST.get("account_no")
             employee.ifsc_code = request.POST.get("ifsc_code")
+            
+            # NEW: Handle the three new optional fields
+            employee.pan_card = request.POST.get("pan_card")
+            employee.gst_no = request.POST.get("gst_no")
+            employee.organization_name = request.POST.get("organization_name")
+            
             employee.role = "employee"
             
             # Check if ready to take orders
@@ -505,7 +511,7 @@ def edit_profile_view(request):
                     "message": "Profile updated successfully!"
                 })
 
-        # ✅ FIX: Move this OUTSIDE the POST block (for GET requests)
+        # For GET requests - prepare context
         stored_locations = employee.preferred_work_location or ""
         selected_locations = [loc.strip() for loc in stored_locations.split(",")] if stored_locations else []
 
@@ -533,6 +539,10 @@ def edit_profile_view(request):
             "bank_account_holder_name": employee.bank_account_holder_name,
             "account_no": employee.account_no,
             "ifsc_code": employee.ifsc_code,
+            # NEW: Add the three new fields to context
+            "pan_card": employee.pan_card,
+            "gst_no": employee.gst_no,
+            "organization_name": employee.organization_name,
             "ready_to_take_orders": employee.status,
         }
         return render(request, "edit_profile.html", context)
@@ -564,7 +574,6 @@ def edit_profile_view(request):
         return render(request, "edit_customers_profile.html", context)
 
     return render(request, "edit_profile.html", {"user": user})
-
 
 def shop(request):
     # Example products

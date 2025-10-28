@@ -72,6 +72,11 @@ class Employee(models.Model):
     account_no = models.BigIntegerField(unique=True, null=True, blank=True)
     ifsc_code = models.CharField(max_length=15, null=True, blank=True)
 
+    # New optional fields
+    pan_card = models.CharField(max_length=10, null=True, blank=True, help_text="PAN Card Number")
+    gst_no = models.CharField(max_length=15, null=True, blank=True, help_text="GST Number")
+    organization_name = models.CharField(max_length=200, null=True, blank=True, help_text="Organization/Company Name")
+
     password = models.CharField(max_length=128, null=True, blank=True) 
     role = models.CharField(max_length=50, null=True, blank=True)
     status = models.BooleanField(default=False)
@@ -81,7 +86,6 @@ class Employee(models.Model):
     
     def __str__(self):
         return self.full_name or "Unnamed Person"
-
 class Customer(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="customers", null=True, blank=True)

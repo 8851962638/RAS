@@ -1,6 +1,6 @@
 # accounts/middleware.py
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, resolve, Resolver404
 from .models import Employee
 
 class ProfileCompletionMiddleware:
@@ -11,19 +11,39 @@ class ProfileCompletionMiddleware:
         # List of URLs that don't require profile completion
         allowed_urls = [
             '/edit_profile/',
-            '/wallet/',  # Changed to direct path
+            '/wallet/',
             '/accounts/logout/',
             '/accounts/login/',
+            '/logout/',  # Added this
+            '/login/',   # Added this for safety
             '/media/',
             '/static/',
             '/admin/',
         ]
+        
+        # Also allow by URL name
+        allowed_url_names = [
+            'logout',
+            'login',
+            'edit_profile',
+            'wallet',
+        ]
 
         # Check if user is authenticated and is an employee
         if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role == 'employee':
-            # Check if current path is not in allowed URLs
             current_path = request.path
+            
+            # Check if current path is in allowed URLs
             is_allowed = any(current_path.startswith(url) for url in allowed_urls)
+            
+            # Also check by URL name
+            if not is_allowed:
+                try:
+                    resolved = resolve(current_path)
+                    if resolved.url_name in allowed_url_names:
+                        is_allowed = True
+                except Resolver404:
+                    pass
 
             if not is_allowed:
                 try:
