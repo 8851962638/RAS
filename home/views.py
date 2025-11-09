@@ -452,6 +452,9 @@ def edit_profile_view(request):
             employee.ifsc_code = request.POST.get("ifsc_code")
             
             # NEW: Handle the three new optional fields
+            employee.full_address = request.POST.get("full_address")
+            employee.working_range = request.POST.get("working_range")
+            employee.belong_to_org = request.POST.get("belong_to_org") == "on"
             employee.pan_card = request.POST.get("pan_card")
             employee.gst_no = request.POST.get("gst_no")
             employee.organization_name = request.POST.get("organization_name")
@@ -544,6 +547,10 @@ def edit_profile_view(request):
             "gst_no": employee.gst_no,
             "organization_name": employee.organization_name,
             "ready_to_take_orders": employee.status,
+            "full_address": employee.full_address,
+            "working_range": employee.working_range,
+            "belong_to_org": employee.belong_to_org,
+
         }
         return render(request, "edit_profile.html", context)
 

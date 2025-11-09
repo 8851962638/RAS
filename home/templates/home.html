@@ -6,6 +6,19 @@
 
 {% block content %}
   <style>
+
+
+.explore-grid-container {
+   
+    gap: 37px;
+
+}
+    
+
+
+
+
+
     /* Services Section Styling */
     section h1 {
       text-align: center;
@@ -296,12 +309,12 @@
       </a>
 
       <!-- 8. Scrap Animal Art (Corrected slug) -->
-      <a href="{% url 'explore_service' 'scrap-animal-art' %}" class="explore-item">
+      <!-- <a href="{% url 'explore_service' 'scrap-animal-art' %}" class="explore-item">
         <div class="explore-circle">
           <img src="{% static 'gallery/king.png' %}" alt="Scrap Animal Art" />
         </div>
         <p>Scrap Animal Art</p>
-      </a>
+      </a> -->
 
       <!-- 9. Nature & Water Fountain / Fountain Art (Slug: fountain-art) -->
       <a href="{% url 'explore_service' 'fountain-art' %}" class="explore-item">

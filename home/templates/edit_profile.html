@@ -4,6 +4,69 @@
 
 {% block content %}
 <style>
+    .org-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 22px;
+}
+.switch input { display: none; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background: #ccc;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 24px;
+  transition: .3s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+input:checked + .slider {
+  background: #4A6CF7;
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Org Box */
+.org-box {
+    background: #f7f8ff;
+    border-left: 4px solid #4A6CF7;
+    padding: 14px;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+.form-row {
+    margin-bottom: 12px;
+}
+
+.form-row input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #cfcfcf;
+}
+
   
 
     main.edit-profile-page {
@@ -715,6 +778,87 @@ label[for="preferred_work_location"] {
     transform: translateY(-50%) rotate(180deg);
     color: #4CAF50;
 }
+.share-profile {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.share-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.share-btn:hover {
+    background-color: #45a049;
+}
+.org-box {
+    background: #f9f9fc;
+    padding: 15px;
+    border-left: 4px solid #4A6CF7;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.form-row {
+    margin-bottom: 12px;
+}
+
+.toggle-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* Switch Style */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.switch input {display:none;}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 24px;
+  top: 0; left: 0; right: 0; bottom: 0;
+  transition: .3s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+input:checked + .slider {
+  background-color: #4A6CF7;
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.address-box {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 60px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+
 </style>
 <main class="edit-profile-page">
     {% if not fathers_name or not dob or not aadhar_card_no or not passport_photo %}
@@ -790,6 +934,11 @@ label[for="preferred_work_location"] {
                 <input type="text" id="aadhar_card_no" name="aadhar_card_no" value="{{ aadhar_card_no|default_if_none:'' }}" required>
             </div>
 
+            <div>
+                <label for="pan_card">PAN Card No.</label>
+                <input type="text" id="pan_card" name="pan_card" value="{{ pan_card|default_if_none:'' }}" required>
+            </div>
+
             <div class="aadhar-section">
                 <div class="aadhar-item">
                     <label>Aadhar Card (Front) <span style="color: red;">*</span></label>
@@ -853,7 +1002,22 @@ label[for="preferred_work_location"] {
                     {% endfor %}
                 </select>
             </div>
+            <!-- ✅ NEW ADDRESS FIELD -->
+            <div class="full-width">
+            <label for="full_address">Full Address <span style="color:red">*</span></label>
+            <textarea id="full_address" name="full_address" class="address-box">{{ full_address|default_if_none:'' }}</textarea>
+            </div>
 
+
+            <div class="full-width">
+                <label for="working_range">Please select range of your working <span style="color: red;">*</span></label>
+                <select id="working_range" name="working_range" required>
+                    <option value="">Select Range</option>
+                    <option value="10Km-20Km" {% if working_range == '10Km-20Km' %}selected{% endif %}>10Km - 20Km</option>
+                    <option value="20Km-30Km" {% if working_range == '20Km-30Km' %}selected{% endif %}>20Km - 30Km</option>
+                    <option value="30Km-40Km" {% if working_range == '30Km-40Km' %}selected{% endif %}>30Km - 40Km</option>
+                </select>
+            </div>
             <div>
                 <label for="bank_account_holder_name">Bank Account Holder Name</label>
                 <input type="text" id="bank_account_holder_name" name="bank_account_holder_name" value="{{ bank_account_holder_name|default_if_none:'' }}">
@@ -868,21 +1032,39 @@ label[for="preferred_work_location"] {
                 <label for="ifsc_code">IFSC Code</label>
                 <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ifsc_code|default_if_none:'' }}">
             </div>
-            <div>
-                <label for="pan_card">PAN Card Number</label>
-                <input type="text" id="pan_card" name="pan_card" value="{{ pan_card|default_if_none:'' }}" placeholder="ABCDE1234F" maxlength="10">
+
+
+            <!-- ✅ TOGGLE FOR ORGANISATION -->
+            <!-- ✅ TOGGLE FOR ORGANISATION -->
+            <div class="full-width org-toggle-wrap">
+                <label class="switch">
+                    <input type="checkbox" id="belong_to_org" name="belong_to_org" {% if belong_to_org %}checked{% endif %}>
+                    <span class="slider round"></span>
+                </label>
+                <span class="toggle-text">Belong to Organisation</span>
             </div>
 
-            <!-- <div>
+            <!-- ✅ CONDITIONAL FIELDS (SIDE BY SIDE USING FLEX) -->
+        <div id="organisation_fields" class="org-box" style="display: {% if belong_to_org %}flex{% else %}none{% endif %};">
+            
+
+            <div class="org-field" style="margin-right: 10px;">
+                <label for="organization_name">Organization Name</label>
+                <input type="text" id="organization_name" name="organization_name" value="{{ organization_name|default_if_none:'' }}" placeholder="Company/Organization Name">
+            </div>
+            <div class="org-field">
                 <label for="gst_no">GST Number</label>
                 <input type="text" id="gst_no" name="gst_no" value="{{ gst_no|default_if_none:'' }}" placeholder="22AAAAA0000A1Z5" maxlength="15">
             </div>
-
-            <div>
-                <label for="organization_name">Organization Name</label>
-                <input type="text" id="organization_name" name="organization_name" value="{{ organization_name|default_if_none:'' }}" placeholder="Company/Organization Name">
-            </div> -->
         </div>
+
+
+
+
+            
+            
+        </div>
+        
 
         <div class="profile-picture">
             <img src="{% if passport_photo %}{{ passport_photo }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
@@ -901,8 +1083,13 @@ label[for="preferred_work_location"] {
                         <strong>Note:</strong> Turning this ON will deduct a one-time <strong>₹20</strong> activation fee from your wallet.
                     </p>
                 </div>
+                <div class="share-profile">
+            <button type="button" class="share-btn" onclick="shareProfile()">Share My Profile</button>
+        </div>
             </div>
         </div>
+
+        
         
         <div class="edit-button">
             <button type="submit">Save Profile</button>
@@ -1089,5 +1276,39 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+    // Toggle visibility for Organisation fields
+    document.getElementById('belong_to_org').addEventListener('change', function() {
+    document.getElementById('organisation_fields').style.display = this.checked ? 'block' : 'none';
+});
+
+
+    // Profile sharing feature
+    function shareProfile() {
+        const shareData = {
+            title: 'My Artist Profile',
+            text: 'Check out my profile on RColorcraft!',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData)
+                .then(() => alert('Profile shared successfully!'))
+                .catch((error) => console.log('Error sharing:', error));
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Profile link copied to clipboard!');
+        }
+    }
+</script>
+<script>
+document.getElementById("passport_photo").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const img = document.querySelector(".profile-picture img");
+        img.src = URL.createObjectURL(file);
+    }
+});
+</script>
+
 
 {% endblock %}
