@@ -180,58 +180,175 @@
     color: #2e7d32;
 }
 
+/* ======================================================
+   DESIGN POPUP STYLES - MODERN & DECENT LOOK
+   ====================================================== */
+
 .design-popup {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
+    /* Full screen overlay */
+    display: none;
+    position: fixed;
+    z-index: 1050; /* Higher z-index for modals */
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    /* Subtle blur effect on background */
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px); 
+    -webkit-backdrop-filter: blur(4px);
+    overflow-y: auto; /* Enable scrolling for the whole popup container */
 }
 
 .design-popup-content {
-  background: #fff;
-  width: 80%;
-  max-width: 900px;
-  margin: 5% auto;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative; 
-  z-index: 10000; 
+    background: #ffffff;
+    width: 90%;
+    max-width: 1100px; /* Increased max width for more gallery space */
+    /* Centered with margin and responsive adjustments */
+    margin: 40px auto; 
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    position: relative; 
+    z-index: 1060; 
+    animation: fadeInScale 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Added animation */
 }
 
+/* Modal Entry Animation */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Header Styling */
+.design-popup-content h3 {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #6c5ce7; /* Accent line */
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* Close Button Styling */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 36px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #6c5ce7; /* Hover color accent */
+}
+
+/* ======================================================
+   DESIGN GALLERY & CARD STYLES
+   ====================================================== */
+
 .design-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
-  gap: 15px;
-  margin-top: 20px;
+    display: grid;
+    /* Grid layout for 4 columns max, minimum card size 220px */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px; /* Increased gap */
+    margin-top: 20px;
 }
 
 .design-card {
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
+    background: #fdfdfd;
+    padding: 0; /* Removed padding from card body to use for image container */
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
-.design-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-}
+
 .design-card:hover {
-  transform: scale(1.05);
-  background: #eef;
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 12px 25px rgba(108, 92, 231, 0.2); /* Enhanced shadow with accent color */
+    border-color: #6c5ce7;
 }
-.close-btn {
-  float: right;
-  font-size: 24px;
-  cursor: pointer;
+
+.design-card img {
+    width: 100%;
+    height: 180px; /* Slightly taller image */
+    object-fit: cover;
+    border-radius: 0; /* Image fills the top edge */
+    transition: transform 0.4s ease-out;
+}
+
+.design-card:hover img {
+    transform: scale(1.05); /* Zoom effect on image hover */
+}
+
+/* Card Body Content (Details) */
+.design-card-details {
+    padding: 15px;
+}
+
+.design-card h4 {
+    font-size: 1.1em;
+    color: #333;
+    margin: 10px 0 5px 0;
+    font-weight: 600;
+}
+
+/* Price and Size Details */
+.design-card p {
+    font-size: 0.9em;
+    color: #666;
+    margin: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.design-card p strong {
+    color: #6c5ce7; /* Accent color for values */
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.design-card .price {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #2ecc71; /* Green for price */
+}
+
+/* ======================================================
+   RESPONSIVE ADJUSTMENTS
+   ====================================================== */
+@media (max-width: 768px) {
+    .design-popup-content {
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    .design-gallery {
+        /* Switch to max 2 columns on smaller screens */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .design-popup-content h3 {
+        font-size: 1.8em;
+    }
 }
 #clearDesignBtn {
   background: #ff4d4d;
@@ -522,19 +639,23 @@
 
 </div>
 <div id="designPopup" class="design-popup">
-  <div class="design-popup-content">
-    <span class="close-btn" onclick="closeDesignPopup()">&times;</span>
-    <h3>Select a Design for {{ service_name }}</h3>
-    <div class="design-gallery">
-      {% for img in db_images %}
-      <div class="design-card" onclick="selectDesign('{{ img.id }}','{{ img.image_name }}','{{ img.price }}')">
-        <img src="{{ img.image.url }}" alt="{{ img.image_name }}">
-        <h4>{{ img.image_name }}</h4>
-        <p>₹{{ img.price }}</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+  <div class="design-popup-content">
+    <span class="close-btn" onclick="closeDesignPopup()">&times;</span>
+    <h3>Select a Design for {{ service_name }}</h3>
+    <div class="design-gallery">
+      {% for img in db_images %}
+      <div class="design-card" onclick="selectDesign('{{ img.id }}','{{ img.image_name }}','{{ img.price }}')">
+        <img src="{{ img.image.url }}" alt="{{ img.image_name }}">
+        
+        <div class="design-card-details">
+            <h4>{{ img.image_name }}</h4>
+            <p>Price: <strong class="price">₹{{ img.price }}</strong></p>
+            <p>Min Size: <strong>{{ img.min_size }} sqft</strong></p>
+        </div>
+              </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 <div id="toast" class="toast"></div>
 <!-- SCRIPTS -->

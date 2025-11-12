@@ -19,6 +19,7 @@ urlpatterns = [
     path('bookings/', views.bookings, name='bookings'),
     path("bookings/update-status/<int:booking_id>/", views.update_booking_status, name="update_booking_status"),
     path('admin/bookings/<int:booking_id>/assign/', views.assign_booking, name='assign_booking'),
+    path('update_service_price/', views.update_service_price, name='update_service_price'),
 
     path('employee/assignments/', views.employee_bookings, name='employee_bookings'),
     path('employee/assignments/<int:booking_id>/<str:action>/', views.handle_assignment_response, name='handle_assignment_response'),
@@ -36,3 +37,4 @@ urlpatterns = [
 
 
 ]
+

@@ -32,15 +32,18 @@
 
             <!-- ✅ Approve button (only visible to admin for unverified images) -->
             <div class="action-btn">
-              {% if request.user.is_staff %}
-                {% if not img.is_verified_pic %}
-                  <button class="approve-btn" data-id="{{ img.id }}">✅</button>
-                {% endif %}
-                <button class="delete-btn" data-id="{{ img.id }}">❌</button>
-              {% elif img.userupload_id == request.user.id %}
-                <button class="delete-btn" data-id="{{ img.id }}">❌</button>
-              {% endif %}
-            </div>
+  {% if request.user.is_staff %}
+    {% if not img.is_verified_pic %}
+      <button class="approve-btn" data-id="{{ img.id }}">✅</button>
+    {% endif %}
+    <button class="edit-price-btn" data-id="{{ img.id }}" data-price="{{ img.price }}">💰</button>
+
+    <button class="delete-btn" data-id="{{ img.id }}">❌</button>
+  {% elif img.userupload_id == request.user.id %}
+    <button class="delete-btn" data-id="{{ img.id }}">❌</button>
+  {% endif %}
+</div>
+
 
             <div class="artwork-details">
             <span class="price-tag">₹{{ img.price }} / sq ft</span>
@@ -82,7 +85,7 @@
   <div id="caption"></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   // This ensures the code only runs after the whole HTML page is loaded
   document.addEventListener('DOMContentLoaded', function() {
@@ -289,7 +292,81 @@ document.querySelectorAll('.delete-btn').forEach(btn => {
   });
 });
 
+$(document).ready(function() {
+  $(".edit-price-btn").on("click", function(e) {
+    e.stopPropagation();
+    var imgId = $(this).data("id");
+    var oldPrice = $(this).data("price");
+
+    // 🧾 SweetAlert styled input popup
+    Swal.fire({
+      title: '💰 Update Artwork Price',
+      input: 'number',
+      inputLabel: 'Enter the new price for this artwork',
+      inputValue: oldPrice,
+      inputAttributes: { min: 0 },
+      showCancelButton: true,
+      confirmButtonText: '💾 Save',
+      cancelButtonText: '❌ Cancel',
+      confirmButtonColor: '#7b2ff7',
+      cancelButtonColor: '#d33',
+      background: '#f9f9f9',
+      color: '#333',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value !== oldPrice) {
+        var newPrice = result.value;
+
+        $.ajax({
+          url: "{% url 'update_service_price' %}",
+          type: "POST",
+          data: JSON.stringify({ id: imgId, price: newPrice }),
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          contentType: "application/json",
+          success: function(response) {
+            if (response.success) {
+              Swal.fire({
+                icon: 'success',
+                title: '✅ Price Updated!',
+                text: 'The new price has been saved successfully.',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#ffffff',
+                color: '#333',
+                timerProgressBar: true
+              });
+              setTimeout(() => location.reload(), 1600);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: response.message || 'Something went wrong!',
+                confirmButtonColor: '#d33'
+              });
+            }
+          },
+          error: function() {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: '⚠️ Failed to update price. Try again.',
+              confirmButtonColor: '#d33'
+            });
+          }
+        });
+      }
+    });
+  });
+});
+
 </script>
+
+
 <!-- Floating Book Button -->
 <a href="{% url 'book_service' service_slug %}" class="floating-book">
   Book Now

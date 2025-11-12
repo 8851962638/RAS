@@ -7,66 +7,85 @@
 <section class="form-section">
   <h1>Add Service Image</h1>
   <form id="serviceImageForm" method="POST" enctype="multipart/form-data" class="styled-form">
-    {% csrf_token %}
+  {% csrf_token %}
 
+  <!-- Row 1: Name + Price -->
+  <div class="form-row">
     <div class="form-group">
       <label>Name of Photo:</label>
       <input type="text" name="image_name" required>
     </div>
 
-    <!-- Row for Price + File + Dropdown -->
-    <div class="form-row">
-      <div class="form-group">
-  <label>Price:</label>
-  <div class="price-input">
-    <input 
-      type="number" 
-      name="price" 
-      min="0" 
-      step="1" 
-      oninput="validity.valid||(value='');" 
-      required
-    >
-    <span class="unit">₹ / sq ft</span>
-  </div>
-</div>
-
-
-      <div class="form-group">
-        <label>Image:</label>
-        <input type="file" name="image" accept="image/*" required class="file-input">
+    <div class="form-group">
+      <label>Price:</label>
+      <div class="price-input">
+        <input 
+          type="number" 
+          name="price" 
+          min="0" 
+          step="1" 
+          oninput="validity.valid||(value='');" 
+          required
+        >
+        <span class="unit">₹ / sq ft</span>
       </div>
+    </div>
+  </div>
 
-      <!-- MOVED THIS BLOCK INSIDE THE form-row DIV -->
-      <div class="form-group">
-        <label>Type of Art:</label>
-        <select name="type_of_art" required>
-          <option value="">-- Select Type --</option>
-          <option value="3D Wall Art">3D Wall Art</option>
-          <option value="3D Floor Art">3D Floor Art</option>
-          <option value="Mural Art">Mural Art</option>
-          <option value="Metro Advertisement">Metro Advertisement</option>
-          <option value="Outdoor Advertisement">Outdoor Advertisement</option>
-          <option value="School Painting">School Painting</option>
-          <option value="Selfie Painting">Selfie Painting</option>
-          <option value="Madhubani Painting">Madhubani Painting</option>
-          <option value="Texture Painting">Texture Painting</option>
-          <option value="Stone Murti">Stone Murti</option>
-          <option value="Statue">Statue</option>
-          <option value="Scrap Animal Art">Scrap Animal Art</option>
-          <option value="Nature & Water Fountain">Nature & Water Fountain</option>
-          <option value="Cartoon Painting">Cartoon Painting</option>
-          <option value="Home Painting">Home Painting</option>
-        </select>
+  <!-- Row 2: Size + Image + Type -->
+  <div class="form-row">
+    <div class="form-group">
+      <label>Minimum Size (Width * Height):</label>
+      <div class="size-input">
+        <input type="number" name="width" placeholder="Width" min="1" required>
+        <span class="multiply-symbol">*</span>
+        <input type="number" name="height" placeholder="Height" min="1" required>
       </div>
     </div>
 
-    <button type="submit" class="submit-btn">Submit</button>
-  </form>
+    <div class="form-group">
+      <label>Image:</label>
+      <input type="file" name="image" accept="image/*" required class="file-input">
+    </div>
+
+    <div class="form-group">
+      <label>Type of Art:</label>
+      <select name="type_of_art" required>
+        <option value="">-- Select Type --</option>
+        <option value="3D Wall Art">3D Wall Art</option>
+        <option value="3D Floor Art">3D Floor Art</option>
+        <option value="Mural Art">Mural Art</option>
+        <option value="Metro Advertisement">Metro Advertisement</option>
+        <option value="Outdoor Advertisement">Outdoor Advertisement</option>
+        <option value="School Painting">School Painting</option>
+        <option value="Selfie Painting">Selfie Painting</option>
+        <option value="Madhubani Painting">Madhubani Painting</option>
+        <option value="Texture Painting">Texture Painting</option>
+        <option value="Stone Murti">Stone Murti</option>
+        <option value="Statue">Statue</option>
+        <option value="Scrap Animal Art">Scrap Animal Art</option>
+        <option value="Nature & Water Fountain">Nature & Water Fountain</option>
+        <option value="Cartoon Painting">Cartoon Painting</option>
+        <option value="Home Painting">Home Painting</option>
+      </select>
+    </div>
+  </div>
+
+  <img id="imagePreview" style="display:none; margin-top:10px; max-width:250px; border-radius:10px; cursor:pointer;" />
+
+  <button type="submit" class="submit-btn">Submit</button>
+</form>
+
 
   <div id="responseMessage" class="response-message"></div>
 </section>
+<!-- <img id="imagePreview" style="display:none; margin-top:20px; max-width:200px; border-radius:10px; cursor:pointer;" /> -->
 
+<!-- Fullscreen modal for enlarged image -->
+<div id="imageModal" class="image-modal">
+  <!-- <span class="close-btn">&times;</span> -->
+  <img class="modal-content" id="modalImage">
+</div>
 <script>
 document.getElementById("serviceImageForm").addEventListener("submit", function(e) {
     e.preventDefault(); 
@@ -94,6 +113,41 @@ document.getElementById("serviceImageForm").addEventListener("submit", function(
         console.error("Error:", error);
         document.getElementById("responseMessage").innerHTML = `<p class="error-msg">⚠️ Something went wrong!</p>`;
     });
+});
+
+
+document.querySelector('input[name="image"]').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('imagePreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Show full image on click
+document.getElementById('imagePreview').addEventListener('click', function() {
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  modal.style.display = 'flex';
+  modalImg.src = this.src;
+});
+
+// Close modal on clicking the ×
+document.querySelector('.close-btn').addEventListener('click', function(e) {
+  e.stopPropagation(); // prevent modal click event
+  document.getElementById('imageModal').style.display = 'none';
+});
+
+// Also close if user clicks outside image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.style.display = 'none';
+  }
 });
 </script>
 
@@ -245,5 +299,58 @@ select {
     flex-direction: column;
   }
 }
+
+/* Fullscreen modal */
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal image */
+.image-modal .modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+/* Close button */
+.image-modal .close-btn {
+  position: absolute;
+  top: 20px; right: 30px;
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.image-modal .close-btn:hover {
+  color: #ff4444;
+}
+
+.size-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.size-input input {
+  width: 80px;
+  text-align: center;
+}
+
+.multiply-symbol {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
 </style>
 {% endblock %}

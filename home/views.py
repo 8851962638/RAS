@@ -1013,3 +1013,31 @@ def handle_assignment_response(request, booking_id, action):
         messages.info(request, "You have declined the assignment.")
 
     return redirect(reverse("employee_bookings"))
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from employee.models import ServiceImage
+
+@csrf_exempt
+def update_service_price(request):
+    if request.method == "POST":
+        if not request.user.is_staff:
+            return JsonResponse({"success": False, "message": "Permission denied."}, status=403)
+        try:
+            data = json.loads(request.body)
+            image_id = data.get("id")
+            new_price = data.get("price")
+
+            img = ServiceImage.objects.get(id=image_id)
+            img.price = new_price
+            img.save()
+
+            return JsonResponse({"success": True})
+        except ServiceImage.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Image not found."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    return JsonResponse({"success": False, "message": "Invalid request method."})
