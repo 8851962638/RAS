@@ -142,8 +142,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-RAZORPAY_KEY_ID = "rzp_test_RMViGxvSb9tRoJ"  # Test key
-RAZORPAY_KEY_SECRET = "aCpEmJSMaKuSI16uEaftaD1O"   # Test secret
+RAZORPAY_KEY_ID = "rzp_live_ReWe4HaZkbq4aQ"  # live key
+RAZORPAY_KEY_SECRET = "gw4hfOd4jcpndJxdCUlb7cTQ"   # live secret
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
