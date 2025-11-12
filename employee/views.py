@@ -7,37 +7,24 @@ def service_images_view(request):
         try:
             name = request.POST.get("image_name")
             price = request.POST.get("price")
+            width = request.POST.get("width")
+            height = request.POST.get("height")
+            min_size = f"{width} * {height}"  # combine
             type_of_art = request.POST.get("type_of_art")
             image = request.FILES.get("image")
 
-            # Debug: Let's see what we're working with
-            print(f"User: {request.user}")
-            print(f"Is authenticated: {request.user.is_authenticated}")
-            print(f"Full name: {getattr(request.user, 'full_name', 'NO FULL_NAME ATTR')}")
-            print(f"Email: {getattr(request.user, 'email', 'NO EMAIL ATTR')}")
-
-            # More defensive user handling with priority for full_name
-            user_name = "Anonymous"  # Default fallback
-            user_id = 0  # Default fallback
-            
+            user_name = "Anonymous"
+            user_id = 0
             if hasattr(request.user, 'is_authenticated') and request.user.is_authenticated:
                 user_id = getattr(request.user, 'id', 0)
-                
-                # Priority order: full_name -> email -> fallback to Anonymous
-                user_name = (getattr(request.user, 'full_name', None) or 
-                            getattr(request.user, 'email', None) or 
-                            'Anonymous')
-                
-                # Extra safety check for empty strings
-                if not user_name or user_name.strip() == '':
-                    user_name = "Anonymous"
-
-            print(f"Final user_name: {user_name}")
-            print(f"Final user_id: {user_id}")
+                user_name = (getattr(request.user, 'full_name', None)
+                             or getattr(request.user, 'email', None)
+                             or "Anonymous")
 
             ServiceImage.objects.create(
                 image_name=name,
                 price=price,
+                min_size=min_size,
                 image=image,
                 type_of_art=type_of_art,
                 userupload_id=user_id,
@@ -49,3 +36,6 @@ def service_images_view(request):
             return JsonResponse({"success": False, "message": f"❌ {str(e)}"})
 
     return render(request, "service_images.html")
+
+
+    

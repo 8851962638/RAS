@@ -11,7 +11,9 @@ class ServiceImage(models.Model):
     file_url = models.URLField(blank=True, null=True)
     userupload_id = models.IntegerField(default=0)  # if you just want to store an ID manually
     userupload_name = models.CharField(max_length=255, default="Anonymous", null=False, blank=False)  # uploader’s name as text
-    is_verified_pic = models.BooleanField(default=False) 
+    is_verified_pic = models.BooleanField(default=False)
+    min_size = models.CharField(max_length=50, default="")  # <-- New field for '10 * 60'
+ 
 
     class Meta:
         db_table = "service_images"

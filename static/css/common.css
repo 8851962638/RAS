@@ -307,6 +307,10 @@ footer {
   font-weight: 500;
 }
 
+.service-card:hover p {
+  background: none; /* remove gradient background */
+  -webkit-text-fill-color: #fff; /* make text white */
+}
 /* Reviews Section */
 .reviews-section {
     padding: 50px 20px;
