@@ -34,7 +34,7 @@ urlpatterns = [
     path('assign/<int:booking_id>/', views.assign_booking, name='assign_booking'), # New URL
     path('approve-service-image/', views.approve_service_image, name='approve_service_image'),
     path('delete_service_image/', views.delete_service_image, name='delete_service_image'),
+    path('artist/toggle/<int:artist_id>/', views.toggle_block_artist, name='toggle_block_artist'),
 
 
 ]
-

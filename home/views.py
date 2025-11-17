@@ -216,16 +216,22 @@ def logout_view(request):
 from django.shortcuts import render
 from django.db.models import Q 
 from accounts.models import Employee
-
 def artists(request):
     query = Employee.objects.all()
 
     # Get filters
+    artist_id = request.GET.get("artist_id")
     name = request.GET.get("name")
     pin_code = request.GET.get("pin_code")
     address = request.GET.get("address")
     work_type = request.GET.get("work_type")
     experience_years = request.GET.get("experience_years")
+
+    # Filter by Artist ID (supports RAS5, ras12, 8 etc.)
+    if artist_id:
+        clean_id = artist_id.upper().replace("RAS", "").strip()  # ensures case-insensitive
+        if clean_id.isdigit():
+            query = query.filter(id=clean_id)
 
     # Apply filters with Q objects
     if name:
@@ -1041,3 +1047,16 @@ def update_service_price(request):
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
     return JsonResponse({"success": False, "message": "Invalid request method."})
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from accounts.models import Employee
+@login_required
+def toggle_block_artist(request, artist_id):
+    artist = get_object_or_404(Employee, id=artist_id)
+    artist.block_status = not artist.block_status
+    artist.save()
+    return redirect(request.META.get('HTTP_REFERER', '/artists/'))
+
+
