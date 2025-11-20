@@ -164,45 +164,53 @@ def login_auth(request):
             if not user.is_verified:
                 return JsonResponse({"success": False, "error": "Email not verified yet!"})
 
-            # Login and save session
-            login(request, user)
-
-            # Check user role and redirect accordingly
+            # -------------------------------
+            # 🔥 BLOCK CHECK FOR EMPLOYEE
+            # -------------------------------
             if user.role == "employee":
                 try:
                     employee = Employee.objects.get(user=user)
-                    
-                    # Check if critical profile fields are empty
-                    if (not employee.fathers_name or 
-                        not employee.dob or 
-                        not employee.aadhar_card_no or
-                        not employee.passport_photo):
+
+                    if employee.block_status:
                         return JsonResponse({
-                            "success": True,
-                            "redirect_url": "/edit_profile/",  # ✅ Changed from /accounts/edit-profile/
-                            "message": "Please complete your profile to start working"
+                            "success": False,
+                            "error": "You are blocked by the Company Admin. Kindly contact +91-9876543210 for further information."
                         })
-                    else:
-                        return JsonResponse({
-                            "success": True,
-                            "redirect_url": "/",
-                        })
+
                 except Employee.DoesNotExist:
                     return JsonResponse({
                         "success": False,
                         "error": "Employee profile not found"
                     })
-            
-            # For customers or other roles - redirect to home
-            return JsonResponse({
-                "success": True,
-                "redirect_url": "/",
-            })
+            # -------------------------------
+
+            # Login and save session
+            login(request, user)
+
+            # Role = Employee → Profile completion check
+            if user.role == "employee":
+                employee = Employee.objects.get(user=user)
+                if (not employee.fathers_name or 
+                    not employee.dob or 
+                    not employee.aadhar_card_no or
+                    not employee.passport_photo):
+
+                    return JsonResponse({
+                        "success": True,
+                        "redirect_url": "/edit_profile/",
+                        "message": "Please complete your profile to start working"
+                    })
+
+                return JsonResponse({"success": True, "redirect_url": "/"})
+
+            # Other roles
+            return JsonResponse({"success": True, "redirect_url": "/"})
 
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
 
     return JsonResponse({"success": False, "error": "Invalid request method"})
+
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm
