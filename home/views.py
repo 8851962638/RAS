@@ -764,6 +764,8 @@ def verify_razorpay_payment(request):
         return JsonResponse({'success': False, 'error': str(e)})
 
 # Add this to your views.py or update your existing save_bookings view
+from django.core.mail import send_mail
+from django.conf import settings
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -872,6 +874,56 @@ def save_booking(request):
             # --- FINAL AMOUNT FIX ---
             total_amount=total_amount
         )
+        # --- SEND BOOKING CONFIRMATION EMAIL ---
+        try:
+            subject = f"Booking Confirmation - {booking.booking_id}"
+
+            message = f"""
+        Hello {booking.customer_name},
+
+        Thank you for booking with RColorCraft! 🎨  
+        Your booking has been successfully received.
+
+        Here are your booking details:
+
+        ----------------------------------------
+        🆔 Booking ID: {booking.booking_id}
+        🛠 Service: {booking.service_name}
+
+        📅 Appointment Date: {appointment_date.strftime('%d-%m-%Y')}
+        🏠 Address: {booking.address}, {booking.city}, {booking.state} - {booking.pin_code}
+
+        🧱 Total Walls: {booking.total_walls}
+        📐 Width x Height: {booking.width} ft x {booking.height} ft
+        📏 Total Sq Ft: {booking.total_sqft}
+
+        💰 Total Amount: ₹{booking.total_amount}
+
+        🎨 Art Type: {booking.type_of_art_booked}
+        """
+
+            # Add design info only if applicable
+            if booking.design_names:
+                message += f"🖼 Selected Design: {booking.design_names}\n"
+                message += f"💵 Design Rate: ₹{booking.price_of_design} per sqft\n"
+
+            if booking.customer_design:
+                message += f"📁 Custom Design Uploaded: Yes\n"
+
+            message += "\n----------------------------------------\n"
+            message += "Our team will contact you within 24 hours.\n"
+            message += "Thank you for choosing RColorCraft! 😊"
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],  # customer email
+                fail_silently=False,
+            )
+        except Exception as email_error:
+            print("EMAIL ERROR:", email_error)
+
 
         return JsonResponse({'success': True, 'message': 'Booking saved successfully', 'id': booking.id})
 

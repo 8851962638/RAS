@@ -237,3 +237,71 @@ def login_api(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from django.db.models import Q
+from employee.models import ServiceImage
+from .serializers import ServiceImageSerializer
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def explore_service_api(request, service_type):
+
+    service_dict = {
+        '3d-wall-art': '3D Wall Art',
+        '3d-floor-art': '3D Floor Art',
+        'mural-art': 'Mural Art',
+        'mural': 'Mural Art',
+        'metro-advertisement': 'Metro Advertisement',
+        'outdoor-advertisement': 'Outdoor Advertisement',
+        'school-painting': 'School Painting',
+        'selfie-painting': 'Selfie Painting',
+        'madhubani-painting': 'Madhubani Painting',
+        'texture-painting': 'Texture Painting',
+        'stone-murti': 'Stone Murti',
+        'statue': 'Statue',
+        'scrap-animal-art': 'Scrap Animal Art',
+        'nature-fountain': 'Nature & Water Fountain',
+        'fountain-art': 'Nature & Water Fountain',
+        'cartoon-painting': 'Cartoon Painting',
+        'home-painting': 'Home Painting',
+    }
+
+    service_name = service_dict.get(service_type, 'Service')
+    query_term = service_name
+
+    # special cases
+    if service_name == 'Mural Art':
+        query_term = 'Mural'
+    elif service_name == 'Nature & Water Fountain':
+        query_term = 'Fountain'
+
+    # 🔥 Same filtering logic as original view
+    if request.user.is_authenticated and request.user.is_staff:
+        db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
+
+    elif request.user.is_authenticated:
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term
+        ).filter(
+            Q(is_verified_pic=True) | Q(userupload_id=request.user.id)
+        )
+
+    else:
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term,
+            is_verified_pic=True
+        )
+
+    serializer = ServiceImageSerializer(db_images, many=True)
+
+    return Response({
+        "service_name": service_name,
+        "service_slug": service_type,
+        "images": serializer.data
+    })
