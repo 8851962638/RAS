@@ -46,9 +46,13 @@
 
 
             <div class="artwork-details">
-            <span class="price-tag">₹{{ img.price }} / sq ft</span>
-              <span class="art-type">{{ img.type_of_art }}</span>
-            </div>
+  <span class="price-tag">₹{{ img.price }} / sq ft</span>
+  <span class="art-type">{{ img.type_of_art }}</span>
+  {% if img.min_size %}
+    <span class="min-size">📏 Min Size: {{ img.min_size }} ft</span>
+  {% endif %}
+</div>
+
             <div class="artist-info">
               <i class="fas fa-user-circle"></i>
               <span>By {{ img.userupload_name }}</span>

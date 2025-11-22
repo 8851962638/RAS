@@ -305,3 +305,96 @@ def explore_service_api(request, service_type):
         "service_slug": service_type,
         "images": serializer.data
     })
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.conf import settings
+from datetime import datetime
+from home.models import Booking
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_booking_api(request):
+    data = request.data
+    try:
+        # Required fields validation
+        required = ["service_name", "contact_number", "email", "address", "pin_code",
+                    "state", "city", "total_walls", "width", "height",
+                    "total_sqft", "appointment_date", "total_amount"]
+        for field in required:
+            if not data.get(field):
+                return Response({"success": False, "message": f"{field} is required"}, status=400)
+
+        # Date format fix
+        appointment = data.get("appointment_date")
+        try:
+            appointment_date = datetime.strptime(appointment, "%d-%m-%Y").date()
+        except:
+            appointment_date = datetime.strptime(appointment, "%Y-%m-%d").date()
+
+        next_id = Booking.objects.count() + 1
+        booking_id = f"RCC{next_id}"
+
+        design_name = data.get("selected_design_name")
+        design_price = float(data.get("selected_design_price")) if data.get("selected_design_price") else None
+        custom_design_file = request.FILES.get("custom_design")
+
+        if design_name:
+            art_type = "Selected Design"
+        elif custom_design_file:
+            art_type = "Custom Upload"
+            design_price = design_price if design_price else 0
+        else:
+            art_type = "Standard Service"
+
+        booking = Booking.objects.create(
+            customer_name=request.user.full_name or request.user.email,
+            customer_user_id=request.user.id,
+            booking_id=booking_id,
+            service_name=data.get("service_name"),
+            contact_number=data.get("contact_number"),
+            email=data.get("email"),
+            address=data.get("address"),
+            pin_code=data.get("pin_code"),
+            state=data.get("state"),
+            city=data.get("city"),
+            total_walls=data.get("total_walls"),
+            width=data.get("width"),
+            height=data.get("height"),
+            total_sqft=data.get("total_sqft"),
+            appointment_date=appointment_date,
+            design_names=design_name,
+            type_of_art_booked=art_type,
+            price_of_design=design_price,
+            customer_design=custom_design_file,
+            total_amount=data.get("total_amount")
+        )
+
+        # Email trigger (optional)
+        try:
+            send_mail(
+                f"Booking Confirmation - {booking.booking_id}",
+                f"Dear {booking.customer_name}, your booking {booking.booking_id} is confirmed.",
+                settings.DEFAULT_FROM_EMAIL,
+                [booking.email]
+            )
+        except Exception as e:
+            print("Email Error", e)
+
+        return Response({
+            "success": True,
+            "message": "Booking saved successfully",
+            "booking": {
+                "id": booking.id,
+                "booking_id": booking.booking_id,
+                "total_amount": booking.total_amount,
+                "customer_name": booking.customer_name
+            }
+        }, status=200)
+
+    except Exception as e:
+        return Response({"success": False, "message": str(e)}, status=500)

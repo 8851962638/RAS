@@ -999,6 +999,23 @@ def update_booking_status(request, booking_id):
     return redirect(reverse("bookings"))
 
 
+# @user_passes_test(is_admin)
+# def assign_booking(request, booking_id):
+#     """Admin view to assign a booking to a specific employee."""
+#     if request.method == "POST":
+#         employee_id = request.POST.get("employee_id")
+#         booking = get_object_or_404(Booking, id=booking_id)
+#         employee = get_object_or_404(CustomUser, id=employee_id)
+        
+#         # Assign the employee and set status to 'assigned' (awaiting response)
+#         booking.assigned_employee = employee
+#         booking.assignment_status = 'assigned' 
+#         booking.save()
+        
+#     return redirect(reverse("bookings"))
+from django.core.mail import send_mail
+from django.conf import settings
+
 @user_passes_test(is_admin)
 def assign_booking(request, booking_id):
     """Admin view to assign a booking to a specific employee."""
@@ -1006,12 +1023,53 @@ def assign_booking(request, booking_id):
         employee_id = request.POST.get("employee_id")
         booking = get_object_or_404(Booking, id=booking_id)
         employee = get_object_or_404(CustomUser, id=employee_id)
-        
-        # Assign the employee and set status to 'assigned' (awaiting response)
+
+        # Assign the employee
         booking.assigned_employee = employee
-        booking.assignment_status = 'assigned' 
+        booking.assignment_status = 'assigned'
         booking.save()
-        
+
+        # 🔍 Fetch employee profile to get email
+        employee_profile = Employee.objects.filter(user=employee).first()
+        employee_email = employee_profile.email_address if employee_profile else None
+
+        # 🔥 Send assignment email
+        if employee_email:
+            service = booking.service_name
+            booking_date = booking.appointment_date
+            city = booking.city
+            state = booking.state
+
+            msg = f"""
+Dear {employee.full_name or employee.email},
+
+You have received a new booking request.
+
+🔹 Service: {service}
+🔹 Date: {booking_date}
+🔹 City: {city}
+🔹 State: {state}
+
+⚠️ Customer privacy protection:
+- Customer phone number: ❌ Hidden
+- Customer email: ❌ Hidden
+- Customer full address: ❌ Hidden
+
+For more information and full details,
+👉 Please login to your account and accept the order.
+
+Regards,
+RColorcraft Bookings Team
+"""
+
+            send_mail(
+                subject="📢 New Booking Assigned — Action Required",
+                message=msg,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[employee_email],
+                fail_silently=False,
+            )
+
     return redirect(reverse("bookings"))
 
 

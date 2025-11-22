@@ -174,7 +174,7 @@ def login_auth(request):
                     if employee.block_status:
                         return JsonResponse({
                             "success": False,
-                            "error": "You are blocked by the Company Admin. Kindly contact +91-9876543210 for further information."
+                            "error": "You are blocked by the Company Admin. Kindly contact +91-9759013133 or info@colorcraft.com for further information."
                         })
 
                 except Employee.DoesNotExist:
