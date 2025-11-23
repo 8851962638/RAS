@@ -173,12 +173,13 @@ document.getElementById('payBtn').onclick = function(){
             let rzp = new Razorpay(options);
 
             // 🆕 Helps prevent blank screen errors
-            rzp.on('payment.failed', function (res){
-                alert("Payment failed: " + res.error.description);
-                console.error(res.error);
-            });
-
             rzp.open();
+
+rzp.on('payment.failed', function (res){
+    alert("Payment failed: " + res.error.description);
+    console.error(res.error);
+});
+
         } else {
             alert(data.error);
         }
