@@ -764,6 +764,8 @@ def verify_razorpay_payment(request):
         return JsonResponse({'success': False, 'error': str(e)})
 
 # Add this to your views.py or update your existing save_bookings view
+from django.core.mail import send_mail
+from django.conf import settings
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -872,6 +874,56 @@ def save_booking(request):
             # --- FINAL AMOUNT FIX ---
             total_amount=total_amount
         )
+        # --- SEND BOOKING CONFIRMATION EMAIL ---
+        try:
+            subject = f"Booking Confirmation - {booking.booking_id}"
+
+            message = f"""
+        Hello {booking.customer_name},
+
+        Thank you for booking with RColorCraft! 🎨  
+        Your booking has been successfully received.
+
+        Here are your booking details:
+
+        ----------------------------------------
+        🆔 Booking ID: {booking.booking_id}
+        🛠 Service: {booking.service_name}
+
+        📅 Appointment Date: {appointment_date.strftime('%d-%m-%Y')}
+        🏠 Address: {booking.address}, {booking.city}, {booking.state} - {booking.pin_code}
+
+        🧱 Total Walls: {booking.total_walls}
+        📐 Width x Height: {booking.width} ft x {booking.height} ft
+        📏 Total Sq Ft: {booking.total_sqft}
+
+        💰 Total Amount: ₹{booking.total_amount}
+
+        🎨 Art Type: {booking.type_of_art_booked}
+        """
+
+            # Add design info only if applicable
+            if booking.design_names:
+                message += f"🖼 Selected Design: {booking.design_names}\n"
+                message += f"💵 Design Rate: ₹{booking.price_of_design} per sqft\n"
+
+            if booking.customer_design:
+                message += f"📁 Custom Design Uploaded: Yes\n"
+
+            message += "\n----------------------------------------\n"
+            message += "Our team will contact you within 24 hours.\n"
+            message += "Thank you for choosing RColorCraft! 😊"
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],  # customer email
+                fail_silently=False,
+            )
+        except Exception as email_error:
+            print("EMAIL ERROR:", email_error)
+
 
         return JsonResponse({'success': True, 'message': 'Booking saved successfully', 'id': booking.id})
 
@@ -947,6 +999,23 @@ def update_booking_status(request, booking_id):
     return redirect(reverse("bookings"))
 
 
+# @user_passes_test(is_admin)
+# def assign_booking(request, booking_id):
+#     """Admin view to assign a booking to a specific employee."""
+#     if request.method == "POST":
+#         employee_id = request.POST.get("employee_id")
+#         booking = get_object_or_404(Booking, id=booking_id)
+#         employee = get_object_or_404(CustomUser, id=employee_id)
+        
+#         # Assign the employee and set status to 'assigned' (awaiting response)
+#         booking.assigned_employee = employee
+#         booking.assignment_status = 'assigned' 
+#         booking.save()
+        
+#     return redirect(reverse("bookings"))
+from django.core.mail import send_mail
+from django.conf import settings
+
 @user_passes_test(is_admin)
 def assign_booking(request, booking_id):
     """Admin view to assign a booking to a specific employee."""
@@ -954,12 +1023,53 @@ def assign_booking(request, booking_id):
         employee_id = request.POST.get("employee_id")
         booking = get_object_or_404(Booking, id=booking_id)
         employee = get_object_or_404(CustomUser, id=employee_id)
-        
-        # Assign the employee and set status to 'assigned' (awaiting response)
+
+        # Assign the employee
         booking.assigned_employee = employee
-        booking.assignment_status = 'assigned' 
+        booking.assignment_status = 'assigned'
         booking.save()
-        
+
+        # 🔍 Fetch employee profile to get email
+        employee_profile = Employee.objects.filter(user=employee).first()
+        employee_email = employee_profile.email_address if employee_profile else None
+
+        # 🔥 Send assignment email
+        if employee_email:
+            service = booking.service_name
+            booking_date = booking.appointment_date
+            city = booking.city
+            state = booking.state
+
+            msg = f"""
+Dear {employee.full_name or employee.email},
+
+You have received a new booking request.
+
+🔹 Service: {service}
+🔹 Date: {booking_date}
+🔹 City: {city}
+🔹 State: {state}
+
+⚠️ Customer privacy protection:
+- Customer phone number: ❌ Hidden
+- Customer email: ❌ Hidden
+- Customer full address: ❌ Hidden
+
+For more information and full details,
+👉 Please login to your account and accept the order.
+
+Regards,
+RColorcraft Bookings Team
+"""
+
+            send_mail(
+                subject="📢 New Booking Assigned — Action Required",
+                message=msg,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[employee_email],
+                fail_silently=False,
+            )
+
     return redirect(reverse("bookings"))
 
 

@@ -338,3 +338,162 @@ def api_verify_payment(request):
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
 
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from django.db.models import Q
+from employee.models import ServiceImage
+from .serializers import ServiceImageSerializer
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def explore_service_api(request, service_type):
+
+    service_dict = {
+        '3d-wall-art': '3D Wall Art',
+        '3d-floor-art': '3D Floor Art',
+        'mural-art': 'Mural Art',
+        'mural': 'Mural Art',
+        'metro-advertisement': 'Metro Advertisement',
+        'outdoor-advertisement': 'Outdoor Advertisement',
+        'school-painting': 'School Painting',
+        'selfie-painting': 'Selfie Painting',
+        'madhubani-painting': 'Madhubani Painting',
+        'texture-painting': 'Texture Painting',
+        'stone-murti': 'Stone Murti',
+        'statue': 'Statue',
+        'scrap-animal-art': 'Scrap Animal Art',
+        'nature-fountain': 'Nature & Water Fountain',
+        'fountain-art': 'Nature & Water Fountain',
+        'cartoon-painting': 'Cartoon Painting',
+        'home-painting': 'Home Painting',
+    }
+
+    service_name = service_dict.get(service_type, 'Service')
+    query_term = service_name
+
+    # special cases
+    if service_name == 'Mural Art':
+        query_term = 'Mural'
+    elif service_name == 'Nature & Water Fountain':
+        query_term = 'Fountain'
+
+    # 🔥 Same filtering logic as original view
+    if request.user.is_authenticated and request.user.is_staff:
+        db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
+
+    elif request.user.is_authenticated:
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term
+        ).filter(
+            Q(is_verified_pic=True) | Q(userupload_id=request.user.id)
+        )
+
+    else:
+        db_images = ServiceImage.objects.filter(
+            type_of_art__icontains=query_term,
+            is_verified_pic=True
+        )
+
+    serializer = ServiceImageSerializer(db_images, many=True)
+
+    return Response({
+        "service_name": service_name,
+        "service_slug": service_type,
+        "images": serializer.data
+    })
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.conf import settings
+from datetime import datetime
+from home.models import Booking
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_booking_api(request):
+    data = request.data
+    try:
+        # Required fields validation
+        required = ["service_name", "contact_number", "email", "address", "pin_code",
+                    "state", "city", "total_walls", "width", "height",
+                    "total_sqft", "appointment_date", "total_amount"]
+        for field in required:
+            if not data.get(field):
+                return Response({"success": False, "message": f"{field} is required"}, status=400)
+
+        # Date format fix
+        appointment = data.get("appointment_date")
+        try:
+            appointment_date = datetime.strptime(appointment, "%d-%m-%Y").date()
+        except:
+            appointment_date = datetime.strptime(appointment, "%Y-%m-%d").date()
+
+        next_id = Booking.objects.count() + 1
+        booking_id = f"RCC{next_id}"
+
+        design_name = data.get("selected_design_name")
+        design_price = float(data.get("selected_design_price")) if data.get("selected_design_price") else None
+        custom_design_file = request.FILES.get("custom_design")
+
+        if design_name:
+            art_type = "Selected Design"
+        elif custom_design_file:
+            art_type = "Custom Upload"
+            design_price = design_price if design_price else 0
+        else:
+            art_type = "Standard Service"
+
+        booking = Booking.objects.create(
+            customer_name=request.user.full_name or request.user.email,
+            customer_user_id=request.user.id,
+            booking_id=booking_id,
+            service_name=data.get("service_name"),
+            contact_number=data.get("contact_number"),
+            email=data.get("email"),
+            address=data.get("address"),
+            pin_code=data.get("pin_code"),
+            state=data.get("state"),
+            city=data.get("city"),
+            total_walls=data.get("total_walls"),
+            width=data.get("width"),
+            height=data.get("height"),
+            total_sqft=data.get("total_sqft"),
+            appointment_date=appointment_date,
+            design_names=design_name,
+            type_of_art_booked=art_type,
+            price_of_design=design_price,
+            customer_design=custom_design_file,
+            total_amount=data.get("total_amount")
+        )
+
+        # Email trigger (optional)
+        try:
+            send_mail(
+                f"Booking Confirmation - {booking.booking_id}",
+                f"Dear {booking.customer_name}, your booking {booking.booking_id} is confirmed.",
+                settings.DEFAULT_FROM_EMAIL,
+                [booking.email]
+            )
+        except Exception as e:
+            print("Email Error", e)
+
+        return Response({
+            "success": True,
+            "message": "Booking saved successfully",
+            "booking": {
+                "id": booking.id,
+                "booking_id": booking.booking_id,
+                "total_amount": booking.total_amount,
+                "customer_name": booking.customer_name
+            }
+        }, status=200)
+
+    except Exception as e:
+        return Response({"success": False, "message": str(e)}, status=500)
