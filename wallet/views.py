@@ -72,6 +72,7 @@ def verify_razorpay_payment_wallet(request):
             'razorpay_payment_id': razorpay_payment_id,
             'razorpay_signature': razorpay_signature
         }
+        print(params_dict)
 
         # ✅ Verify payment signature
         razorpay_client.utility.verify_payment_signature(params_dict)

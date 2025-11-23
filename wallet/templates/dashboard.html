@@ -70,7 +70,7 @@
   <div class="balance">Current Balance: ₹{{ wallet.balance }}</div>
 
   <div style="text-align:center; margin-bottom:20px;">
-    <input type="number" id="walletAmount" placeholder="Enter Amount to Add" min="200" step="100" />
+    <input type="number" id="walletAmount" placeholder="Enter Amount to Add"  />
     <button id="payBtn">Add Money</button>
     <div class="min-note">Minimum amount: ₹200</div>
   </div>
@@ -102,17 +102,11 @@
 <script>
 document.getElementById('payBtn').onclick = function(){
     let amount = document.getElementById('walletAmount').value;
-    
-    // Check minimum amount of 200
-    if(amount < 200){ 
-        alert('Minimum amount to add is ₹200'); 
-        return; 
-    }
-    
-    if(amount < 1){ 
-        alert('Enter valid amount'); 
-        return; 
-    }
+
+    // if(amount < 200){ 
+    //     alert('Minimum amount to add is ₹200'); 
+    //     return; 
+    // }
 
     fetch("{% url 'create_wallet_order' %}", {
         method:'POST',
@@ -125,43 +119,71 @@ document.getElementById('payBtn').onclick = function(){
     .then(res=>res.json())
     .then(data=>{
         if(data.success){
+
             let options = {
                 "key": data.key_id,
                 "amount": data.amount,
                 "currency": data.currency,
                 "name": "RColourcraft Wallet",
+                "description": "Wallet Top-up",
                 "order_id": data.order_id,
-                "handler": function(response){
+
+                // 🆕 REQUIRED for Cards + Netbanking
+                "prefill": {
+                    "name": "{{ request.user.first_name }}",
+                    "email": "{{ request.user.email }}",
+                    "contact": "{{ request.user.profile.phone|default:request.user.username }}"
+                },
+
+                // 🆕 Better Checkout UX
+                "theme": { "color": "#4CAF50" },
+
+                "modal": {
+                    "ondismiss": function() {
+                        console.log("Payment popup closed");
+                    }
+                },
+
+                "handler": function (response) {
                     fetch("{% url 'verify_wallet_payment' %}", {
-                        method:'POST',
-                        headers:{
-                          'Content-Type':'application/json',
-                          'X-CSRFToken':'{{ csrf_token }}'
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
                         },
-                        body:JSON.stringify({
+                        body: JSON.stringify({
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
                             amount: amount
                         })
                     })
-                    .then(res=>res.json())
-                    .then(resp=>{
-                        if(resp.success){
-                            alert('✅ Wallet credited successfully!');
+                    .then(res => res.json())
+                    .then(resp => {
+                        if (resp.success) {
+                            alert("✅ Wallet credited successfully!");
                             location.reload();
                         } else {
                             alert(resp.error);
                         }
                     });
-                },
-                "theme": { "color": "#4CAF50" }
+                }
             };
-            new Razorpay(options).open();
+
+            let rzp = new Razorpay(options);
+
+            // 🆕 Helps prevent blank screen errors
+            rzp.on('payment.failed', function (res){
+                alert("Payment failed: " + res.error.description);
+                console.error(res.error);
+            });
+
+            rzp.open();
         } else {
             alert(data.error);
         }
     });
 };
 </script>
+
 {% endblock %}

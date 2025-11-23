@@ -237,3 +237,104 @@ def login_api(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.conf import settings
+from wallet.models import Wallet, WalletTransaction
+
+import razorpay
+import json
+import time
+from decimal import Decimal
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+
+@csrf_exempt
+def api_create_order(request):
+    """REST API → Create Razorpay wallet recharge order"""
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST method required"})
+
+    try:
+        body = json.loads(request.body)
+        amount = int(float(body.get("amount", 0)) * 100)
+
+        if amount < 100:
+            return JsonResponse({"success": False, "error": "Minimum amount is ₹1"})
+
+        receipt_id = f"wallet_{int(time.time())}"
+
+        order_data = {
+            "amount": amount,
+            "currency": "INR",
+            "receipt": receipt_id,
+            "payment_capture": 1
+        }
+
+        order = razorpay_client.order.create(order_data)
+
+        return JsonResponse({
+            "success": True,
+            "order_id": order["id"],
+            "amount": order["amount"],
+            "currency": order["currency"],
+            "key_id": settings.RAZORPAY_KEY_ID,
+        })
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
+    
+
+
+@csrf_exempt
+def api_verify_payment(request):
+    """REST API → Verify payment and credit wallet"""
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST method required"})
+
+    try:
+        body = json.loads(request.body)
+
+        user_id = body.get("user_id")
+        if not user_id:
+            return JsonResponse({"success": False, "error": "user_id required"})
+
+        user = User.objects.get(id=user_id)
+
+        razorpay_order_id = body.get("razorpay_order_id")
+        razorpay_payment_id = body.get("razorpay_payment_id")
+        razorpay_signature = body.get("razorpay_signature")
+        amount = Decimal(str(body.get("amount")))
+
+        params_dict = {
+            "razorpay_order_id": razorpay_order_id,
+            "razorpay_payment_id": razorpay_payment_id,
+            "razorpay_signature": razorpay_signature
+        }
+
+        # verify payment signature
+        razorpay_client.utility.verify_payment_signature(params_dict)
+
+        # credit wallet
+        wallet, _ = Wallet.objects.get_or_create(user=user)
+        wallet.credit(amount)
+
+        WalletTransaction.objects.create(
+            wallet=wallet,
+            amount=amount,
+            transaction_type="CREDIT",
+            razorpay_payment_id=razorpay_payment_id
+        )
+
+        return JsonResponse({"success": True, "message": "Wallet credited successfully"})
+
+    except razorpay.errors.SignatureVerificationError:
+        return JsonResponse({"success": False, "error": "Signature verification failed"})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
+
