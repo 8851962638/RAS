@@ -12,6 +12,6 @@ urlpatterns = [
     path('login_api/', login_api, name='login_api'),
     path("wallet/create-order/", api_create_order, name="api_create_order"),
     path("wallet/verify-payment/", api_verify_payment, name="api_verify_payment"),
-    path("api/save-booking/", save_booking_api, name="save_booking_api"),
+    path("save-booking/", save_booking_api, name="save_booking_api"),
 
 ]
