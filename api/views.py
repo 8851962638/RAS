@@ -338,162 +338,209 @@ def api_verify_payment(request):
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.shortcuts import get_object_or_404
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from django.db.models import Q
-from employee.models import ServiceImage
-from .serializers import ServiceImageSerializer
+from wallet.models import Wallet, WalletTransaction
+from accounts.models import Employee, Customer
+
+import time
+import json
+from decimal import Decimal
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def explore_service_api(request, service_type):
+# =============== CUSTOMER PROFILE ===============
+@csrf_exempt
+def api_get_customer_profile(request):
+    if request.method != "GET":
+        return JsonResponse({"success": False, "error": "GET method required"})
 
-    service_dict = {
-        '3d-wall-art': '3D Wall Art',
-        '3d-floor-art': '3D Floor Art',
-        'mural-art': 'Mural Art',
-        'mural': 'Mural Art',
-        'metro-advertisement': 'Metro Advertisement',
-        'outdoor-advertisement': 'Outdoor Advertisement',
-        'school-painting': 'School Painting',
-        'selfie-painting': 'Selfie Painting',
-        'madhubani-painting': 'Madhubani Painting',
-        'texture-painting': 'Texture Painting',
-        'stone-murti': 'Stone Murti',
-        'statue': 'Statue',
-        'scrap-animal-art': 'Scrap Animal Art',
-        'nature-fountain': 'Nature & Water Fountain',
-        'fountain-art': 'Nature & Water Fountain',
-        'cartoon-painting': 'Cartoon Painting',
-        'home-painting': 'Home Painting',
-    }
+    user = request.user
+    if not user.is_authenticated or user.role != "customer":
+        return JsonResponse({"success": False, "error": "Unauthorized"})
 
-    service_name = service_dict.get(service_type, 'Service')
-    query_term = service_name
+    customer = Customer.objects.get(user=user)
 
-    # special cases
-    if service_name == 'Mural Art':
-        query_term = 'Mural'
-    elif service_name == 'Nature & Water Fountain':
-        query_term = 'Fountain'
-
-    # 🔥 Same filtering logic as original view
-    if request.user.is_authenticated and request.user.is_staff:
-        db_images = ServiceImage.objects.filter(type_of_art__icontains=query_term)
-
-    elif request.user.is_authenticated:
-        db_images = ServiceImage.objects.filter(
-            type_of_art__icontains=query_term
-        ).filter(
-            Q(is_verified_pic=True) | Q(userupload_id=request.user.id)
-        )
-
-    else:
-        db_images = ServiceImage.objects.filter(
-            type_of_art__icontains=query_term,
-            is_verified_pic=True
-        )
-
-    serializer = ServiceImageSerializer(db_images, many=True)
-
-    return Response({
-        "service_name": service_name,
-        "service_slug": service_type,
-        "images": serializer.data
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "name": customer.customer_full_name,
+            "email": customer.email,
+            "mobile": customer.mobile,
+            "profile_photo": customer.customer_photo.url if customer.customer_photo else None
+        }
     })
 
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.response import Response
-from django.core.mail import send_mail
-from django.conf import settings
-from datetime import datetime
-from home.models import Booking
+@csrf_exempt
+def api_update_customer_profile(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def save_booking_api(request):
-    data = request.data
-    try:
-        # Required fields validation
-        required = ["service_name", "contact_number", "email", "address", "pin_code",
-                    "state", "city", "total_walls", "width", "height",
-                    "total_sqft", "appointment_date", "total_amount"]
-        for field in required:
-            if not data.get(field):
-                return Response({"success": False, "message": f"{field} is required"}, status=400)
+    user = request.user
+    if not user.is_authenticated or user.role != "customer":
+        return JsonResponse({"success": False, "error": "Unauthorized"})
 
-        # Date format fix
-        appointment = data.get("appointment_date")
-        try:
-            appointment_date = datetime.strptime(appointment, "%d-%m-%Y").date()
-        except:
-            appointment_date = datetime.strptime(appointment, "%Y-%m-%d").date()
+    customer = Customer.objects.get(user=user)
 
-        next_id = Booking.objects.count() + 1
-        booking_id = f"RCC{next_id}"
+    customer.customer_full_name = request.POST.get("name")
+    customer.email = request.POST.get("email")
+    customer.mobile = request.POST.get("mobile")
 
-        design_name = data.get("selected_design_name")
-        design_price = float(data.get("selected_design_price")) if data.get("selected_design_price") else None
-        custom_design_file = request.FILES.get("custom_design")
+    if "profile_photo" in request.FILES:
+        customer.customer_photo = request.FILES["profile_photo"]
 
-        if design_name:
-            art_type = "Selected Design"
-        elif custom_design_file:
-            art_type = "Custom Upload"
-            design_price = design_price if design_price else 0
+    customer.save()
+
+    return JsonResponse({"success": True, "message": "Profile updated successfully"})
+
+
+# =============== EMPLOYEE PROFILE ===============
+@csrf_exempt
+def api_get_employee_profile(request):
+    if request.method != "GET":
+        return JsonResponse({"success": False, "error": "GET method required"})
+
+    user = request.user
+    if not user.is_authenticated or user.role != "employee":
+        return JsonResponse({"success": False, "error": "Unauthorized"})
+
+    employee = Employee.objects.get(user=user)
+
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "father_name": employee.fathers_name,
+            "dob": str(employee.dob),
+            "gender": employee.gender,
+            "house_no": employee.house_no,
+            "village": employee.village,
+            "city": employee.city,
+            "state": employee.state,
+            "pincode": employee.pincode,
+            "aadhar_card_no": employee.aadhar_card_no,
+            "experience": employee.experience,
+            "preferred_work_location": employee.preferred_work_location,
+            "type_of_work": employee.type_of_work,
+            "ready_to_take_orders": employee.status,
+            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
+            "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
+            "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
+        }
+    })
+
+
+@csrf_exempt
+def api_update_employee_profile(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
+
+    user = request.user
+    if not user.is_authenticated or user.role != "employee":
+        return JsonResponse({"success": False, "error": "Unauthorized"})
+
+    employee = Employee.objects.get(user=user)
+    prev_status = employee.status
+
+    # Basic fields
+    employee.fathers_name = request.POST.get("fathers_name")
+    employee.dob = request.POST.get("dob")
+    employee.gender = request.POST.get("gender")
+    employee.house_no = request.POST.get("house_no")
+    employee.village = request.POST.get("village")
+    employee.city = request.POST.get("city")
+    employee.state = request.POST.get("state")
+    employee.pincode = request.POST.get("pincode")
+    employee.aadhar_card_no = request.POST.get("aadhar_card_no")
+    employee.experience = request.POST.get("experience")
+
+    # Multi-Select
+    employee.type_of_work = request.POST.getlist("type_of_work")
+    employee.preferred_work_location = ", ".join(request.POST.getlist("preferred_work_location"))
+
+    # Files
+    if "passport_photo" in request.FILES:
+        employee.passport_photo = request.FILES["passport_photo"]
+
+    if "aadhar_front" in request.FILES:
+        employee.aadhar_card_image_front = request.FILES["aadhar_front"]
+
+    if "aadhar_back" in request.FILES:
+        employee.aadhar_card_image_back = request.FILES["aadhar_back"]
+
+    # Banking + org fields
+    employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
+    employee.account_no = request.POST.get("account_no")
+    employee.ifsc_code = request.POST.get("ifsc_code")
+    employee.pan_card = request.POST.get("pan_card")
+    employee.gst_no = request.POST.get("gst_no")
+    employee.organization_name = request.POST.get("organization_name")
+
+    # Ready to take orders
+    is_ready = request.POST.get("ready_to_take_orders") == "true"
+
+    # Deduct ₹20 only ONCE
+    if not prev_status and is_ready:
+        wallet = Wallet.objects.filter(user=user).first()
+
+        if wallet and wallet.balance >= Decimal("20.00"):
+            wallet.balance -= Decimal("20.00")
+            wallet.save()
+
+            WalletTransaction.objects.create(
+                wallet=wallet,
+                transaction_type="DEBIT",
+                amount=Decimal("20.00"),
+                razorpay_payment_id=f"ACTIVATION_{user.id}_{int(time.time())}"
+            )
+
+            employee.status = True
         else:
-            art_type = "Standard Service"
+            employee.status = False
+            employee.save()
+            return JsonResponse({"success": False, "message": "Insufficient wallet balance"})
 
-        booking = Booking.objects.create(
-            customer_name=request.user.full_name or request.user.email,
-            customer_user_id=request.user.id,
-            booking_id=booking_id,
-            service_name=data.get("service_name"),
-            contact_number=data.get("contact_number"),
-            email=data.get("email"),
-            address=data.get("address"),
-            pin_code=data.get("pin_code"),
-            state=data.get("state"),
-            city=data.get("city"),
-            total_walls=data.get("total_walls"),
-            width=data.get("width"),
-            height=data.get("height"),
-            total_sqft=data.get("total_sqft"),
-            appointment_date=appointment_date,
-            design_names=design_name,
-            type_of_art_booked=art_type,
-            price_of_design=design_price,
-            customer_design=custom_design_file,
-            total_amount=data.get("total_amount")
+    else:
+        employee.status = is_ready
+
+    employee.save()
+
+    return JsonResponse({"success": True, "message": "Employee profile updated successfully"})
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from accounts.models import CustomUser
+from home.models import CustomProduct
+
+
+@csrf_exempt
+def api_save_custom_product(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
+
+    try:
+        data = json.loads(request.body)
+
+        user_id = data.get("user_id")  # Flutter must send this
+        user = CustomUser.objects.get(id=user_id)
+
+        CustomProduct.objects.create(
+            user=user,
+            name=data.get("product_name"),
+            size=data.get("size"),
+            material=data.get("material"),
+            other_material=data.get("other_material"),
+            message=data.get("message"),
         )
 
-        # Email trigger (optional)
-        try:
-            send_mail(
-                f"Booking Confirmation - {booking.booking_id}",
-                f"Dear {booking.customer_name}, your booking {booking.booking_id} is confirmed.",
-                settings.DEFAULT_FROM_EMAIL,
-                [booking.email]
-            )
-        except Exception as e:
-            print("Email Error", e)
-
-        return Response({
-            "success": True,
-            "message": "Booking saved successfully",
-            "booking": {
-                "id": booking.id,
-                "booking_id": booking.booking_id,
-                "total_amount": booking.total_amount,
-                "customer_name": booking.customer_name
-            }
-        }, status=200)
+        return JsonResponse({"success": True})
 
     except Exception as e:
-        return Response({"success": False, "message": str(e)}, status=500)
+        return JsonResponse({"success": False, "error": str(e)})
+
