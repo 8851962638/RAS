@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import api_save_custom_product, save_customer_signup_api, verify_customer_otp_api, save_employee_signup_api, verify_employee_otp_api, login_api, api_create_order, api_verify_payment
-from .views import api_get_customer_profile, api_update_customer_profile
+from .views import api_get_customer_profile, api_update_customer_profile, save_booking_api, explore_service_api, session_status_api, logout_api
 from .views import api_get_employee_profile, api_update_employee_profile
 app_name = "api"
 
@@ -22,12 +22,6 @@ urlpatterns = [
     path("api/save-booking/", save_booking_api, name="save_booking_api"),
 
     path("explore/<str:service_type>/", explore_service_api, name="explore_service_api"),
-
-
-
-
-
     path("session-status/", session_status_api, name="session_status_api"),
-
     path("logout_api/", logout_api, name="logout_api"),
 ]
