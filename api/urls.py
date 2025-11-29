@@ -18,5 +18,16 @@ urlpatterns = [
     path("employee/profile/", api_get_employee_profile),
     path("employee/profile/update/", api_update_employee_profile),
     path("custom-product/save/", api_save_custom_product),
+    
+    path("api/save-booking/", save_booking_api, name="save_booking_api"),
 
+    path("explore/<str:service_type>/", explore_service_api, name="explore_service_api"),
+
+
+
+
+
+    path("session-status/", session_status_api, name="session_status_api"),
+
+    path("logout_api/", logout_api, name="logout_api"),
 ]
