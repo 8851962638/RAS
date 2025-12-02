@@ -39,6 +39,7 @@ def explore_service(request, service_type):
         'selfie-painting': 'Selfie Painting',
         'madhubani-painting': 'Madhubani Painting',
         'texture-painting': 'Texture Painting',
+        'pillere-painting': 'Pillere Painting', 
         'stone-murti': 'Stone Murti',
         'statue': 'Statue',
         'scrap-animal-art': 'Scrap Animal Art',
