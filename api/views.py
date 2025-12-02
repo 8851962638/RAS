@@ -714,3 +714,52 @@ def explore_service_api(request, service_type):
         "images": serializer.data
     })
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+from employee.models import ServiceImage
+import json
+
+User = get_user_model()
+
+@csrf_exempt
+def api_service_image_upload(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
+
+    try:
+        name = request.POST.get("image_name")
+        price = request.POST.get("price")
+        width = request.POST.get("width")
+        height = request.POST.get("height")
+        min_size = f"{width} * {height}"
+        type_of_art = request.POST.get("type_of_art")
+        image = request.FILES.get("image")
+
+        user_id = request.POST.get("user_id")
+        user_name = "Anonymous"
+
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                user_name = user.full_name if hasattr(user, "full_name") else user.email
+            except:
+                user_name = "Anonymous"
+
+        ServiceImage.objects.create(
+            image_name=name,
+            price=price,
+            min_size=min_size,
+            type_of_art=type_of_art,
+            image=image,
+            userupload_id=user_id,
+            userupload_name=user_name
+        )
+
+        return JsonResponse({
+            "success": True,
+            "message": "Service image uploaded successfully!"
+        })
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
