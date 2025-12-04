@@ -227,7 +227,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'info@rcolorcraft.com' 
 # **CRITICAL**: Replace 'your_godaddy_password' with the actual password for info@rcolorcraft.com
 # For security, it is highly recommended to use environment variables for the password.
-EMAIL_HOST_PASSWORD = 'Craft@2151' 
+EMAIL_HOST_PASSWORD = 'Rcolorcraft@123' 
 
 # 5. Default Sender Address
 DEFAULT_FROM_EMAIL = 'info@rcolorcraft.com'
