@@ -763,3 +763,64 @@ def api_service_image_upload(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+
+
+
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db.models import Q
+from accounts.models import Employee
+from .serializers import EmployeeSerializer
+
+
+# ✅ API 1: Get ALL artists (No filters)
+@api_view(["GET"])
+def api_get_all_artists(request):
+    artists = Employee.objects.all().order_by("-id")
+    serializer = EmployeeSerializer(artists, many=True)
+    return Response({"success": True, "artists": serializer.data})
+
+
+# ✅ API 2: Get FILTERED artists
+@api_view(["GET"])
+def api_get_filtered_artists(request):
+    query = Employee.objects.all()
+
+    # Get filters
+    artist_id = request.GET.get("artist_id")
+    name = request.GET.get("name")
+    pin_code = request.GET.get("pin_code")
+    address = request.GET.get("address")
+    work_type = request.GET.get("work_type")
+    experience_years = request.GET.get("experience_years")
+
+    # Artist ID — supports ras5, RAS10, 7, etc.
+    if artist_id:
+        clean_id = artist_id.upper().replace("RAS", "").strip()
+        if clean_id.isdigit():
+            query = query.filter(id=clean_id)
+
+    if name:
+        query = query.filter(full_name__icontains=name)
+    if pin_code:
+        query = query.filter(pincode__icontains=pin_code)
+    if address:
+        query = query.filter(
+            Q(village__icontains=address) |
+            Q(city__icontains=address) |
+            Q(state__icontains=address)
+        )
+    if work_type:
+        query = query.filter(type_of_work__icontains=work_type)
+    if experience_years:
+        try:
+            exp = int(experience_years)
+            query = query.filter(experience__gte=exp)
+        except:
+            pass
+
+    serializer = EmployeeSerializer(query, many=True)
+    return Response({"success": True, "artists": serializer.data})
