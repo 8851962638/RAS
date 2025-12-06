@@ -25,5 +25,6 @@ urlpatterns = [
     path("session-status/", session_status_api, name="session_status_api"),
     path("logout_api/", logout_api, name="logout_api"),
     path("service-image/upload/", api_service_image_upload),
-
+    path("artists/", api_get_all_artists),
+    path("artists/filter/", api_get_filtered_artists),
 ]
