@@ -713,7 +713,7 @@
 {% endif %}
 
           <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
-          <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li>
+          <!-- <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li> -->
 {% if user.is_authenticated and user.role == 'admin' or user.is_authenticated and user.role == 'employee' %}
     <li><a href="{% url 'service_images' %}">Art Images</a></li>
 {% endif %}
@@ -887,7 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/reviews">Reviews & Feedback</a></li>
-                        <li><a href="/shop">Shop</a></li>
+                        <!-- <li><a href="/shop">Shop</a></li> -->
                         <li><a href="/contact_us">Contact Us</a></li>
                     </ul>
                 </div>
