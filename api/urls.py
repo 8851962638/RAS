@@ -2,7 +2,7 @@ from django.urls import path
 from .views import api_save_custom_product, save_customer_signup_api, verify_customer_otp_api, save_employee_signup_api, verify_employee_otp_api, login_api, api_create_order, api_verify_payment
 from .views import api_get_customer_profile, api_update_customer_profile, save_booking_api, explore_service_api, session_status_api, logout_api
 from .views import api_get_employee_profile, api_update_employee_profile, api_service_image_upload
-from .views import api_get_employee_profile, api_update_employee_profile, api_get_all_artists, api_get_filtered_artists
+from .views import api_get_employee_profile, api_update_employee_profile, api_get_all_artists, api_get_filtered_artists, api_create_review, api_get_reviews
 app_name = "api"
 
 urlpatterns = [
@@ -28,4 +28,6 @@ urlpatterns = [
     path("service-image/upload/", api_service_image_upload),
     path("artists/", api_get_all_artists),
     path("artists/filter/", api_get_filtered_artists),
+    path("create-review/", api_create_review, name="api_create_review"),
+    path("reviews/", api_get_reviews, name="api_get_reviews"),
 ]

@@ -824,3 +824,87 @@ def api_get_filtered_artists(request):
 
     serializer = EmployeeSerializer(query, many=True)
     return Response({"success": True, "artists": serializer.data})
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from accounts.models import Customer
+from home.models import Review
+
+@csrf_exempt
+@login_required
+def api_create_review(request):
+    """Create new customer review"""
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST method required"}, status=405)
+
+    try:
+        # Ensure logged-in user is a customer
+        try:
+            customer = Customer.objects.get(user=request.user)
+        except Customer.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Only customers can submit reviews"}, status=403)
+
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        review_text = request.POST.get("customer_review")
+        rating = request.POST.get("rating")
+        review_image = request.FILES.get("image")
+
+        if not (name and email and rating):
+            return JsonResponse({"success": False, "error": "Missing required fields"}, status=400)
+
+        review = Review.objects.create(
+            customer_id=str(customer.id),
+            customer_name=name,
+            customer_email=email,
+            customer_review=review_text or "",
+            rating=int(rating),
+            review_image=review_image,
+            review_date=timezone.now(),
+        )
+
+        profile_pic_url = customer.customer_photo.url if customer.customer_photo else None
+
+        return JsonResponse({
+            "success": True,
+            "message": "Review submitted successfully!",
+            "data": {
+                "id": review.id,
+                "customer_id": review.customer_id,
+                "name": review.customer_name,
+                "email": review.customer_email,
+                "customer_review": review.customer_review,
+                "rating": review.rating,
+                "image": review.review_image.url if review.review_image else None,
+                "profile_pic": profile_pic_url,
+                "created_at": review.review_date.strftime("%Y-%m-%d %H:%M"),
+            }
+        })
+
+    except ValueError:
+        return JsonResponse({"success": False, "error": "Invalid rating value"}, status=400)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+def api_get_reviews(request):
+    """Return reviews list for Flutter"""
+    reviews = Review.objects.all().order_by("-review_date")
+
+    data = []
+    for r in reviews:
+        data.append({
+            "id": r.id,
+            "customer_id": r.customer_id,
+            "name": r.customer_name,
+            "email": r.customer_email,
+            "customer_review": r.customer_review,
+            "rating": r.rating,
+            "image": r.review_image.url if r.review_image else None,
+            "created_at": r.review_date.strftime("%Y-%m-%d %H:%M"),
+        })
+
+    return JsonResponse({"success": True, "reviews": data})
