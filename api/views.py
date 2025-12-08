@@ -908,3 +908,114 @@ def api_get_reviews(request):
         })
 
     return JsonResponse({"success": True, "reviews": data})
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from home.models import Booking
+from .serializers import BookingSerializer
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_orders_api(request):
+    # Only allow customer role
+    if request.user.role != "customer":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    # Get all bookings for customer
+    bookings = Booking.objects.filter(
+        customer_user_id=request.user.id
+    ).order_by('-created_at')
+
+    serializer = BookingSerializer(bookings, many=True)
+
+    return Response({
+        "success": True,
+        "count": bookings.count(),
+        "data": serializer.data
+    })
+
+# api/views.py
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from home.models import Booking
+from .serializers import BookingSerializer
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def employee_bookings_api(request):
+    # Only employees are allowed
+    if request.user.role != "employee":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    bookings = Booking.objects.filter(
+        assigned_employee=request.user
+    ).order_by('-created_at')
+
+    serializer = BookingSerializer(bookings, many=True)
+
+    return Response({
+        "success": True,
+        "count": bookings.count(),
+        "data": serializer.data
+    })
+
+
+# api/views.py
+
+from decimal import Decimal
+from django.shortcuts import get_object_or_404
+from wallet.models import Wallet, WalletTransaction
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def booking_assignment_action_api(request, booking_id, action):
+    # Only employees
+    if request.user.role != "employee":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    employee = request.user
+
+    # Security check
+    if booking.assigned_employee != employee or booking.assignment_status != 'assigned':
+        return Response({"success": False, "message": "Invalid action or unauthorized access"}, status=400)
+
+    # Accept booking
+    if action == "accept":
+        wallet = Wallet.objects.filter(user=employee).first()
+
+        if wallet and wallet.balance >= Decimal("60.00"):
+            wallet.balance -= Decimal("60.00")
+            wallet.save()
+
+            WalletTransaction.objects.create(
+                wallet=wallet,
+                transaction_type="DEBIT",
+                amount=Decimal("60.00"),
+                razorpay_payment_id=None,
+            )
+
+            booking.assignment_status = "accepted"
+            booking.save()
+
+            return Response({"success": True, "message": "Booking accepted. ₹60 deducted"})
+
+        else:
+            return Response({"success": False, "message": "Insufficient wallet balance"}, status=400)
+
+    # Decline booking
+    elif action == "decline":
+        booking.assignment_status = "declined"
+        booking.assigned_employee = None
+        booking.save()
+
+        return Response({"success": True, "message": "Booking declined"})
+
+    return Response({"success": False, "message": "Invalid action"}, status=400)
