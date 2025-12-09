@@ -5,12 +5,173 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  
+
+    .trending-section {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .trending-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #000000;
+      margin-bottom: 3rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
+    }
+
+    .trending-slider {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 0;
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+    }
+
+    .slider-track {
+      display: flex;
+      gap: 2rem;
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .slider-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-320px * 9 - 2rem * 9));
+      }
+    }
+
+    .trending-card {
+      position: relative;
+      width: 280px;
+      height: 250px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+
+    .trending-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+
+    .trending-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .trending-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        transparent 100%
+      );
+      padding: 2rem 1.5rem 1.5rem;
+      transform: translateY(0);
+      transition: all 0.4s ease;
+    }
+
+    .trending-card:hover .card-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.8) 60%,
+        transparent 100%
+      );
+    }
+
+    .card-overlay h3 {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-overlay p {
+      color: #ffd700;
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    .trending-card:hover .card-overlay p {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .trending-heading {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+      }
+
+      .trending-card {
+        width: 250px;
+        height: 320px;
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(calc(-250px * 9 - 2rem * 9));
+        }
+      }
+
+      .card-overlay h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
   <style>
 
 
 .explore-grid-container {
    
-    gap: 37px;
+    gap: 58px;
 
 }
     
@@ -340,9 +501,9 @@
 
     <div class="trending-slider">
       <div class="slider-track">
-        <!-- Example 9 Cards -->
+        <!-- Original Cards -->
         <div class="trending-card">
-          <img src="{% static 'sliding/trend.jpeg' %}" alt="3D Art" />
+          <img src="{% static 'sliding/3dArt1.jpeg' %}" alt="3D Art" />
           <div class="card-overlay">
             <h3>3D Art</h3>
             <!-- <p>₹ 150 per sq.ft</p> -->
@@ -350,7 +511,7 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'sliding/trend2.jpeg' %}" alt="Aesthetic Art" />
+          <img src="{% static 'sliding/aestheticArt.jpeg' %}" alt="Aesthetic Art" />
           <div class="card-overlay">
             <h3>Aesthetic Art</h3>
             <!-- <p>₹ 200 per sq.ft</p> -->
@@ -358,7 +519,7 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'sliding/trend3.jpeg' %}" alt="Metro Advertisement" />
+          <img src="{% static 'sliding/metro.jpeg' %}" alt="Metro Advertisement" />
           <div class="card-overlay">
             <h3>Metro Advertisement</h3>
             <!-- <p>₹ 120 per sq.ft</p> -->
@@ -366,7 +527,7 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'sliding/3d11.jpeg' %}" alt="Abstract" />
+          <img src="{% static 'sliding/abstract.jpeg' %}" alt="Abstract" />
           <div class="card-overlay">
             <h3>Abstract</h3>
             <!-- <p>₹ 180 per sq.ft</p> -->
@@ -374,7 +535,7 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'sliding/trend5.jpeg' %}" alt="Nature" />
+          <img src="{% static 'sliding/nature.jpeg' %}" alt="Nature" />
           <div class="card-overlay">
             <h3>Nature Art</h3>
             <!-- <p>₹ 210 per sq.ft</p> -->
@@ -382,16 +543,15 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'sliding/kids.jpeg' %}" alt="Kids Theme" />
+          <img src="{% static 'sliding/kidsTheme.jpeg' %}" alt="Kids Theme" />
           <div class="card-overlay">
-            <h3>Mural Art</h3>
+            <h3>Kids Theme</h3>
             <!-- <p>₹ 130 per sq.ft</p> -->
           </div>
         </div>
 
-        <!-- Duplicate again for smooth infinite scroll -->
         <div class="trending-card">
-          <img src="{% static 'gallery/paint4.jpg' %}" alt="Mural Art" />
+          <img src="{% static 'sliding/mural.jpeg' %}" alt="Mural Art" />
           <div class="card-overlay">
             <h3>Mural Art</h3>
             <!-- <p>₹ 150 per sq.ft</p> -->
@@ -399,7 +559,7 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'gallery/paint5.jpg' %}" alt="Canvas Painting" />
+          <img src="{% static 'sliding/canvasPainting.jpeg' %}" alt="Canvas Painting" />
           <div class="card-overlay">
             <h3>Canvas Painting</h3>
             <!-- <p>₹ 200 per sq.ft</p> -->
@@ -407,10 +567,83 @@
         </div>
 
         <div class="trending-card">
-          <img src="{% static 'gallery/king.png' %}" alt="Radha Krishna Mural" />
+          <img src="{% static 'sliding/radhakrishna.jpeg' %}" alt="Radha Krishna Mural" />
           <div class="card-overlay">
             <h3>Radha Krishna Mural</h3>
+            <!-- <p>₹ 220 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <!-- Duplicate for seamless infinite scroll -->
+        <div class="trending-card">
+          <img src="{% static 'sliding/3dArt1.jpeg' %}" alt="3D Art" />
+          <div class="card-overlay">
+            <h3>3D Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/aestheticArt.jpeg' %}" alt="Aesthetic Art" />
+          <div class="card-overlay">
+            <h3>Aesthetic Art</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/metro.jpeg' %}" alt="Metro Advertisement" />
+          <div class="card-overlay">
+            <h3>Metro Advertisement</h3>
             <!-- <p>₹ 120 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/abstract.jpeg' %}" alt="Abstract" />
+          <div class="card-overlay">
+            <h3>Abstract</h3>
+            <!-- <p>₹ 180 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/nature.jpeg' %}" alt="Nature" />
+          <div class="card-overlay">
+            <h3>Nature Art</h3>
+            <!-- <p>₹ 210 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/kidsTheme.jpeg' %}" alt="Kids Theme" />
+          <div class="card-overlay">
+            <h3>Kids Theme</h3>
+            <!-- <p>₹ 130 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/mural.jpeg' %}" alt="Mural Art" />
+          <div class="card-overlay">
+            <h3>Mural Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/canvasPainting.jpeg' %}" alt="Canvas Painting" />
+          <div class="card-overlay">
+            <h3>Canvas Painting</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="{% static 'sliding/radhakrishna.jpeg' %}" alt="Radha Krishna Mural" />
+          <div class="card-overlay">
+            <h3>Radha Krishna Mural</h3>
+            <!-- <p>₹ 220 per sq.ft</p> -->
           </div>
         </div>
       </div>
