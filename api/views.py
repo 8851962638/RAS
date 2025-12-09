@@ -1019,3 +1019,136 @@ def booking_assignment_action_api(request, booking_id, action):
         return Response({"success": True, "message": "Booking declined"})
 
     return Response({"success": False, "message": "Invalid action"}, status=400)
+
+
+# api/views.py
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.db.models import Q
+from home.models import Booking
+from accounts.models import CustomUser
+from .serializers import BookingSerializer
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_bookings_api(request):
+    # only admin
+    if request.user.role != "admin":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    status_filter = request.GET.get("status")
+
+    if status_filter and status_filter.lower() != "all":
+        bookings = Booking.objects.filter(
+            Q(status=status_filter) | Q(assignment_status=status_filter)
+        ).order_by("-created_at")
+    else:
+        bookings = Booking.objects.all().order_by("-created_at")
+
+    serializer = BookingSerializer(bookings, many=True)
+
+    return Response({
+        "success": True,
+        "count": bookings.count(),
+        "data": serializer.data
+    })
+
+
+from django.shortcuts import get_object_or_404
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def admin_update_booking_status_api(request, booking_id):
+    if request.user.role != "admin":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    new_status = request.data.get("status")
+    if not new_status:
+        return Response({"success": False, "message": "status required"}, status=400)
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = new_status
+    booking.save()
+
+    return Response({"success": True, "message": "Status updated"})
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+from accounts.models import Employee
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def admin_assign_booking_api(request, booking_id):
+    if request.user.role != "admin":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    employee_id = request.data.get("employee_id")
+    if not employee_id:
+        return Response({"success": False, "message": "employee_id required"}, status=400)
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    employee = get_object_or_404(CustomUser, id=employee_id)
+
+    # Assign
+    booking.assigned_employee = employee
+    booking.assignment_status = "assigned"
+    booking.save()
+
+    # fetch email
+    employee_profile = Employee.objects.filter(user=employee).first()
+    employee_email = employee_profile.email_address if employee_profile else None
+
+    if employee_email:
+        service = booking.service_name
+        booking_date = booking.appointment_date
+        city = booking.city
+        state = booking.state
+
+        msg = f"""
+Dear {employee.full_name or employee.email},
+
+You have received a new booking request.
+
+🔹 Service: {service}
+🔹 Date: {booking_date}
+🔹 City: {city}
+🔹 State: {state}
+
+⚠️ Customer privacy protection:
+- Customer phone number: ❌ Hidden
+- Customer email: ❌ Hidden
+- Customer full address: ❌ Hidden
+
+Login to your dashboard to accept it.
+
+Regards,
+RColorcraft Bookings Team
+"""
+
+        try:
+            send_mail(
+                subject="New Booking Assigned — Action Required",
+                message=msg,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[employee_email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            # still return success (email failure shouldn't block)
+            return Response({
+                "success": True,
+                "message": "Assigned, but email sending failed",
+                "error": str(e),
+            })
+
+    return Response({
+        "success": True,
+        "message": "Booking assigned successfully",
+        "assigned_to": employee.full_name
+    })
