@@ -4,7 +4,7 @@ from .views import api_get_customer_profile, api_update_customer_profile, save_b
 from .views import api_get_employee_profile, api_update_employee_profile, api_service_image_upload
 from .views import api_get_employee_profile, api_update_employee_profile, api_get_all_artists, api_get_filtered_artists, api_create_review, api_get_reviews, my_orders_api
 from .views import employee_bookings_api, booking_assignment_action_api
-
+from .views import admin_bookings_api, admin_update_booking_status_api, admin_assign_booking_api
 app_name = "api"
 
 urlpatterns = [
@@ -35,4 +35,8 @@ urlpatterns = [
     path("my-orders/", my_orders_api, name="my_orders_api"),
     path("employee/bookings/", employee_bookings_api, name="employee_bookings_api"),
     path("employee/booking/<int:booking_id>/<str:action>/", booking_assignment_action_api, name="booking_assignment_action_api"),
+
+    path("admin/bookings/", admin_bookings_api, name="admin_bookings_api"),
+    path("admin/booking/<int:booking_id>/status/", admin_update_booking_status_api, name="admin_update_booking_status_api"),
+    path("admin/booking/<int:booking_id>/assign/", admin_assign_booking_api, name="admin_assign_booking_api"),
 ]
