@@ -99,6 +99,380 @@ from django.db import transaction
 from accounts.models import CustomUser, Employee
 
 
+import json
+import jwt # Required for token decoding
+import time
+from decimal import Decimal
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, get_user_model
+from django.conf import settings
+
+# JWT Imports
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.settings import api_settings
+
+# Model Imports (Assuming these are correct based on your files)
+from accounts.models import Employee, Customer
+from wallet.models import Wallet, WalletTransaction
+
+# Get the custom User model for use in helper function
+User = get_user_model()
+
+
+# =====================================================================
+# 1. TOKEN HELPER FUNCTION (REQUIRED for all secured APIs)
+# =====================================================================
+def get_user_from_token(request):
+    """Decodes the JWT token from the Authorization header and returns the User object."""
+    auth_header = request.headers.get("Authorization")
+    
+    # Check if header is present and starts with 'Bearer '
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return None, "Authentication credentials were not provided"
+
+    # Extract the token (e.g., "Bearer token" -> "token")
+    token = auth_header.split(" ")[1]
+    
+    try:
+        # Decode and Validate the Token
+        payload = jwt.decode(
+            token, 
+            settings.SECRET_KEY, 
+            algorithms=[api_settings.ALGORITHM]
+        )
+        
+        # Get the user ID from the token payload
+        user_id = payload.get(api_settings.USER_ID_CLAIM)
+        
+        # Retrieve the user from the database
+        user = User.objects.get(id=user_id)
+        
+        return user, None # Success: return user and no error
+
+    except jwt.ExpiredSignatureError:
+        return None, "Token has expired"
+    except jwt.DecodeError:
+        return None, "Invalid token"
+    except User.DoesNotExist:
+        return None, "User not found for token"
+    except Exception as e:
+        # Catch any other decoding/database errors
+        return None, f"Authentication error: {str(e)}"
+
+
+# =====================================================================
+# 2. LOGIN API (Generates Token)
+# =====================================================================
+
+# Helper function to get tokens (using DRF Simple JWT logic)
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+@csrf_exempt
+def login_api(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Invalid request method"})
+
+    try:
+        # Parse JSON data from Flutter (Assuming JSON body)
+        data = json.loads(request.body)
+        email = data.get("email")
+        password = data.get("password")
+
+        if not all([email, password]):
+            return JsonResponse({"success": False, "error": "Email and password are required"})
+        
+        # Authenticate user
+        user = authenticate(request, email=email, password=password)
+
+        if user is None:
+            return JsonResponse({"success": False, "error": "Invalid email or password"})
+
+        if not user.is_verified:
+            return JsonResponse({"success": False, "error": "Email not verified yet!"})
+
+        # GENERATE JWT TOKENS
+        tokens = get_tokens_for_user(user)
+
+        user_data = {
+            "full_name": user.full_name,
+            "email": user.email,
+            "role": user.role,
+        }
+
+        # RETURN TOKENS IN THE RESPONSE
+        return JsonResponse({
+            "success": True, 
+            "user": user_data,
+            "token": tokens['access'] # <-- Send the access token
+        })
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
+
+
+# =====================================================================
+# 3. CUSTOMER PROFILE APIs (Uses Token)
+# =====================================================================
+
+@csrf_exempt
+def api_get_customer_profile(request):
+    if request.method != "GET":
+        return JsonResponse({"success": False, "error": "GET method required"})
+
+    # 🚀 Authenticate user using the Authorization token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+    
+    if user.role != "customer":
+        return JsonResponse({"success": False, "error": "Forbidden: Not a customer"}, status=403)
+
+    try:
+        customer = Customer.objects.get(user=user)
+    except Customer.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Customer profile not found"}, status=404)
+
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "name": customer.customer_full_name,
+            "email": customer.email,
+            "mobile": customer.mobile,
+            "profile_photo": customer.customer_photo.url if customer.customer_photo else None
+        }
+    })
+
+@csrf_exempt
+def api_update_customer_profile(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
+    
+    # 🚀 Authenticate user using the Authorization token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+    
+    if user.role != "customer":
+        return JsonResponse({"success": False, "error": "Forbidden: Only customers can update this profile"}, status=403)
+
+    try:
+        customer = Customer.objects.get(user=user)
+    except Customer.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Customer profile not found"}, status=404)
+
+    
+    # --- Original update logic ---
+    customer.customer_full_name = request.POST.get("name")
+    customer.email = request.POST.get("email") # Assuming this is allowed
+    customer.mobile = request.POST.get("mobile") # Assuming this is allowed
+
+    if "profile_photo" in request.FILES:
+        customer.customer_photo = request.FILES["profile_photo"]
+    # ... (rest of your update logic if any)
+    
+    customer.save()
+
+    return JsonResponse({"success": True, "message": "Profile updated successfully"})
+
+
+# =====================================================================
+# 4. EMPLOYEE PROFILE APIs (Uses Token)
+# =====================================================================
+
+@csrf_exempt
+def api_get_employee_profile(request):
+    if request.method != "GET":
+        return JsonResponse({"success": False, "error": "GET method required"})
+
+    # 🚀 Authenticate user using the token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+    
+    if user.role != "employee":
+        return JsonResponse({"success": False, "error": "Forbidden: Not an employee"}, status=403)
+
+    try:
+        employee = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
+
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "father_name": employee.fathers_name,
+            "dob": str(employee.dob),
+            "gender": employee.gender,
+            "house_no": employee.house_no,
+            "village": employee.village,
+            "city": employee.city,
+            "state": employee.state,
+            "pincode": employee.pincode,
+            "aadhar_card_no": employee.aadhar_card_no,
+            "experience": employee.experience,
+            "preferred_work_location": employee.preferred_work_location,
+            "type_of_work": employee.type_of_work,
+            "ready_to_take_orders": employee.status,
+            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
+            "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
+            "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
+        }
+    })
+
+import jwt
+import json
+import time
+from decimal import Decimal
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+# Assuming you have these models imported in your file
+from accounts.models import Employee
+from wallet.models import Wallet, WalletTransaction 
+
+# For JWT decoding
+from rest_framework_simplejwt.settings import api_settings
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
+@csrf_exempt
+def api_update_employee_profile(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "POST required"})
+
+    # 🚀 NEW: Authenticate user using the token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+    
+    # 🚀 NEW: Check role after authentication
+    if user.role != "employee":
+        return JsonResponse({"success": False, "error": "Forbidden: Not an employee"}, status=403)
+
+    try:
+        employee = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
+
+    prev_status = employee.status
+
+    # Basic fields
+    employee.fathers_name = request.POST.get("fathers_name")
+    employee.dob = request.POST.get("dob")
+    employee.gender = request.POST.get("gender")
+    employee.house_no = request.POST.get("house_no")
+    employee.village = request.POST.get("village")
+    employee.city = request.POST.get("city")
+    employee.state = request.POST.get("state")
+    employee.pincode = request.POST.get("pincode")
+    employee.aadhar_card_no = request.POST.get("aadhar_card_no")
+    employee.experience = request.POST.get("experience")
+
+    # Multi-Select
+    # Note: request.POST.getlist works correctly for POST data
+    employee.type_of_work = request.POST.get("type_of_work") # Assuming you want a single string if it's not a list field
+    employee.preferred_work_location = request.POST.get("preferred_work_location") # Assuming this is a single string
+
+    # Files
+    if "passport_photo" in request.FILES:
+        employee.passport_photo = request.FILES["passport_photo"]
+
+    if "aadhar_front" in request.FILES:
+        employee.aadhar_card_image_front = request.FILES["aadhar_front"]
+
+    if "aadhar_back" in request.FILES:
+        employee.aadhar_card_image_back = request.FILES["aadhar_back"]
+
+    # Banking + org fields
+    employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
+    employee.account_no = request.POST.get("account_no")
+    employee.ifsc_code = request.POST.get("ifsc_code")
+    employee.pan_card = request.POST.get("pan_card")
+    employee.gst_no = request.POST.get("gst_no")
+    employee.organization_name = request.POST.get("organization_name")
+
+    # Ready to take orders
+    is_ready = request.POST.get("ready_to_take_orders") == "true"
+
+    # Deduct ₹20 only ONCE
+    if not prev_status and is_ready:
+        # Assuming Wallet and WalletTransaction models are imported
+        wallet = Wallet.objects.filter(user=user).first()
+
+        if wallet and wallet.balance >= Decimal("20.00"):
+            wallet.balance -= Decimal("20.00")
+            wallet.save()
+
+            WalletTransaction.objects.create(
+                wallet=wallet,
+                transaction_type="DEBIT",
+                amount=Decimal("20.00"),
+                razorpay_payment_id=f"ACTIVATION_{user.id}_{int(time.time())}"
+            )
+
+            employee.status = True
+        else:
+            employee.status = False
+            employee.save()
+            return JsonResponse({"success": False, "message": "Insufficient wallet balance"})
+
+    else:
+        employee.status = is_ready
+
+    employee.save()
+
+    return JsonResponse({"success": True, "message": "Employee profile updated successfully"})
+
+
+@csrf_exempt
+def api_get_employee_profile(request):
+    if request.method != "GET":
+        return JsonResponse({"success": False, "error": "GET method required"})
+
+    # 🚀 NEW: Authenticate user using the token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+    
+    # 🚀 NEW: Check role after authentication
+    if user.role != "employee":
+        return JsonResponse({"success": False, "error": "Forbidden: Not an employee"}, status=403)
+
+    try:
+        employee = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
+
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "father_name": employee.fathers_name,
+            "dob": str(employee.dob),
+            "gender": employee.gender,
+            "house_no": employee.house_no,
+            "village": employee.village,
+            "city": employee.city,
+            "state": employee.state,
+            "pincode": employee.pincode,
+            "aadhar_card_no": employee.aadhar_card_no,
+            "experience": employee.experience,
+            "preferred_work_location": employee.preferred_work_location,
+            "type_of_work": employee.type_of_work,
+            "ready_to_take_orders": employee.status,
+            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
+            "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
+            "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
+        }
+    })
+
 @csrf_exempt
 def save_employee_signup_api(request):
     if request.method != 'POST':
@@ -200,43 +574,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 
 
-@csrf_exempt
-def login_api(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Invalid request method"})
 
-    try:
-        # Parse JSON data from Flutter
-        data = json.loads(request.body)
-        email = data.get("email")
-        password = data.get("password")
-
-        if not all([email, password]):
-            return JsonResponse({"success": False, "error": "Email and password are required"})
-
-        # Authenticate user
-        user = authenticate(request, email=email, password=password)
-
-        if user is None:
-            return JsonResponse({"success": False, "error": "Invalid email or password"})
-
-        if not user.is_verified:
-            return JsonResponse({"success": False, "error": "Email not verified yet!"})
-
-        # Log the user in and save session
-        login(request, user)
-
-        # Optional: return basic user info
-        user_data = {
-            "full_name": user.full_name,
-            "email": user.email,
-            "role": user.role,
-        }
-
-        return JsonResponse({"success": True, "user": user_data})
-
-    except Exception as e:
-        return JsonResponse({"success": False, "error": str(e)})
 
 
 from django.http import JsonResponse
@@ -353,163 +691,10 @@ import json
 from decimal import Decimal
 
 
-# =============== CUSTOMER PROFILE ===============
-@csrf_exempt
-def api_get_customer_profile(request):
-    if request.method != "GET":
-        return JsonResponse({"success": False, "error": "GET method required"})
-
-    user = request.user
-    if not user.is_authenticated or user.role != "customer":
-        return JsonResponse({"success": False, "error": "Unauthorized"})
-
-    customer = Customer.objects.get(user=user)
-
-    return JsonResponse({
-        "success": True,
-        "data": {
-            "name": customer.customer_full_name,
-            "email": customer.email,
-            "mobile": customer.mobile,
-            "profile_photo": customer.customer_photo.url if customer.customer_photo else None
-        }
-    })
 
 
-@csrf_exempt
-def api_update_customer_profile(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "POST required"})
-
-    user = request.user
-    if not user.is_authenticated or user.role != "customer":
-        return JsonResponse({"success": False, "error": "Unauthorized"})
-
-    customer = Customer.objects.get(user=user)
-
-    customer.customer_full_name = request.POST.get("name")
-    customer.email = request.POST.get("email")
-    customer.mobile = request.POST.get("mobile")
-
-    if "profile_photo" in request.FILES:
-        customer.customer_photo = request.FILES["profile_photo"]
-
-    customer.save()
-
-    return JsonResponse({"success": True, "message": "Profile updated successfully"})
 
 
-# =============== EMPLOYEE PROFILE ===============
-@csrf_exempt
-def api_get_employee_profile(request):
-    if request.method != "GET":
-        return JsonResponse({"success": False, "error": "GET method required"})
-
-    user = request.user
-    if not user.is_authenticated or user.role != "employee":
-        return JsonResponse({"success": False, "error": "Unauthorized"})
-
-    employee = Employee.objects.get(user=user)
-
-    return JsonResponse({
-        "success": True,
-        "data": {
-            "father_name": employee.fathers_name,
-            "dob": str(employee.dob),
-            "gender": employee.gender,
-            "house_no": employee.house_no,
-            "village": employee.village,
-            "city": employee.city,
-            "state": employee.state,
-            "pincode": employee.pincode,
-            "aadhar_card_no": employee.aadhar_card_no,
-            "experience": employee.experience,
-            "preferred_work_location": employee.preferred_work_location,
-            "type_of_work": employee.type_of_work,
-            "ready_to_take_orders": employee.status,
-            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
-            "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
-            "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
-        }
-    })
-
-
-@csrf_exempt
-def api_update_employee_profile(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "POST required"})
-
-    user = request.user
-    if not user.is_authenticated or user.role != "employee":
-        return JsonResponse({"success": False, "error": "Unauthorized"})
-
-    employee = Employee.objects.get(user=user)
-    prev_status = employee.status
-
-    # Basic fields
-    employee.fathers_name = request.POST.get("fathers_name")
-    employee.dob = request.POST.get("dob")
-    employee.gender = request.POST.get("gender")
-    employee.house_no = request.POST.get("house_no")
-    employee.village = request.POST.get("village")
-    employee.city = request.POST.get("city")
-    employee.state = request.POST.get("state")
-    employee.pincode = request.POST.get("pincode")
-    employee.aadhar_card_no = request.POST.get("aadhar_card_no")
-    employee.experience = request.POST.get("experience")
-
-    # Multi-Select
-    employee.type_of_work = request.POST.getlist("type_of_work")
-    employee.preferred_work_location = ", ".join(request.POST.getlist("preferred_work_location"))
-
-    # Files
-    if "passport_photo" in request.FILES:
-        employee.passport_photo = request.FILES["passport_photo"]
-
-    if "aadhar_front" in request.FILES:
-        employee.aadhar_card_image_front = request.FILES["aadhar_front"]
-
-    if "aadhar_back" in request.FILES:
-        employee.aadhar_card_image_back = request.FILES["aadhar_back"]
-
-    # Banking + org fields
-    employee.bank_account_holder_name = request.POST.get("bank_account_holder_name")
-    employee.account_no = request.POST.get("account_no")
-    employee.ifsc_code = request.POST.get("ifsc_code")
-    employee.pan_card = request.POST.get("pan_card")
-    employee.gst_no = request.POST.get("gst_no")
-    employee.organization_name = request.POST.get("organization_name")
-
-    # Ready to take orders
-    is_ready = request.POST.get("ready_to_take_orders") == "true"
-
-    # Deduct ₹20 only ONCE
-    if not prev_status and is_ready:
-        wallet = Wallet.objects.filter(user=user).first()
-
-        if wallet and wallet.balance >= Decimal("20.00"):
-            wallet.balance -= Decimal("20.00")
-            wallet.save()
-
-            WalletTransaction.objects.create(
-                wallet=wallet,
-                transaction_type="DEBIT",
-                amount=Decimal("20.00"),
-                razorpay_payment_id=f"ACTIVATION_{user.id}_{int(time.time())}"
-            )
-
-            employee.status = True
-        else:
-            employee.status = False
-            employee.save()
-            return JsonResponse({"success": False, "message": "Insufficient wallet balance"})
-
-    else:
-        employee.status = is_ready
-
-    employee.save()
-
-    return JsonResponse({"success": True, "message": "Employee profile updated successfully"})
 
 
 from django.views.decorators.csrf import csrf_exempt
