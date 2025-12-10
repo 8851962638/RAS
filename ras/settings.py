@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'api',
     'wallet',
     'user',
+    'rest_framework_simplejwt',
 ]
 
 LOGIN_REDIRECT_URL = 'home:landing'
