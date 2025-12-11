@@ -591,11 +591,50 @@ from decimal import Decimal
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
+# @csrf_exempt
+# def api_create_order(request):
+#     """REST API → Create Razorpay wallet recharge order"""
+#     if request.method != "POST":
+#         return JsonResponse({"success": False, "error": "POST method required"})
+
+#     try:
+#         body = json.loads(request.body)
+#         amount = int(float(body.get("amount", 0)) * 100)
+
+#         if amount < 100:
+#             return JsonResponse({"success": False, "error": "Minimum amount is ₹1"})
+
+#         receipt_id = f"wallet_{int(time.time())}"
+
+#         order_data = {
+#             "amount": amount,
+#             "currency": "INR",
+#             "receipt": receipt_id,
+#             "payment_capture": 1
+#         }
+
+#         order = razorpay_client.order.create(order_data)
+
+#         return JsonResponse({
+#             "success": True,
+#             "order_id": order["id"],
+#             "amount": order["amount"],
+#             "currency": order["currency"],
+#             "key_id": settings.RAZORPAY_KEY_ID,
+#         })
+
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)})
+    
 @csrf_exempt
 def api_create_order(request):
-    """REST API → Create Razorpay wallet recharge order"""
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST method required"})
+
+    # 🚀 Authenticate
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
 
     try:
         body = json.loads(request.body)
@@ -604,7 +643,7 @@ def api_create_order(request):
         if amount < 100:
             return JsonResponse({"success": False, "error": "Minimum amount is ₹1"})
 
-        receipt_id = f"wallet_{int(time.time())}"
+        receipt_id = f"wallet_{int(time.time())}_{user.id}"
 
         order_data = {
             "amount": amount,
@@ -625,23 +664,70 @@ def api_create_order(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
-    
+
+
+
+# @csrf_exempt
+# def api_verify_payment(request):
+#     """REST API → Verify payment and credit wallet"""
+#     if request.method != "POST":
+#         return JsonResponse({"success": False, "error": "POST method required"})
+
+#     try:
+#         body = json.loads(request.body)
+
+#         user_id = body.get("user_id")
+#         if not user_id:
+#             return JsonResponse({"success": False, "error": "user_id required"})
+
+#         user = User.objects.get(id=user_id)
+
+#         razorpay_order_id = body.get("razorpay_order_id")
+#         razorpay_payment_id = body.get("razorpay_payment_id")
+#         razorpay_signature = body.get("razorpay_signature")
+#         amount = Decimal(str(body.get("amount")))
+
+#         params_dict = {
+#             "razorpay_order_id": razorpay_order_id,
+#             "razorpay_payment_id": razorpay_payment_id,
+#             "razorpay_signature": razorpay_signature
+#         }
+
+#         # verify payment signature
+#         razorpay_client.utility.verify_payment_signature(params_dict)
+
+#         # credit wallet
+#         wallet, _ = Wallet.objects.get_or_create(user=user)
+#         wallet.credit(amount)
+
+#         WalletTransaction.objects.create(
+#             wallet=wallet,
+#             amount=amount,
+#             transaction_type="CREDIT",
+#             razorpay_payment_id=razorpay_payment_id
+#         )
+
+#         return JsonResponse({"success": True, "message": "Wallet credited successfully"})
+
+#     except razorpay.errors.SignatureVerificationError:
+#         return JsonResponse({"success": False, "error": "Signature verification failed"})
+
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)})
 
 
 @csrf_exempt
 def api_verify_payment(request):
-    """REST API → Verify payment and credit wallet"""
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST method required"})
 
+    # 🚀 Authenticate user
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+
     try:
         body = json.loads(request.body)
-
-        user_id = body.get("user_id")
-        if not user_id:
-            return JsonResponse({"success": False, "error": "user_id required"})
-
-        user = User.objects.get(id=user_id)
 
         razorpay_order_id = body.get("razorpay_order_id")
         razorpay_payment_id = body.get("razorpay_payment_id")
@@ -654,10 +740,8 @@ def api_verify_payment(request):
             "razorpay_signature": razorpay_signature
         }
 
-        # verify payment signature
         razorpay_client.utility.verify_payment_signature(params_dict)
 
-        # credit wallet
         wallet, _ = Wallet.objects.get_or_create(user=user)
         wallet.credit(amount)
 
@@ -704,16 +788,43 @@ from accounts.models import CustomUser
 from home.models import CustomProduct
 
 
+# @csrf_exempt
+# def api_save_custom_product(request):
+#     if request.method != "POST":
+#         return JsonResponse({"success": False, "error": "POST required"})
+
+#     try:
+#         data = json.loads(request.body)
+
+#         user_id = data.get("user_id")  # Flutter must send this
+#         user = CustomUser.objects.get(id=user_id)
+
+#         CustomProduct.objects.create(
+#             user=user,
+#             name=data.get("product_name"),
+#             size=data.get("size"),
+#             material=data.get("material"),
+#             other_material=data.get("other_material"),
+#             message=data.get("message"),
+#         )
+
+#         return JsonResponse({"success": True})
+
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)})
+
 @csrf_exempt
 def api_save_custom_product(request):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST required"})
 
+    # 🚀 Authenticate
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+
     try:
         data = json.loads(request.body)
-
-        user_id = data.get("user_id")  # Flutter must send this
-        user = CustomUser.objects.get(id=user_id)
 
         CustomProduct.objects.create(
             user=user,
@@ -728,7 +839,6 @@ def api_save_custom_product(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
-
 
 
 # API IMPORTS
@@ -907,10 +1017,57 @@ import json
 
 User = get_user_model()
 
+# @csrf_exempt
+# def api_service_image_upload(request):
+#     if request.method != "POST":
+#         return JsonResponse({"success": False, "error": "POST required"})
+
+#     try:
+#         name = request.POST.get("image_name")
+#         price = request.POST.get("price")
+#         width = request.POST.get("width")
+#         height = request.POST.get("height")
+#         min_size = f"{width} * {height}"
+#         type_of_art = request.POST.get("type_of_art")
+#         image = request.FILES.get("image")
+
+#         user_id = request.POST.get("user_id")
+#         user_name = "Anonymous"
+
+#         if user_id:
+#             try:
+#                 user = User.objects.get(id=user_id)
+#                 user_name = user.full_name if hasattr(user, "full_name") else user.email
+#             except:
+#                 user_name = "Anonymous"
+
+#         ServiceImage.objects.create(
+#             image_name=name,
+#             price=price,
+#             min_size=min_size,
+#             type_of_art=type_of_art,
+#             image=image,
+#             userupload_id=user_id,
+#             userupload_name=user_name
+#         )
+
+#         return JsonResponse({
+#             "success": True,
+#             "message": "Service image uploaded successfully!"
+#         })
+
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)})
+
 @csrf_exempt
 def api_service_image_upload(request):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST required"})
+
+    # 🚀 Get user from token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
 
     try:
         name = request.POST.get("image_name")
@@ -921,30 +1078,17 @@ def api_service_image_upload(request):
         type_of_art = request.POST.get("type_of_art")
         image = request.FILES.get("image")
 
-        user_id = request.POST.get("user_id")
-        user_name = "Anonymous"
-
-        if user_id:
-            try:
-                user = User.objects.get(id=user_id)
-                user_name = user.full_name if hasattr(user, "full_name") else user.email
-            except:
-                user_name = "Anonymous"
-
         ServiceImage.objects.create(
             image_name=name,
             price=price,
             min_size=min_size,
             type_of_art=type_of_art,
             image=image,
-            userupload_id=user_id,
-            userupload_name=user_name
+            userupload_id=user.id,
+            userupload_name=user.full_name or user.email
         )
 
-        return JsonResponse({
-            "success": True,
-            "message": "Service image uploaded successfully!"
-        })
+        return JsonResponse({"success": True, "message": "Image uploaded successfully"})
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
@@ -1011,24 +1155,92 @@ def api_get_filtered_artists(request):
     return Response({"success": True, "artists": serializer.data})
 
 
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from django.contrib.auth.decorators import login_required
+# from django.utils import timezone
+# from accounts.models import Customer
+# from home.models import Review
+
+# @csrf_exempt
+# @login_required
+# def api_create_review(request):
+#     """Create new customer review"""
+#     if request.method != "POST":
+#         return JsonResponse({"success": False, "error": "POST method required"}, status=405)
+
+#     try:
+#         # Ensure logged-in user is a customer
+#         try:
+#             customer = Customer.objects.get(user=request.user)
+#         except Customer.DoesNotExist:
+#             return JsonResponse({"success": False, "error": "Only customers can submit reviews"}, status=403)
+
+#         name = request.POST.get("name")
+#         email = request.POST.get("email")
+#         review_text = request.POST.get("customer_review")
+#         rating = request.POST.get("rating")
+#         review_image = request.FILES.get("image")
+
+#         if not (name and email and rating):
+#             return JsonResponse({"success": False, "error": "Missing required fields"}, status=400)
+
+#         review = Review.objects.create(
+#             customer_id=str(customer.id),
+#             customer_name=name,
+#             customer_email=email,
+#             customer_review=review_text or "",
+#             rating=int(rating),
+#             review_image=review_image,
+#             review_date=timezone.now(),
+#         )
+
+#         profile_pic_url = customer.customer_photo.url if customer.customer_photo else None
+
+#         return JsonResponse({
+#             "success": True,
+#             "message": "Review submitted successfully!",
+#             "data": {
+#                 "id": review.id,
+#                 "customer_id": review.customer_id,
+#                 "name": review.customer_name,
+#                 "email": review.customer_email,
+#                 "customer_review": review.customer_review,
+#                 "rating": review.rating,
+#                 "image": review.review_image.url if review.review_image else None,
+#                 "profile_pic": profile_pic_url,
+#                 "created_at": review.review_date.strftime("%Y-%m-%d %H:%M"),
+#             }
+#         })
+
+#     except ValueError:
+#         return JsonResponse({"success": False, "error": "Invalid rating value"}, status=400)
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from accounts.models import Customer
 from home.models import Review
+from django.utils import timezone
+from .views import get_user_from_token  # Make sure the import path is correct
+
 
 @csrf_exempt
-@login_required
 def api_create_review(request):
     """Create new customer review"""
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST method required"}, status=405)
 
+    # 🚀 Authenticate user from token
+    user, error = get_user_from_token(request)
+    if not user:
+        return JsonResponse({"success": False, "error": error}, status=401)
+
     try:
         # Ensure logged-in user is a customer
         try:
-            customer = Customer.objects.get(user=request.user)
+            customer = Customer.objects.get(user=user)
         except Customer.DoesNotExist:
             return JsonResponse({"success": False, "error": "Only customers can submit reviews"}, status=403)
 
