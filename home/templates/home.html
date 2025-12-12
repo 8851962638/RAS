@@ -177,6 +177,9 @@
     
 
 
+.services-grid {
+    justify-content: center;
+}
 
 
 
@@ -200,7 +203,7 @@
     }
     
     .service-card {
-      flex: 0 1 calc(25% - 16px);
+      flex: 0 1 calc(30% - 16px);
       background: #fff;
       box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
       border-radius: 15px;
@@ -352,35 +355,43 @@
     }
     
     /* Responsive Design */
-    @media screen and (min-width: 320px) {
+    /* @media screen and (min-width: 320px) {
       .service-card {
         flex: 0 1 calc(100% - 16px);
       }
-    }
+    } */
     
-    @media screen and (min-width: 576px) {
+    /* @media screen and (min-width: 576px) {
       .service-card {
         flex: 0 1 calc(50% - 16px);
       }
-    }
+    } */
     
-    @media screen and (min-width: 768px) {
-      .service-card {
-        flex: 0 1 calc(33.333% - 16px);
-      }
-    }
+   .service-card {
+    flex: 0 1 calc(30% - 16px);
+}
+
     
-    @media screen and (min-width: 1024px) {
+    /* @media screen and (min-width: 1024px) {
       .service-card {
         flex: 0 1 calc(25% - 16px);
       }
-    }
+    } */
     
-    @media screen and (min-width: 1400px) {
+    /* @media screen and (min-width: 1400px) {
       .service-card {
         flex: 0 1 calc(20% - 16px);
       }
-    }
+    } */
+
+    .services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 59px;
+}
+
+
   </style>
 
   <!-- Hero Section -->
