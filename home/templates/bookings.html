@@ -23,7 +23,8 @@
     <div class="booking-list">
         {% if bookings %}
             {% for booking in bookings %}
-                <div class="booking-card">
+                <div class="booking-card {% if booking.total_sqft >= 5000 %}highlight-large{% endif %}">
+
                     <div class="booking-header">
                         <span class="service-name">{{ booking.service_name }}</span>
                         <span class="booking-id">{{ booking.booking_id }}</span>
@@ -349,5 +350,22 @@
         margin-left: 0;
     }
 }
+
+.highlight-large {
+    border: 2px solid #e74c3c !important;
+    background: rgba(231, 76, 60, 0.15) !important; /* light red background */
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.45) !important;
+    animation: pulseRed 1.5s infinite alternate;
+}
+
+@keyframes pulseRed {
+    from {
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+    }
+    to {
+        box-shadow: 0 0 22px rgba(231, 76, 60, 0.6);
+    }
+}
+
 </style>
 {% endblock %}
