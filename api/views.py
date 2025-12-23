@@ -1549,3 +1549,29 @@ RColorcraft Bookings Team
         "message": "Booking assigned successfully",
         "assigned_to": employee.full_name
     })
+
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_employee_list_api(request):
+    if request.user.role != "admin":
+        return Response({"success": False, "message": "Not allowed"}, status=403)
+
+    employees = CustomUser.objects.filter(role="employee", is_active=True)
+
+    data = [
+        {
+            "id": emp.id,
+            "full_name": emp.full_name,
+            "email": emp.email,
+        }
+        for emp in employees
+    ]
+
+    return Response({
+        "success": True,
+        "count": len(data),
+        "data": data
+    })
+
