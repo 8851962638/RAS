@@ -1564,7 +1564,7 @@ RColorcraft Bookings Team
         "assigned_to": employee.full_name
     })
 
-
+from .serializers import AdminEmployeeListSerializer
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -1574,18 +1574,12 @@ def admin_employee_list_api(request):
 
     employees = CustomUser.objects.filter(role="employee", is_active=True)
 
-    data = [
-        {
-            "id": emp.id,
-            "full_name": emp.full_name,
-            "email": emp.email,
-        }
-        for emp in employees
-    ]
+    serializer = AdminEmployeeListSerializer(employees, many=True)
 
     return Response({
         "success": True,
-        "count": len(data),
-        "data": data
+        "count": employees.count(),
+        "data": serializer.data
     })
+
 
