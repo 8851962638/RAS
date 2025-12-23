@@ -307,6 +307,9 @@ def api_get_employee_profile(request):
     return JsonResponse({
         "success": True,
         "data": {
+            "full_name": user.full_name,
+            "email": user.email,          # read-only
+            "mobile": employee.mobile,
             "father_name": employee.fathers_name,
             "dob": str(employee.dob),
             "gender": employee.gender,
@@ -361,6 +364,17 @@ def api_update_employee_profile(request):
         employee = Employee.objects.get(user=user)
     except Employee.DoesNotExist:
         return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
+
+    full_name = request.POST.get("full_name")
+    mobile = request.POST.get("mobile")
+
+    if full_name:
+        user.full_name = full_name
+        user.save(update_fields=["full_name"])
+
+    if mobile:
+        employee.mobile = mobile
+
 
     prev_status = employee.status
 
@@ -432,46 +446,46 @@ def api_update_employee_profile(request):
     return JsonResponse({"success": True, "message": "Employee profile updated successfully"})
 
 
-@csrf_exempt
-def api_get_employee_profile(request):
-    if request.method != "GET":
-        return JsonResponse({"success": False, "error": "GET method required"})
+# @csrf_exempt
+# def api_get_employee_profile(request):
+#     if request.method != "GET":
+#         return JsonResponse({"success": False, "error": "GET method required"})
 
-    # 🚀 NEW: Authenticate user using the token
-    user, error = get_user_from_token(request)
-    if not user:
-        return JsonResponse({"success": False, "error": error}, status=401)
+#     # 🚀 NEW: Authenticate user using the token
+#     user, error = get_user_from_token(request)
+#     if not user:
+#         return JsonResponse({"success": False, "error": error}, status=401)
     
-    # 🚀 NEW: Check role after authentication
-    if user.role != "employee":
-        return JsonResponse({"success": False, "error": "Forbidden: Not an employee"}, status=403)
+#     # 🚀 NEW: Check role after authentication
+#     if user.role != "employee":
+#         return JsonResponse({"success": False, "error": "Forbidden: Not an employee"}, status=403)
 
-    try:
-        employee = Employee.objects.get(user=user)
-    except Employee.DoesNotExist:
-        return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
+#     try:
+#         employee = Employee.objects.get(user=user)
+#     except Employee.DoesNotExist:
+#         return JsonResponse({"success": False, "error": "Employee profile not found"}, status=404)
 
-    return JsonResponse({
-        "success": True,
-        "data": {
-            "father_name": employee.fathers_name,
-            "dob": str(employee.dob),
-            "gender": employee.gender,
-            "house_no": employee.house_no,
-            "village": employee.village,
-            "city": employee.city,
-            "state": employee.state,
-            "pincode": employee.pincode,
-            "aadhar_card_no": employee.aadhar_card_no,
-            "experience": employee.experience,
-            "preferred_work_location": employee.preferred_work_location,
-            "type_of_work": employee.type_of_work,
-            "ready_to_take_orders": employee.status,
-            "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
-            "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
-            "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
-        }
-    })
+#     return JsonResponse({
+#         "success": True,
+#         "data": {
+#             "father_name": employee.fathers_name,
+#             "dob": str(employee.dob),
+#             "gender": employee.gender,
+#             "house_no": employee.house_no,
+#             "village": employee.village,
+#             "city": employee.city,
+#             "state": employee.state,
+#             "pincode": employee.pincode,
+#             "aadhar_card_no": employee.aadhar_card_no,
+#             "experience": employee.experience,
+#             "preferred_work_location": employee.preferred_work_location,
+#             "type_of_work": employee.type_of_work,
+#             "ready_to_take_orders": employee.status,
+#             "passport_photo": employee.passport_photo.url if employee.passport_photo else None,
+#             "aadhar_front": employee.aadhar_card_image_front.url if employee.aadhar_card_image_front else None,
+#             "aadhar_back": employee.aadhar_card_image_back.url if employee.aadhar_card_image_back else None,
+#         }
+#     })
 
 @csrf_exempt
 def save_employee_signup_api(request):
