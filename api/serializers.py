@@ -23,3 +23,19 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = "__all__"
+
+
+# serializers.py
+from rest_framework import serializers
+from accounts.models import CustomUser
+
+class AdminEmployeeListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "full_name",
+            "email",
+            "is_active",
+            "date_joined",
+        ]
