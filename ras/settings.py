@@ -65,11 +65,13 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.translation_debug.TranslationDebugMiddleware',
     'accounts.middleware.ProfileCompletionMiddleware',
 ]
 
@@ -152,11 +154,25 @@ RAZORPAY_KEY_SECRET = "yj8L8KoHaMkv5xV2qMgytr8r"   # live secret
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+LANGUAGES = [
+    ('en', 'English'),
+    ('hi', 'Hindi'),
+    ('pa', 'Punjabi'),
+    ('mr', 'Marathi'),
+    ('bn', 'Bengali'),
+    ('gu', 'Gujarati'),
+    ('gwc', 'Garhwali'),
+    ('bho', 'Bhojpuri'),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 USE_TZ = True
 
