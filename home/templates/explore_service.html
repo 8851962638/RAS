@@ -44,17 +44,19 @@
   {% endif %}
 </div>
 
-
-           <div class="artwork-details">
+<div class="artwork-details">
   <span class="price-wrapper">
 
-    <span class="fake-price-badge">
-      ₹{% widthratio img.price 1 5 %} / sq ft
-      
-    </span>
+   <span class="fake-price-badge">
+  <span class="fake-price-value">
+    ₹{% widthratio img.price 1 5 %} / sqft
+  </span>
+  <div class="price-note">Price</div>
+</span>
 
     <span class="price-tag">
       ₹{{ img.price }} / sq ft
+      <div class="price-note">Discounted Price</div>
     </span>
 
   </span>
@@ -938,6 +940,7 @@ body {
 }
 
 
+
 .min-size-line {
   margin-top: 6px;
   font-size: 0.9rem;
@@ -947,21 +950,34 @@ body {
   border-radius: 15px;
   display: inline-block;
 }
-.price-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .fake-price-badge {
   background: #f1f5f9;
   color: #4a5568;
-  padding: 0.4rem 0.9rem;
+  padding: 8px 14px;
   border-radius: 20px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  border: 2px solid #e2e8f0;
+  font-size: 0.95rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  gap: 3px;
+}
+
+.fake-price-value {
   text-decoration: line-through;
+}
+
+
+.price-note {
+  font-size: 0.75rem;
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 </style>
