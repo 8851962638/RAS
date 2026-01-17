@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Login - Painting{% endblock %}
+{% block title %}{% trans "Login - Painting" %}{% endblock %}
 
 {% block content %}
 <div class="auth-container">
   <div class="auth-box">
-    <h1>Welcome Back 🎨</h1>
-    <p class="subtitle">Login to continue exploring amazing artists</p>
+    <h1>{% trans "Welcome Back 🎨" %}</h1>
+    <p class="subtitle">{% trans "Login to continue exploring amazing artists" %}</p>
 
     <form id="loginForm">
       {% csrf_token %}

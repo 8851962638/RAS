@@ -1,0 +1,2022 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+  घर - आरकलरक्राफ्ट
+</title>
+  
+  <!-- CSS link -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD5Vn0gT8nNq0UdwQ3N3cQ4A8b6rC8L9Tz1Jb1S9/7g56b0lX6T8z8x8x8x8w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/review_page.css">
+  
+<style>
+  /* Popup box */
+  .popup-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #2C61C0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    flex-direction: column;
+    min-width: 160px;
+  }
+
+  .popup-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #ffffffff;
+    font-weight: 500;
+  }
+
+  .popup-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+</style>
+<style>
+  /* Popup box */
+  .popup-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #2C61C0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    flex-direction: column;
+    min-width: 160px;
+  }
+
+  .popup-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #ffffffff;
+    font-weight: 500;
+  }
+
+  .popup-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  /* ========== LARGE ORDER BUTTON STYLES ========== */
+  
+  /* Mobile Large Order Button Container */
+  .mobile-large-order {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  /* Mobile Large Order Button - Floating Action Button Style */
+  .large-order-btn-mobile {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+  }
+
+  .large-order-btn-mobile:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.7);
+  }
+
+  .large-order-btn-mobile:active {
+    transform: scale(0.95);
+  }
+
+  /* Pulse animation for attention */
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    50% {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.8), 0 0 0 10px rgba(102, 126, 234, 0.1);
+    }
+  }
+
+  /* Desktop - Large Order Button in Nav */
+  .large-order-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    margin-left: 10px;
+  }
+
+  .large-order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Make button work inside nav list */
+  .nav-left ul li {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* ========== POPUP OVERLAY STYLES ========== */
+  
+  /* Popup Overlay */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .popup-overlay.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Popup Content */
+  .popup {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.4s ease;
+    z-index: 1;
+  }
+
+  .popup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .popup-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  }
+
+  .popup-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+  }
+
+  .popup h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .popup-subtitle {
+    color: #667eea;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .popup-content {
+    text-align: center;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .contact-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .contact-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #667eea;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #f0f0f0;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .close-btn:hover {
+    background: #e0e0e0;
+    transform: rotate(90deg);
+  }
+
+  .close-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+    pointer-events: none;
+  }
+
+  .cta-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ========== RESPONSIVE STYLES ========== */
+  
+  /* Mobile View */
+  @media (max-width: 767px) {
+    /* Show floating button on mobile */
+    .mobile-large-order {
+      display: block;
+    }
+    
+    /* Style button in hamburger menu */
+    .nav-left .large-order-btn {
+      margin: 10px 0;
+      width: calc(100% - 20px);
+      display: block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+    }
+    
+    .nav-left ul li {
+      display: block;
+    }
+
+    .popup {
+      padding: 2rem;
+      width: 95%;
+    }
+
+    .popup h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Tablet View */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .large-order-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      margin-left: 5px;
+    }
+  }
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+    .large-order-btn {
+        margin: 10px 0;
+        width: 100%;
+        display: block;
+    }
+    
+    .nav-left ul li {
+        display: block;
+    }
+}
+@media screen and (max-width: 600px) {
+  .nav-icon {
+   /* A smaller size for mobile */
+    margin-top: 6px; /* Adjusting the margin for better alignment */
+    margin-left: 122px;
+  }
+}
+@media (max-width: 480px) {
+    .card-buttons {
+        max-width: 150px;
+        margin-left: 90px;
+    }
+}
+
+/* Add this CSS to your existing styles (update the .contact-item class) */
+
+.contact-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+}
+
+/* Updated Contact Item - Now clickable */
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Contact Link Styles */
+.contact-link {
+    text-decoration: none;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.contact-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    transform: translateX(5px);
+}
+
+.contact-link:active {
+    transform: scale(0.98);
+}
+
+.contact-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #667eea;
+    transition: all 0.3s ease;
+}
+
+.contact-link:hover svg {
+    fill: #764ba2;
+    transform: scale(1.1);
+}
+    </style>
+    <style>
+       
+        
+      
+
+        footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            padding: 60px 20px 20px;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-section ul li a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        } */
+
+        /* .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        } */
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .footer-bottom .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            footer {
+                padding: 40px 20px 20px;
+            }
+        }
+    </style>
+    <style>
+      
+    /* Social Media Section */
+    .social-section {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+        text-align: center;
+    }
+
+    .social-section h2 {
+        color: #0277bd;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .social-section p {
+        color: #546e7a;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .social-link {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-link:hover {
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-link svg {
+        width: 35px;
+        height: 35px;
+        fill: white;
+    }
+
+    .social-facebook {
+        background: linear-gradient(135deg, #1877f2, #0d5fc9);
+    }
+
+    .social-instagram {
+        background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .social-twitter {
+        background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+    }
+
+    .social-linkedin {
+        background: linear-gradient(135deg, #0077b5, #005885);
+    }
+
+    .social-whatsapp {
+        background: linear-gradient(135deg, #25d366, #1da851);
+    }
+
+  
+
+    
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+       
+
+        .social-links {
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+        }
+
+    </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="bubble-container"></div>
+
+    <div class="left-group">
+      <div class="logo">
+        <h1 class="site-logo-text">RColorcraft</h1> 
+      </div>
+
+      <!-- HAMBURGER MENU BUTTON (visible only on mobile) -->
+       <!-- <div class="hamburger-menu" id="hamburgerMenu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div> -->
+      
+
+      <!-- NAVIGATION MENU -->
+      <nav class="nav-left" id="navMenu">
+        <ul>
+          <li><a href="/gwc/" class="">Home</a></li>
+          
+
+
+          <li><a href="/gwc/reviews/" class="">Reviews & Feedback</a></li>
+          <!-- <li><a href="/gwc/shop/" class="">Shop</a></li> -->
+
+
+
+          
+          
+        </ul>
+      </nav>
+    </div>
+
+<div class="mobile-large-order">
+  <button class="large-order-btn-mobile" onclick="openPopup()">
+    📦
+  </button>
+</div>
+
+<!-- Language Switcher -->
+<div class="language-switcher">
+  <form action="/set_language/" method="post" id="languageForm">
+    <input type="hidden" name="csrfmiddlewaretoken" value="vuYOQiTmd16cd8603wXlr8CiKORUkwPcbaZ5n9xTab5emj4ZfFd55nEOuQhpeUA6">
+    <select name="language" id="languageSelect" onchange="changeLanguage()" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; background: white; font-weight: 500;">
+      <option value="en" >English</option>
+      <option value="hi" >हिन्दी (Hindi)</option>
+      <option value="pa" >ਪੰਜਾਬੀ (Punjabi)</option>
+      <option value="mr" >मराठी (Marathi)</option>
+      <option value="bn" >বাংলা (Bengali)</option>
+      <option value="gu" >ગુજરાતી (Gujarati)</option>
+      <option value="gwc" >गढ़वाली (Garhwali)</option>
+      <option value="bho" >भोजपुरी (Bhojpuri)</option>
+    </select>
+  </form>
+</div>
+
+<style>
+  .language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 200px;
+    z-index: 999;
+  }
+  
+  .language-switcher select {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .language-switcher select:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .language-switcher select:focus {
+    outline: none;
+    border-color: #2C61C0;
+    box-shadow: 0 0 5px rgba(44, 97, 192, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    .language-switcher {
+      top: 70px;
+      right: 10px;
+    }
+  }
+</style>
+
+<script>
+  function changeLanguage() {
+    document.getElementById('languageForm').submit();
+  }
+</script>
+
+     <!-- Replace your popup-overlay section with this updated version -->
+
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+    <div class="popup" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closePopup()">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+
+        <div class="popup-header">
+            <div class="popup-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-6 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l-1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                </svg>
+            </div>
+            <h2>Bulk Orders Welcome!</h2>
+            <p class="popup-subtitle">We're here to help with your large orders</p>
+        </div>
+
+        <div class="popup-content">
+            <p>Thank you for considering us for your bulk order needs! We offer special pricing and dedicated support for large quantity purchases.</p>
+        </div>
+
+        <div class="contact-info">
+            <a href="mailto:rcolorcraft@gmail.com" class="contact-item contact-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                <span style="color: #000000;">rcolorcraft@gmail.com</span>
+            </a>
+            <a href="tel:+919759013133" class="contact-item contact-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <span style="color: #000000;">+91 97590 13133</span>
+            </a>
+        </div>
+
+        <button class="cta-button" onclick="closePopup()">
+            Get in Touch
+        </button>
+    </div>
+</div>
+
+    <script>
+        // Replace your existing popup script with this updated version
+
+function openPopup() {
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closePopup(event) {
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay) {
+        // Close if clicking overlay background OR if called directly (close button)
+        if (!event || event.target === overlay || event.currentTarget.classList.contains('close-btn')) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    }
+}
+
+// Close popup with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const overlay = document.getElementById('popupOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+            closePopup();
+        }
+    }
+});
+
+// Ensure close button works - add this after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.querySelector('.close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closePopup();
+        });
+    }
+});
+    </script>
+
+    <!-- USER ICON (stays on the right) -->
+    <nav class="nav-right">
+      <ul>
+        <li>
+          <a href="javascript:void(0)" onclick="togglePopup()">
+            <img src="/static/gallery/user.png" alt="Contact" class="nav-icon">
+          </a>
+          <!-- Popup menu -->
+          <div id="myPopup" class="popup-menu">
+            <a href="/gwc/wallet/">Wallet</a>
+            <a href="/gwc/edit_profile/">Edit Profile</a>
+            <a href="/gwc/logout/">Logout / Login</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+  </header>
+
+  <!-- OVERLAY FOR MOBILE MENU -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- Main Content -->
+  
+<style>
+  
+
+    .trending-section {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .trending-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #000000;
+      margin-bottom: 3rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
+    }
+
+    .trending-slider {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 0;
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+    }
+
+    .slider-track {
+      display: flex;
+      gap: 2rem;
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .slider-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-320px * 9 - 2rem * 9));
+      }
+    }
+
+    .trending-card {
+      position: relative;
+      width: 280px;
+      height: 250px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+
+    .trending-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+
+    .trending-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .trending-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        transparent 100%
+      );
+      padding: 2rem 1.5rem 1.5rem;
+      transform: translateY(0);
+      transition: all 0.4s ease;
+    }
+
+    .trending-card:hover .card-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.8) 60%,
+        transparent 100%
+      );
+    }
+
+    .card-overlay h3 {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-overlay p {
+      color: #ffd700;
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    .trending-card:hover .card-overlay p {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .trending-heading {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+      }
+
+      .trending-card {
+        width: 250px;
+        height: 320px;
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(calc(-250px * 9 - 2rem * 9));
+        }
+      }
+
+      .card-overlay h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  <style>
+
+
+.explore-grid-container {
+   
+    gap: 58px;
+
+}
+    
+
+
+
+
+
+    /* Services Section Styling */
+    section h1 {
+      text-align: center;
+      text-transform: capitalize;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      color: #212121;
+      font-weight: 700;
+    }
+    
+    .services-grid {
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      gap: 4px;
+    }
+    
+    .service-card {
+      flex: 0 1 calc(25% - 16px);
+      background: #fff;
+      box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
+      border-radius: 15px;
+      margin: 8px;
+      padding: 20px 15px;
+      position: relative;
+      z-index: 1;
+      min-height: 354px;
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    /* .service-card:before {
+      content: '';
+      position: absolute;
+      background: rgb(85 108 214 / 5%);
+      width: 170px;
+      height: 400px;
+      left: 1;
+      z-index: -1;
+      transform: rotate(42deg);
+      right: -56px;
+      top: -23px;
+      border-radius: 35px;
+      transition: all 0.7s ease;
+    }
+     */
+    .service-card:hover {
+      background: linear-gradient(135deg, #309df0 0%, #2d8fd9 100%);
+      color: #fff;
+      transform: scale(1.08) translateY(-5px);
+      z-index: 9;
+      box-shadow: 0 8px 16px 0 rgba(48, 157, 240, 0.3), 0 12px 40px 0 rgba(48, 157, 240, 0.25);
+    }
+    
+    .service-card:hover:before {
+      background: rgb(85 108 214 / 15%);
+      transform: rotate(42deg) scale(1.1);
+    }
+    
+    .service-card .circle {
+            transform: scale(1.06) rotate(0deg);
+
+      width: 140px;
+      height: 140px;
+      margin-top: 12px;
+      margin-bottom: 15px;
+      background: #fff;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+      border: 3px solid transparent;
+    }
+    
+    .service-card:hover .circle {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .service-card .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    
+    .service-card:hover .circle img {
+      transform: scale(1.1);
+    }
+    
+    .service-card h3 {
+      color: #212121;
+      font-size: 1.3rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      transition: 0.7s;
+    }
+    
+    .service-card p {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #666;
+      flex-grow: 1;
+      transition: 0.7s;
+    }
+    
+   
+    .service-card:hover h3,
+    .service-card:hover p {
+      color: #fff;
+    }
+    
+    .book-btn,
+    .explore-btn {
+      border: 0;
+      border-radius: 15px;
+      color: #fff;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      text-decoration: none;
+      transition: 0.3s;
+      cursor: pointer;
+      display: inline-block;
+    }
+    
+    .book-btn {
+      background: linear-gradient(140deg, #42c3ca 0%, #42c3ca 50%, #42c3cac7 75%) !important;
+    }
+    
+    .explore-btn {
+      background: linear-gradient(140deg, #309df0 0%, #309df0 50%, #309df0c7 75%) !important;
+    }
+    
+    .service-card:hover .book-btn {
+      background: #fff !important;
+      color: #42c3ca;
+    }
+    
+    .service-card:hover .explore-btn {
+      background: #fff !important;
+      color: #309df0;
+    }
+    
+    .hover_color_bubble {
+      position: absolute;
+      background: rgb(54 81 207 / 15%);
+      width: 100rem;
+      height: 100rem;
+      left: 0;
+      right: 0;
+      z-index: -1;
+      top: 16rem;
+      border-radius: 50%;
+      transform: rotate(-36deg);
+      left: -18rem;
+      transition: 0.7s;
+    }
+    
+    .service-card:hover .hover_color_bubble {
+      top: 0rem;
+    }
+    
+    /* Responsive Design */
+    @media screen and (min-width: 320px) {
+      .service-card {
+        flex: 0 1 calc(100% - 16px);
+      }
+    }
+    
+    @media screen and (min-width: 576px) {
+      .service-card {
+        flex: 0 1 calc(50% - 16px);
+      }
+    }
+    
+    @media screen and (min-width: 768px) {
+      .service-card {
+        flex: 0 1 calc(33.333% - 16px);
+      }
+    }
+    
+    @media screen and (min-width: 1024px) {
+      .service-card {
+        flex: 0 1 calc(25% - 16px);
+      }
+    }
+    
+    @media screen and (min-width: 1400px) {
+      .service-card {
+        flex: 0 1 calc(20% - 16px);
+      }
+    }
+  </style>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-overlay">
+      <div class="hero-text glass-card">
+        <h1>
+          
+            फेरि स्वागत छ
+          
+        </h1>
+        <p>आरकलरक्राफ्टमा, हामी आश्चर्यजनक भित्तिचित्र, रचनात्मक चित्र र कलात्मक डिजाइनमा विशेषज्ञता राखौं जो तपाईंको स्थान रूपान्तरित गर्छ।</p>
+        <!-- <button>Explore Services</button> -->
+      </div>
+      <div class="hero-img">
+        <img src="/static/gallery/logohome.png" alt="Hero Image" />
+      </div>
+    </div>
+  </div>
+
+  <section class="quick-explore-section">
+    <div class="explore-grid-container">
+      <!-- 1. 3D Wall Art (Corrected slug) -->
+      <a href="/gwc/explore/3d-wall-art/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/3D%20wall%20art.jpeg" alt="3D Wall Art" />
+        </div>
+        <p>3D Wall Art</p>
+      </a>
+
+      <!-- 2. 3D Floor Art (Corrected slug) -->
+      <a href="/gwc/explore/3d-floor-art/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/3D%20floor%20Art.jpeg" alt="3D Floor Art" />
+        </div>
+        <p>3D Floor Art</p>
+      </a>
+
+      <!-- 3. Outdoor Advertisement (Corrected slug) -->
+      <a href="/gwc/explore/outdoor-advertisement/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/Outdoor%20Advertisement.jpeg" alt="Outdoor Advertisement" />
+        </div>
+        <p>Outdoor Advertisement</p>
+      </a>
+
+      <!-- 4. Metro Advertisement (Corrected slug) -->
+      <a href="/gwc/explore/metro-advertisement/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/Metro%20Advertisement.jpeg" alt="Metro Advertisement" />
+        </div>
+        <p>Metro Advertisement</p>
+      </a>
+
+      <!-- 5. School Painting (Corrected slug) -->
+      <a href="/gwc/explore/school-painting/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/kids.png" alt="School Painting" />
+        </div>
+        <p>School Painting</p>
+      </a>
+
+      <!-- 6. Stone Murti (Corrected slug) -->
+      <!-- <a href="/gwc/explore/stone-murti/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/ganeshmurti.jpg" alt="Stone Murti" />
+        </div>
+        <p>Stone Murti</p>
+      </a> -->
+
+      <!-- 7. Statue (Corrected slug) -->
+      <a href="/gwc/explore/statue/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/ambedkarji.jpg" alt="Statue" />
+        </div>
+        <p>Statue</p>
+      </a>
+
+      <!-- 8. Scrap Animal Art (Corrected slug) -->
+      <!-- <a href="/gwc/explore/scrap-animal-art/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/king.png" alt="Scrap Animal Art" />
+        </div>
+        <p>Scrap Animal Art</p>
+      </a> -->
+
+      <!-- 9. Nature & Water Fountain / Fountain Art (Slug: fountain-art) -->
+      <a href="/gwc/explore/fountain-art/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/Water%20tank.jpeg" alt="Nature and Water Fountain" />
+        </div>
+        <p>Water tank</p>
+      </a>
+
+      <!-- 10. Home Painting (Corrected slug from 'fountain-art' to 'home-painting') -->
+      <a href="/gwc/explore/home-painting/" class="explore-item">
+        <div class="explore-circle">
+          <img src="/static/gallery/paint1.jpg" alt="Home Painting" />
+        </div>
+        <p>Home Painting</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Most Trending Designs Section -->
+  <section class="trending-section">
+    <h2 class="trending-heading">सबैभन्दा लोकप्रिय डिजाइन</h2>
+
+    <div class="trending-slider">
+      <div class="slider-track">
+        <!-- Original Cards -->
+        <div class="trending-card">
+          <img src="/static/sliding/3dArt1.jpeg" alt="3D Art" />
+          <div class="card-overlay">
+            <h3>3D Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/aestheticArt.jpeg" alt="Aesthetic Art" />
+          <div class="card-overlay">
+            <h3>Aesthetic Art</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/metro.jpeg" alt="Metro Advertisement" />
+          <div class="card-overlay">
+            <h3>Metro Advertisement</h3>
+            <!-- <p>₹ 120 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/abstract.jpeg" alt="Abstract" />
+          <div class="card-overlay">
+            <h3>Abstract</h3>
+            <!-- <p>₹ 180 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/nature.jpeg" alt="Nature" />
+          <div class="card-overlay">
+            <h3>Nature Art</h3>
+            <!-- <p>₹ 210 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/kidsTheme.jpeg" alt="Kids Theme" />
+          <div class="card-overlay">
+            <h3>Kids Theme</h3>
+            <!-- <p>₹ 130 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/mural.jpeg" alt="Mural Art" />
+          <div class="card-overlay">
+            <h3>Mural Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/canvasPainting.jpeg" alt="Canvas Painting" />
+          <div class="card-overlay">
+            <h3>Canvas Painting</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/radhakrishna.jpeg" alt="Radha Krishna Mural" />
+          <div class="card-overlay">
+            <h3>Radha Krishna Mural</h3>
+            <!-- <p>₹ 220 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <!-- Duplicate for seamless infinite scroll -->
+        <div class="trending-card">
+          <img src="/static/sliding/3dArt1.jpeg" alt="3D Art" />
+          <div class="card-overlay">
+            <h3>3D Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/aestheticArt.jpeg" alt="Aesthetic Art" />
+          <div class="card-overlay">
+            <h3>Aesthetic Art</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/metro.jpeg" alt="Metro Advertisement" />
+          <div class="card-overlay">
+            <h3>Metro Advertisement</h3>
+            <!-- <p>₹ 120 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/abstract.jpeg" alt="Abstract" />
+          <div class="card-overlay">
+            <h3>Abstract</h3>
+            <!-- <p>₹ 180 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/nature.jpeg" alt="Nature" />
+          <div class="card-overlay">
+            <h3>Nature Art</h3>
+            <!-- <p>₹ 210 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/kidsTheme.jpeg" alt="Kids Theme" />
+          <div class="card-overlay">
+            <h3>Kids Theme</h3>
+            <!-- <p>₹ 130 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/mural.jpeg" alt="Mural Art" />
+          <div class="card-overlay">
+            <h3>Mural Art</h3>
+            <!-- <p>₹ 150 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/canvasPainting.jpeg" alt="Canvas Painting" />
+          <div class="card-overlay">
+            <h3>Canvas Painting</h3>
+            <!-- <p>₹ 200 per sq.ft</p> -->
+          </div>
+        </div>
+
+        <div class="trending-card">
+          <img src="/static/sliding/radhakrishna.jpeg" alt="Radha Krishna Mural" />
+          <div class="card-overlay">
+            <h3>Radha Krishna Mural</h3>
+            <!-- <p>₹ 220 per sq.ft</p> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Services Section -->
+
+  <section>
+    <h1>Our Services</h1>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/3D%20wall%20art.jpeg" alt="3D Wall Art" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>3D Wall Art</b></h3>
+        <p>Our immersive 3D painting experiences transform ordinary walls into extraordinary spaces, making your surroundings vibrant, interactive and unforgettable.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/3d-wall-art/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/3d-wall-art/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/3D%20floor%20Art.jpeg" alt="3D Floor Art" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>3D Floor Art</b></h3>
+        <p>We create immersive 3D Floor paintings experiences that bring your floors and spaces to life.Step into a world where art escapes the canvas.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/3d-floor-art/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/3d-floor-art/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/art11.jpg" alt="Mural Art" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Mural Art</b></h3>
+        <p>We design beautiful and expressive Mural artworks that perfectly match your personality, style, and space. Every brushstroke is crafted to make your walls a true reflection of you.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/mural/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/mural/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Metro%20Advertisement.jpeg" alt="Metro Advertisement" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Metro Advertisement</b></h3>
+        <p>Transform high-traffic areas into stunning visual experiences. Our large-scale creative artworks and ads are perfect for metro stations, public spaces, and commercial zones.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/metro-advertisement/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/metro-advertisement/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Outdoor%20Advertisement.jpeg" alt="Outdoor Advertisement" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Outdoor Advertisement</b></h3>
+        <p>From soft minimalism to bold statements, our aesthetic artworks are thoughtfully crafted to enhance the beauty and energy of your space.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/outdoor-advertisement/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/outdoor-advertisement/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/schoolpaint.jpg" alt="School Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>School Painting</b></h3>
+        <p> Make learning spaces lively and inspiring! Our school paintings bring classrooms, corridors and playgrounds to life with color, fun characters, and motivational messages.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/school-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/school-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Selfie%20Painting.jpeg" alt="Selfie Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Selfie Painting</b></h3>
+        <p>Perfect for photo lovers and Instagram-worthy clicks. Ideal for cafés, studios, events, and public spaces.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/selfie-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/selfie-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Madhubani%20painting.jpeg" alt="Madhubani Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Madhubani Painting</b></h3>
+        <p> Our hand-painted Madhubani artworks reflect India’s rich cultural heritage with intricate patterns, vibrant colors, and meaningful storytelling</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/madhubani-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/madhubani-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Texture%20panting.jpeg" alt="Texture Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Texture Painting</b></h3>
+        <p>Give your walls a touch of elegance and depth with our premium texture painting</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/texture-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/texture-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <!-- <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/ganeshmurti.jpg" alt="Stone Murti" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Stone Murti</b></h3>
+        <p>Our hand-carved stone murtis capture divine energy and artistic excellence, perfect for temples, gardens, and home décor that radiates peace and grace.</p>
+        <div class="card-buttons">
+          
+          <a href="/gwc/shop/" class="explore-btn">Buy Now</a>
+        </div>
+      </div> -->
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Pillere%20panting.jpeg" alt="Pillere Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Pillere Painting</b></h3>
+        <p>Enhance your home with our detailed and beautiful pillere painting service.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/pillere-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/pillere-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+
+      <!-- <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/statue12.jpg" alt="Statue" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Statue</b></h3>
+        <p>Add grandeur and character to your surroundings with our beautifully crafted statues. Each piece is designed with precision, making it a timeless centerpiece for homes, offices, and public spaces.</p>
+        <div class="card-buttons">
+          
+          <a href="/gwc/shop/" class="explore-btn">Buy Now</a>
+        </div>
+      </div> -->
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Scrap%20animal.jpeg" alt="Scrap Animal Art" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Scrap Animal Art</b></h3>
+        <p>Where creativity meets sustainability. We transform recycled scrap materials into stunning animal sculptures that celebrate wildlife while promoting eco-friendly art. Unique, bold, and full of personality</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/scrap-animal-art/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/scrap-animal-art/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/Water%20tank.jpeg" alt="Water Tank" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Water tank</b></h3>
+        <p>We blend the harmony of architecture with the elegance of nature. These artworks create a balanced and sophisticated ambiance in any space.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/nature-fountain/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/nature-fountain/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/dora.png" alt="Cartoon Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Cartoon Painting</b></h3>
+        <p>Perfect for kids, schools, play areas, and creative corners — our cartoon and fun-themed designs bring smiles, laughter, and a touch of whimsy to your walls.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/cartoon-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/cartoon-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="circle">
+          <img src="/static/gallery/normal_paint.png" alt="Home Painting" />
+        </div>
+        <h3 style="padding-bottom: 12px;"> <b>Home Painting</b></h3>
+        <p>Transform your house into a warm and artistic home. Our customized home painting solutions blend creativity, color, and comfort to reflect your personal style.</p>
+        <div class="card-buttons">
+          <a href="/gwc/book/home-painting/" class="book-btn">Book this Service</a>
+          <a href="/gwc/explore/home-painting/" class="explore-btn">Explore</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews Section -->
+  <section class="reviews-section">
+    <h1>Customer Reviews</h1>
+    <div class="reviews-container">
+      
+        <div class="review-card">
+          <div class="review-header">
+            
+              <img src="/static/images/default-avatar.png" alt="Avatar" class="review-avatar" />
+            
+            <div class="review-meta">
+              <h3>hh</h3>
+              <p class="review-text-inline">Awesome</p>
+              <div class="stars">
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                
+                  <i class="fa fa-star-o text-warning"></i>
+                
+                  <i class="fa fa-star-o text-warning"></i>
+                
+              </div>
+            </div>
+          </div>
+          
+            <div class="review-image-container" onclick="openModal('/media/reviews/nback.jpg')">
+              <img src="/media/reviews/nback.jpg" alt="Review Image" class="review-image" />
+            </div>
+          
+        </div>
+      
+        <div class="review-card">
+          <div class="review-header">
+            
+              <img src="/static/images/default-avatar.png" alt="Avatar" class="review-avatar" />
+            
+            <div class="review-meta">
+              <h3>hh</h3>
+              <p class="review-text-inline">Awesome</p>
+              <div class="stars">
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                
+                  <i class="fa fa-star-o text-warning"></i>
+                
+                  <i class="fa fa-star-o text-warning"></i>
+                
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="review-card">
+          <div class="review-header">
+            
+              <img src="/media/customer_photos/WhatsApp_Image_2025-09-07_at_00.14.30_21126b3c.jpg" alt="faizan photo" class="review-avatar" />
+            
+            <div class="review-meta">
+              <h3>faizan</h3>
+              <p class="review-text-inline">a</p>
+              <div class="stars">
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                  <i class="fa fa-star text-warning"></i>
+                
+                
+                  <i class="fa fa-star-o text-warning"></i>
+                
+              </div>
+            </div>
+          </div>
+          
+            <div class="review-image-container" onclick="openModal('/media/reviews/WhatsApp_Image_2025-09-17_at_18.53.29_61a422ca.jpg')">
+              <img src="/media/reviews/WhatsApp_Image_2025-09-17_at_18.53.29_61a422ca.jpg" alt="Review Image" class="review-image" />
+            </div>
+          
+        </div>
+      
+    </div>
+  </section>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <span class="close-btn">&times;</span>
+    <img class="modal-content" id="img01" />
+  </div>
+
+
+  <!-- Footer -->
+ <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>RColorcraft</h3>
+                    <p>Transforming spaces with artistic excellence. We bring creativity and professionalism to every project, from 3D wall art to complete home painting solutions.</p>
+                    <!-- <div class="social-links">
+                        <a href="#" aria-label="Facebook">ⓕ</a>
+                        <a href="#" aria-label="Instagram">🅾</a>
+                        <a href="#" aria-label="Twitter">𝕏</a>
+                        <a href="#" aria-label="LinkedIn">[in]</a>
+                    </div> -->
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/reviews">Reviews & Feedback</a></li>
+                        <!-- <li><a href="/shop">Shop</a></li> -->
+                        <li><a href="/contact_us">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="footer-section">
+                    <h3>Trending Services</h3>
+                    <ul>
+                        <li><a href="/explore/3d-wall-art/">3D Wall Art</a></li>
+                        <li><a href="/explore/home-painting/">Home Painting</a></li>
+                        <li><a href="/explore/mural-art/">Mural Art</a></li>
+                        <li><a href="/explore/cartoon-painting/">Cartoon Painting</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <!-- <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i>📍</i>
+                            <span>Delhi, India</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>📧</i>
+                            <span>info@rcolorcraft.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>📞</i>
+                            <span>+91 XXX XXX XXXX</span>
+                        </div>
+                        <div class="contact-item">
+                            <i>🕒</i>
+                            <span>Mon - Sat: 9AM - 7PM</span>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="footer-bottom">
+               <div class="social-links">
+                
+                <a href="https://facebook.com/rcolorcraft" target="_blank" class="social-link social-facebook" title="Facebook">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+
+                <a href="https://instagram.com/rcolorcraft" target="_blank" class="social-link social-instagram" title="Instagram">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+
+                <a href="https://twitter.com/rcolorcraft" target="_blank" class="social-link social-twitter" title="Twitter">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                </a>
+
+                <a href="https://linkedin.com/company/rcolorcraft" target="_blank" class="social-link social-linkedin" title="LinkedIn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+
+                <a href="https://wa.me/919759013133" target="_blank" class="social-link social-whatsapp" title="WhatsApp">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                </a>
+
+                <!-- <a href="https://youtube.com/@rcolorcraft" target="_blank" class="social-link social-youtube" title="YouTube">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                </a> -->
+
+            </div>
+            <br></br>
+                <p>© 2025 RColorcraft. All Rights Reserved. | Made with <span class="heart">♥</span> in India</p>
+            </div>
+        </div>
+    </footer>
+  <!-- JS file -->
+  <script src="/static/js/script.js"></script>
+  
+  <!-- UPDATED JAVASCRIPT -->
+  <script>
+    // Popup menu toggle
+    function togglePopup() {
+      const popup = document.getElementById("myPopup");
+      popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
+    }
+
+    // Close popup if clicked outside
+    document.addEventListener("click", function(event) {
+      const popup = document.getElementById("myPopup");
+      const icon = document.querySelector(".nav-icon");
+      if (popup && !popup.contains(event.target) && !icon.contains(event.target)) {
+        popup.style.display = "none";
+      }
+    });
+
+    // ===== HAMBURGER MENU FUNCTIONALITY =====
+    const hamburger = document.getElementById('hamburgerMenu');
+    const navMenu = document.getElementById('navMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    // Toggle menu when hamburger is clicked
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Close menu when overlay is clicked
+    menuOverlay.addEventListener('click', function() {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close menu when a menu item is clicked
+    const menuLinks = navMenu.querySelectorAll('a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    // Close menu on window resize if open
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 767) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+  </script>
+  
+</body>
+</html>
