@@ -86,6 +86,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -175,6 +176,7 @@ LOCALE_PATHS = [
 ]
 
 USE_TZ = True
+LANGUAGE_COOKIE_NAME = 'django_language'
 
 
 # Static files (CSS, JavaScript, Images)
