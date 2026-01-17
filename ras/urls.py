@@ -29,11 +29,10 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('', include('home.urls')),
-    # path('u/', include('user.urls')),
     path('emp/', include('employee.urls')),
-    # path('panel/', include('myadmin.urls')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('api/', include('api.urls', namespace='api')),
     path("wallet/", include("wallet.urls")),
-) 
+)
+
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
