@@ -45,13 +45,31 @@
 </div>
 
 
-            <div class="artwork-details">
-  <span class="price-tag">₹{{ img.price }} / sq ft</span>
+           <div class="artwork-details">
+  <span class="price-wrapper">
+
+    <span class="fake-price-badge">
+      ₹{% widthratio img.price 1 5 %} / sq ft
+      
+    </span>
+
+    <span class="price-tag">
+      ₹{{ img.price }} / sq ft
+    </span>
+
+  </span>
+
   <span class="art-type">{{ img.type_of_art }}</span>
-  {% if img.min_size %}
-    <span class="min-size">📏 Min Size: {{ img.min_size }} ft</span>
-  {% endif %}
 </div>
+
+
+
+{% if img.min_size %}
+  <div class="min-size-line">
+    Min Size: {{ img.min_size }} ft
+  </div>
+{% endif %}
+
 
             <div class="artist-info">
               <i class="fas fa-user-circle"></i>
@@ -634,11 +652,11 @@ body {
 }
 
 .price-tag {
-  background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+  background: linear-gradient(135deg, #97d272, #169334);
   color: white;
   padding: 0.5rem 1.2rem;
   border-radius: 25px;
-  font-weight: 600;
+  font-weight: 600; 
   font-size: 1.1rem;
   box-shadow: 0 4px 15px rgba(123, 47, 247, 0.3);
 }
@@ -911,6 +929,40 @@ body {
   background-color: #c82333;
 }
 
+.price-tag {
+    white-space: nowrap;
+}
+
+.min-size {
+   white-space: nowrap;
+}
+
+
+.min-size-line {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #4a5568;
+  background: #f1f5f9;
+  padding: 5px 10px;
+  border-radius: 15px;
+  display: inline-block;
+}
+.price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fake-price-badge {
+  background: #f1f5f9;
+  color: #4a5568;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border: 2px solid #e2e8f0;
+  text-decoration: line-through;
+}
 
 </style>
 
