@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}RColorcraft{% endblock %}</title>
+  <title>{% block title %}{% trans "RColorcraft" %}{% endblock %}</title>
   
   <!-- CSS link -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -705,34 +706,34 @@
       <!-- NAVIGATION MENU -->
       <nav class="nav-left" id="navMenu">
         <ul>
-          <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+          <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">{% trans "Home" %}</a></li>
           {# Only visible to admin #}
 {% if user.is_authenticated and user.role == 'admin' %}
-    <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
-    <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
+    <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">{% trans "Bookings" %}</a></li>
+    <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">{% trans "Artists" %}</a></li>
 {% endif %}
 
-          <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
-          <!-- <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li> -->
+          <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">{% trans "Reviews & Feedback" %}</a></li>
+          <!-- <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">{% trans "Shop" %}</a></li> -->
 {% if user.is_authenticated and user.role == 'admin' or user.is_authenticated and user.role == 'employee' %}
-    <li><a href="{% url 'service_images' %}">Art Images</a></li>
+    <li><a href="{% url 'service_images' %}">{% trans "Art Images" %}</a></li>
 {% endif %}
 
 
           {% if request.user.is_authenticated and request.user.role == "customer" %}
-          <li><a href="{% url 'my_orders' %}">My Orders</a></li>
+          <li><a href="{% url 'my_orders' %}">{% trans "My Orders" %}</a></li>
           {% if user.is_authenticated and user.role == 'customer' or user.is_authenticated and user.role == 'employee' %}
-            <li><a href="{% url 'contact_us' %}">Contact us</a></li>
+            <li><a href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
         {% endif %}
 
           <li>
           <button class="large-order-btn" onclick="openPopup()">
-                Large Order? 📦
+                {% trans "Large Order? 📦" %}
             </button>
             </li>
           {% endif %}
           {% if request.user.is_authenticated and request.user.role == "employee" %}
-                    <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">My Assignments</a></li>
+                    <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">{% trans "My Assignments" %}</a></li>
                     {% endif %}
         </ul>
       </nav>
@@ -744,7 +745,77 @@
   </button>
 </div>
 
+<!-- Language Switcher -->
+<div class="language-switcher">
+  <form action="{% url 'set_language' %}" method="post" id="languageForm">
+    {% csrf_token %}
+    <input type="hidden" name="next" id="nextInput" value="">
+    <select name="language" id="languageSelect" onchange="changeLanguage()" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; background: white; font-weight: 500;">
+      <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+      <option value="hi" {% if LANGUAGE_CODE == 'hi' %}selected{% endif %}>हिन्दी (Hindi)</option>
+      <option value="pa" {% if LANGUAGE_CODE == 'pa' %}selected{% endif %}>ਪੰਜਾਬੀ (Punjabi)</option>
+      <option value="mr" {% if LANGUAGE_CODE == 'mr' %}selected{% endif %}>मराठी (Marathi)</option>
+      <option value="bn" {% if LANGUAGE_CODE == 'bn' %}selected{% endif %}>বাংলা (Bengali)</option>
+      <option value="gu" {% if LANGUAGE_CODE == 'gu' %}selected{% endif %}>ગુજરાતી (Gujarati)</option>
+      <option value="gwc" {% if LANGUAGE_CODE == 'gwc' %}selected{% endif %}>गढ़वाली (Garhwali)</option>
+      <!-- <option value="bho" {% if LANGUAGE_CODE == 'bho' %}selected{% endif %}>भोजपुरी (Bhojpuri)</option> -->
+    </select>
+  </form>
+</div>
 
+<style>
+  .language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 200px;
+    z-index: 999;
+  }
+  
+  .language-switcher select {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .language-switcher select:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .language-switcher select:focus {
+    outline: none;
+    border-color: #2C61C0;
+    box-shadow: 0 0 5px rgba(44, 97, 192, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    .language-switcher {
+      top: 70px;
+      right: 10px;
+    }
+  }
+</style>
+
+<script>
+  function changeLanguage() {
+    // Get the current pathname
+    let pathname = window.location.pathname;
+    
+    // Remove the language prefix (e.g., /hi/, /en/, /gu/, /gwc/)
+    // Match patterns like /xx/ or /xxx/ at the beginning
+    let pathWithoutLang = pathname.replace(/^\/[a-z]{2,3}\//, '/');
+    
+    // If pathname didn't change, it might be root, so use /
+    if (pathWithoutLang === pathname && pathname !== '/') {
+      pathWithoutLang = pathname;
+    }
+    
+    // Set the next parameter to the path without language prefix
+    document.getElementById('nextInput').value = pathWithoutLang + window.location.search;
+    document.getElementById('languageForm').submit();
+  }
+</script>
 
      <!-- Replace your popup-overlay section with this updated version -->
 
@@ -762,8 +833,8 @@
                     <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-6 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l-1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
                 </svg>
             </div>
-            <h2>Bulk Orders Welcome!</h2>
-            <p class="popup-subtitle">We're here to help with your large orders</p>
+            <h2>{% trans "Bulk Orders Welcome!" %}</h2>
+            <p class="popup-subtitle">{% trans "We're here to help with your large orders" %}</p>
         </div>
 
         <div class="popup-content">
@@ -872,7 +943,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <!-- About Section -->
                 <div class="footer-section">
                     <h3>RColorcraft</h3>
-                    <p>Transforming spaces with artistic excellence. We bring creativity and professionalism to every project, from 3D wall art to complete home painting solutions.</p>
+                    <p>{% trans "Transforming spaces with artistic excellence. We bring creativity and professionalism to every project, from 3D wall art to complete home painting solutions." %}</p>
                     <!-- <div class="social-links">
                         <a href="#" aria-label="Facebook">ⓕ</a>
                         <a href="#" aria-label="Instagram">🅾</a>
@@ -883,23 +954,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <!-- Quick Links -->
                 <div class="footer-section">
-                    <h3>Quick Links</h3>
+                    <h3>{% trans "Quick Links" %}</h3>
                     <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/reviews">Reviews & Feedback</a></li>
-                        <!-- <li><a href="/shop">Shop</a></li> -->
-                        <li><a href="/contact_us">Contact Us</a></li>
+                        <li><a href="/">{% trans "Home" %}</a></li>
+                        <li><a href="/reviews">{% trans "Reviews & Feedback" %}</a></li>
+                        <!-- <li><a href="/shop">{% trans "Shop" %}</a></li> -->
+                        <li><a href="/contact_us">{% trans "Contact Us" %}</a></li>
                     </ul>
                 </div>
 
                 <!-- Services -->
                 <div class="footer-section">
-                    <h3>Trending Services</h3>
+                    <h3>{% trans "Trending Services" %}</h3>
                     <ul>
-                        <li><a href="/explore/3d-wall-art/">3D Wall Art</a></li>
-                        <li><a href="/explore/home-painting/">Home Painting</a></li>
-                        <li><a href="/explore/mural-art/">Mural Art</a></li>
-                        <li><a href="/explore/cartoon-painting/">Cartoon Painting</a></li>
+                        <li><a href="/explore/3d-wall-art/">{% trans "3D Wall Art" %}</a></li>
+                        <li><a href="/explore/home-painting/">{% trans "Home Painting" %}</a></li>
+                        <li><a href="/explore/mural-art/">{% trans "Mural Art" %}</a></li>
+                        <li><a href="/explore/cartoon-painting/">{% trans "Cartoon Painting" %}</a></li>
                     </ul>
                 </div>
 
@@ -968,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             </div>
             <br></br>
-                <p>© 2025 RColorcraft. All Rights Reserved. | Made with <span class="heart">♥</span> in India</p>
+                <p>{% trans "© 2025 RColorcraft. All Rights Reserved. | Made with" %} <span class="heart">♥</span> {% trans "in India" %}</p>
             </div>
         </div>
     </footer>

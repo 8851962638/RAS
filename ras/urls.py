@@ -18,9 +18,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
+from home.custom_i18n import custom_set_language
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('set_language/', custom_set_language, name='set_language'),
+]
+
+urlpatterns += i18n_patterns(
     path('', include('home.urls')),
     # path('u/', include('user.urls')),
     path('emp/', include('employee.urls')),
@@ -28,7 +35,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('api/', include('api.urls', namespace='api')),
     path("wallet/", include("wallet.urls")),
-
-    
-] 
+) 
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

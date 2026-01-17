@@ -6,7 +6,22 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse   
+from django.utils import translation
+import logging
+
+logger = logging.getLogger(__name__)
+
 def home_view(request):
+    current_lang = translation.get_language()
+    print(f"\n{'='*60}")
+    print(f"🏠 HOME VIEW DEBUG")
+    print(f"{'='*60}")
+    print(f"Current Language: {current_lang}")
+    print(f"Session Language: {request.session.get('django_language', 'Not Set')}")
+    print(f"Request Path: {request.path}")
+    print(f"Accept-Language Header: {request.META.get('HTTP_ACCEPT_LANGUAGE', 'None')}")
+    logger.info(f"Home view accessed with language: {current_lang}")
+    print(f"{'='*60}\n")
     return render(request, 'home.html')
 
 def contact_us(request):

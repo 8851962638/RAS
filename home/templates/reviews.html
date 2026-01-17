@@ -1,5 +1,6 @@
 {% extends "base1.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}Reviews & Feedback - RColourcraft{% endblock %}
 
@@ -250,12 +251,12 @@
         }
     </style>
   <section class="hero">
-    <h1>What Our Customers Say</h1>
-    <p>Your words inspire us. Your art tells the story.</p>
+    <h1>{% trans "What Our Customers Say" %}</h1>
+    <p>{% trans "Your words inspire us. Your art tells the story." %}</p>
   </section>
 
   <section class="reviews-section">
-    <h2>Customer Reviews</h2>
+    <h2>{% trans "Customer Reviews" %}</h2>
     <div class="reviews-grid" id="reviewsGrid">
       <div class="review-card">
         <img src="{% static 'gallery/john.jpg' %}" alt="John D">
@@ -314,13 +315,13 @@
 
   <section class="gallery-section">
     <div class="review-form">
-      <h3>Leave a Review</h3>
+      <h3>{% trans "Leave a Review" %}</h3>
       <form id="reviewForm" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="customer_review" rows="4" placeholder="Your Review"></textarea>
-        <label>Your Rating:</label>
+        <input type="text" name="name" placeholder="{% trans 'Your Name' %}" required>
+        <input type="email" name="email" placeholder="{% trans 'Your Email' %}" required>
+        <textarea name="customer_review" rows="4" placeholder="{% trans 'Your Review' %}"></textarea>
+        <label>{% trans "Your Rating:" %}</label>
         <div class="star-rating">
           <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
           <label class="star star-5" for="star-5"></label>
@@ -335,10 +336,10 @@
         </div>
 
     <div class="form-group">
-  <p>Upload your picture (optional):</p>
+  <p>{% trans "Upload your picture (optional):" %}</p>
   <div class="file-upload-container">
-    <label for="image" class="file-upload-btn">Choose File</label>
-    <span id="file-name-display" class="file-name-text">No file chosen</span>
+    <label for="image" class="file-upload-btn">{% trans "Choose File" %}</label>
+    <span id="file-name-display" class="file-name-text">{% trans "No file chosen" %}</span>
     <input type="file" name="image" id="image" class="file-upload-input">
   </div>
 </div>
@@ -347,7 +348,7 @@
 
 
 <div class="form-group text-center">
-  <button type="submit">Submit Review</button>
+  <button type="submit">{% trans "Submit Review" %}</button>
 </div>
 
       </form>

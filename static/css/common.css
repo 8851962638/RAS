@@ -167,6 +167,42 @@ nav ul li a.active::after {
   align-items: center;
 }
 
+/* Language Selector */
+.language-selector {
+  margin-right: 15px;
+}
+
+.language-selector select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.language-selector select:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: #ff416c;
+  box-shadow: 0 0 8px rgba(255, 65, 108, 0.3);
+}
+
+.language-selector select option {
+  background: #333;
+  color: #fff;
+  padding: 8px;
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(to right, #ff416c, #ff4b2b);
