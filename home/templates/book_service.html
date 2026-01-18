@@ -1,5 +1,6 @@
 {% extends "base1.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}Book {{ service_name }}{% endblock %}
 
@@ -483,9 +484,9 @@
         <div class="booking-container">
             <form class="booking-form" id="bookingForm" method="POST">
                 {% csrf_token %}
-                <h2>Book {{ service_name }}</h2>
+                <h2>{% trans "Book" %} {{ service_name }}</h2>
 
-                <label>Service</label>
+                <label>{% trans "Service" %}</label>
                 <input type="text" name="service_name" value="{{ service_name }}" readonly>
 
                 <div class="contact-row">
