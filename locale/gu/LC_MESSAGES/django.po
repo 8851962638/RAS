@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 23:41+0530\n"
+"POT-Creation-Date: 2026-01-29 23:53+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1300,7 +1300,9 @@ msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
 "solutions."
-msgstr "કલાત્મક શ્રેષ્ઠતા સાથે જગ્યાઓનું રૂપાંતરણ કરો। આપણે 3D દીવાલ કલા થી સંપૂર્ણ ઘર પેઇન્ટિંગ સમાધાન સુધી પ્રતિટી પ્રોજેક્ટમાં સર્જનશીલતા અને વ્યાવસાયિકતા લાવીએ છીએ।"
+msgstr ""
+"કલાત્મક શ્રેષ્ઠતા સાથે જગ્યાઓનું રૂપાંતરણ કરો। આપણે 3D દીવાલ કલા થી સંપૂર્ણ ઘર પેઇન્ટિંગ "
+"સમાધાન સુધી પ્રતિટી પ્રોજેક્ટમાં સર્જનશીલતા અને વ્યાવસાયિકતા લાવીએ છીએ।"
 
 #: .\home\templates\base1.html:957
 msgid "Quick Links"
@@ -1316,22 +1318,22 @@ msgstr "અમારો સંપર્ક કરો"
 msgid "Trending Services"
 msgstr "આપણી સેવાઓ"
 
-#: .\home\templates\base1.html:970 .\home\templates\home.html:422
-#: .\home\templates\home.html:667
+#: .\home\templates\base1.html:970 .\home\templates\home.html:454
+#: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr "3D દીવાલ કલા"
 
-#: .\home\templates\base1.html:971 .\home\templates\home.html:494
-#: .\home\templates\home.html:849
+#: .\home\templates\base1.html:971 .\home\templates\home.html:526
+#: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr "ઘર ચિત્રણ"
 
-#: .\home\templates\base1.html:972 .\home\templates\home.html:562
-#: .\home\templates\home.html:691
+#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+#: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr "મુરલ કલા"
 
-#: .\home\templates\base1.html:973 .\home\templates\home.html:837
+#: .\home\templates\base1.html:973 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr "કાર્ટૂન ચિત્રણ"
 
@@ -1343,24 +1345,49 @@ msgstr "© 2025 RColorcraft। બધા અધિકારો આરક્ષ�
 msgid "in India"
 msgstr "ભારતમાં"
 
+#: .\home\templates\edit_customers_profile.html:4
+#: .\home\templates\edit_customers_profile.html:232
+msgid "Edit Profile"
+msgstr "પ્રોફાઇલ સંપાદિત કરો"
+
+#: .\home\templates\edit_customers_profile.html:238
+msgid "Name"
+msgstr "તમારું નામ"
+
+#: .\home\templates\edit_customers_profile.html:241
+msgid "Gmail"
+msgstr "જીમેલ"
+
+#: .\home\templates\edit_customers_profile.html:244
+msgid "Contact"
+msgstr "સંપર્ક"
+
+#: .\home\templates\edit_customers_profile.html:251
+msgid "Upload New"
+msgstr "નવું અપલોડ કરો"
+
+#: .\home\templates\edit_customers_profile.html:258
+msgid "Save Profile"
+msgstr "પ્રોફાઇલ સાચવો"
+
 #: .\home\templates\home.html:5
 msgid "Home - RColourcraft"
 msgstr "હોમ - આરકલરક્રાફ્ટ"
 
-#: .\home\templates\home.html:394
+#: .\home\templates\home.html:426
 msgid "Welcome Neeraj"
 msgstr "આપનું સ્વાગત છે નીરજ"
 
-#: .\home\templates\home.html:396 .\home\templates\home.html:398
-#: .\home\templates\home.html:400
+#: .\home\templates\home.html:428 .\home\templates\home.html:430
+#: .\home\templates\home.html:432
 msgid "Welcome"
 msgstr "આપનું સ્વાગત છે"
 
-#: .\home\templates\home.html:403
+#: .\home\templates\home.html:435
 msgid "Welcome Back"
 msgstr "પાછા આવવા માટે આભાર"
 
-#: .\home\templates\home.html:406
+#: .\home\templates\home.html:438
 msgid ""
 "At RColorcraft, we specialize in stunning murals, creative paintings, and "
 "artistic designs that transform your space."
@@ -1368,68 +1395,64 @@ msgstr ""
 "આરકલરક્રાફ્ટમાં, આપણે અદ્ભુત મુરલ્સ, સર્જનાત્મક ચિત્રો અને કલાત્મક ડિઝાઇનમાં વિશેષીકરણ કરી "
 "છીએ જે તમારી જગ્યાને રૂપાંતરિત કરે છે."
 
-#: .\home\templates\home.html:430 .\home\templates\home.html:679
+#: .\home\templates\home.html:462 .\home\templates\home.html:711
 msgid "3D Floor Art"
 msgstr "3D ફ્લોર કલા"
 
-#: .\home\templates\home.html:438 .\home\templates\home.html:715
+#: .\home\templates\home.html:470 .\home\templates\home.html:747
 msgid "Outdoor Advertisement"
 msgstr "આઉટડોર જાહેરાત"
 
-#: .\home\templates\home.html:446 .\home\templates\home.html:530
-#: .\home\templates\home.html:603 .\home\templates\home.html:703
+#: .\home\templates\home.html:478 .\home\templates\home.html:562
+#: .\home\templates\home.html:635 .\home\templates\home.html:735
 msgid "Metro Advertisement"
 msgstr "મેટ્રો જાહેરાત"
 
-#: .\home\templates\home.html:454 .\home\templates\home.html:727
+#: .\home\templates\home.html:486 .\home\templates\home.html:759
 msgid "School Painting"
 msgstr "શાળા ચિત્રણ"
 
-#: .\home\templates\home.html:470
-msgid "Statue"
-msgstr "મૂર્તિ"
-
-#: .\home\templates\home.html:486 .\home\templates\home.html:825
+#: .\home\templates\home.html:518 .\home\templates\home.html:857
 msgid "Water Tank"
 msgstr "જલ ટાંકી"
 
-#: .\home\templates\home.html:501
+#: .\home\templates\home.html:533
 msgid "Most Trending Designs"
 msgstr "સૌથી લોકપ્રિય ડિઝાઇનો"
 
-#: .\home\templates\home.html:514 .\home\templates\home.html:587
+#: .\home\templates\home.html:546 .\home\templates\home.html:619
 msgid "3D Art"
 msgstr "3D કલા"
 
-#: .\home\templates\home.html:522 .\home\templates\home.html:595
+#: .\home\templates\home.html:554 .\home\templates\home.html:627
 msgid "Aesthetic Art"
 msgstr "સૌંદર્ય કલા"
 
-#: .\home\templates\home.html:538 .\home\templates\home.html:611
+#: .\home\templates\home.html:570 .\home\templates\home.html:643
 msgid "Abstract"
 msgstr "અમૂર્ત"
 
-#: .\home\templates\home.html:546 .\home\templates\home.html:619
+#: .\home\templates\home.html:578 .\home\templates\home.html:651
 msgid "Nature Art"
 msgstr "પ્રકૃતિ કલા"
 
-#: .\home\templates\home.html:554 .\home\templates\home.html:627
+#: .\home\templates\home.html:586 .\home\templates\home.html:659
 msgid "Kids Theme"
 msgstr "બાળકો થીમ"
 
-#: .\home\templates\home.html:570
+#: .\home\templates\home.html:602
 msgid "Canvas Painting"
 msgstr "કેનવાસ ચિત્રણ"
 
-#: .\home\templates\home.html:578
+#: .\home\templates\home.html:610
 msgid "Radha Krishna Mural"
 msgstr "રાધા કૃષ્ણ મુરલ"
 
-#: .\home\templates\home.html:661
+#: .\home\templates\home.html:693
 msgid "Our Services"
 msgstr "આપણી સેવાઓ"
 
-#: .\home\templates\home.html:668
+#: .\home\templates\home.html:700
 msgid ""
 "Our immersive 3D painting experiences transform ordinary walls into "
 "extraordinary spaces, making your surroundings vibrant, interactive and "
@@ -1438,27 +1461,27 @@ msgstr ""
 "આપણી નિમજ્જિત 3D ચિત્રણ અનુભવો સાધારણ દીવાલોને અસાધારણ જગ્યાઓમાં રૂપાંતરિત કરે છે, "
 "તમારી આસપાસને જીવંત, ઇન્ટરેક્ટિવ અને અવિસ્મરણીય બનાવે છે।"
 
-#: .\home\templates\home.html:670 .\home\templates\home.html:682
-#: .\home\templates\home.html:694 .\home\templates\home.html:706
-#: .\home\templates\home.html:718 .\home\templates\home.html:730
-#: .\home\templates\home.html:742 .\home\templates\home.html:754
-#: .\home\templates\home.html:766 .\home\templates\home.html:790
-#: .\home\templates\home.html:816 .\home\templates\home.html:828
-#: .\home\templates\home.html:840 .\home\templates\home.html:852
+#: .\home\templates\home.html:702 .\home\templates\home.html:714
+#: .\home\templates\home.html:726 .\home\templates\home.html:738
+#: .\home\templates\home.html:750 .\home\templates\home.html:762
+#: .\home\templates\home.html:774 .\home\templates\home.html:786
+#: .\home\templates\home.html:798 .\home\templates\home.html:822
+#: .\home\templates\home.html:848 .\home\templates\home.html:860
+#: .\home\templates\home.html:872 .\home\templates\home.html:884
 msgid "Book this Service"
 msgstr "આ સેવા બુક કરો"
 
-#: .\home\templates\home.html:671 .\home\templates\home.html:683
-#: .\home\templates\home.html:695 .\home\templates\home.html:707
-#: .\home\templates\home.html:719 .\home\templates\home.html:731
-#: .\home\templates\home.html:743 .\home\templates\home.html:755
-#: .\home\templates\home.html:767 .\home\templates\home.html:791
-#: .\home\templates\home.html:817 .\home\templates\home.html:829
-#: .\home\templates\home.html:841 .\home\templates\home.html:853
+#: .\home\templates\home.html:703 .\home\templates\home.html:715
+#: .\home\templates\home.html:727 .\home\templates\home.html:739
+#: .\home\templates\home.html:751 .\home\templates\home.html:763
+#: .\home\templates\home.html:775 .\home\templates\home.html:787
+#: .\home\templates\home.html:799 .\home\templates\home.html:823
+#: .\home\templates\home.html:849 .\home\templates\home.html:861
+#: .\home\templates\home.html:873 .\home\templates\home.html:885
 msgid "Explore"
 msgstr "અન્વેષણ કરો"
 
-#: .\home\templates\home.html:680
+#: .\home\templates\home.html:712
 msgid ""
 "We create immersive 3D Floor paintings experiences that bring your floors "
 "and spaces to life.Step into a world where art escapes the canvas."
@@ -1466,7 +1489,7 @@ msgstr ""
 "આપણે નિમજ્જિત 3D ફ્લોર ચિત્રણ અનુભવો બનાઈ છીએ જે તમારા ફ્લોર અને જગ્યાઓને જીવંત કરે છે। "
 "એક એવી દુનિયામાં પ્રવેશ કરો જ્યાં કલા કેનવાસ પરથી બહાર નીકળે છે।"
 
-#: .\home\templates\home.html:692
+#: .\home\templates\home.html:724
 msgid ""
 "We design beautiful and expressive Mural artworks that perfectly match your "
 "personality, style, and space. Every brushstroke is crafted to make your "
@@ -1476,7 +1499,7 @@ msgstr ""
 "જગ્યા સાથે પૂર્ણપણે મેળ ખાય છે। દરેક બ્રશસ્ટ્રોક તમારી દીવાલોને તમારું સાચું પ્રતિબિંબ બનાવવા "
 "માટે બનાવવામાં આવ્યો છે।"
 
-#: .\home\templates\home.html:704
+#: .\home\templates\home.html:736
 msgid ""
 "Transform high-traffic areas into stunning visual experiences. Our large-"
 "scale creative artworks and ads are perfect for metro stations, public "
@@ -1485,7 +1508,7 @@ msgstr ""
 "ઉચ્ચ ટ્રાફિક વાળી જગ્યાઓને અદ્ભુત દૃશ્ય અનુભવોમાં રૂપાંતરિત કરો। આપણાં મોટા પાયે સર્જનાત્મક "
 "કલાકર્મો અને જાહેરાતો મેટ્રો સ્ટેશન, સાર્વજનિક જગ્યાઓ અને વાણિજ્યિક ક્ષેત્રો માટે આદર્શ છે।"
 
-#: .\home\templates\home.html:716
+#: .\home\templates\home.html:748
 msgid ""
 "From soft minimalism to bold statements, our aesthetic artworks are "
 "thoughtfully crafted to enhance the beauty and energy of your space."
@@ -1493,7 +1516,7 @@ msgstr ""
 "નરમ ન્યૂનતમવાદથી બોલ્ડ સ્ટેટમેન્ટો સુધી, આપણાં સૌંદર્ય કલાકર્મો તમારી જગ્યાની સુંદરતા અને "
 "ઊર્જા વધારવા માટે વિચારપૂર્વક બનાવવામાં આવ્યાં છે।"
 
-#: .\home\templates\home.html:728
+#: .\home\templates\home.html:760
 msgid ""
 "Make learning spaces lively and inspiring! Our school paintings bring "
 "classrooms, corridors and playgrounds to life with color, fun characters, "
@@ -1502,11 +1525,11 @@ msgstr ""
 "શિક્ષણ જગ્યાઓને જીવંત અને પ્રેરક બનાવો! આપણાં શાળા ચિત્રણો કક્ષાઓ, કોરિડોર્સ અને રમતના "
 "મેદાનોને રંગ, મજાદાર પાત્રો અને પ્રેરણાદાયક સંદેશાઓ સાથે જીવંત કરે છે।"
 
-#: .\home\templates\home.html:739
+#: .\home\templates\home.html:771
 msgid "Selfie Painting"
 msgstr "સેલ્ફી ચિત્રણ"
 
-#: .\home\templates\home.html:740
+#: .\home\templates\home.html:772
 msgid ""
 "Perfect for photo lovers and Instagram-worthy clicks. Ideal for cafés, "
 "studios, events, and public spaces."
@@ -1514,11 +1537,11 @@ msgstr ""
 "ફોટો પ્રેમીઓ અને ઇન્સ્ટાગ્રામ-યોગ્ય ક્લિક્સ માટે આદર્શ। કાફે, સ્ટુડિયોઝ, ઇવેન્ટ્સ અને સાર્વજનિક "
 "જગ્યાઓ માટે આદર્શ।"
 
-#: .\home\templates\home.html:751
+#: .\home\templates\home.html:783
 msgid "Madhubani Painting"
 msgstr "મધુબની ચિત્રણ"
 
-#: .\home\templates\home.html:752
+#: .\home\templates\home.html:784
 msgid ""
 "Our hand-painted Madhubani artworks reflect India's rich cultural heritage "
 "with intricate patterns, vibrant colors, and meaningful storytelling"
@@ -1526,30 +1549,30 @@ msgstr ""
 "આપણાં હાથથી રંગેલાં મધુબની કલાકર્મો જટિલ પેટર્ન, જીવંત રંગો અને અર્થપૂર્ણ વર્ણનાંબી સાથે "
 "ભારતની સમૃદ્ધ સાંસ્કૃતિક વારસાને પ્રતિબિંબિત કરે છે।"
 
-#: .\home\templates\home.html:763
+#: .\home\templates\home.html:795
 msgid "Texture Painting"
 msgstr "ટેક્સચર ચિત્રણ"
 
-#: .\home\templates\home.html:764
+#: .\home\templates\home.html:796
 msgid ""
 "Give your walls a touch of elegance and depth with our premium texture "
 "painting"
 msgstr "આપણાં પ્રીમિયમ ટેક્સચર ચિત્રણ સાથે તમારી દીવાલોને સુંદરતા અને ઊંડાઈનો સ્પર્શ આપો।"
 
-#: .\home\templates\home.html:787
+#: .\home\templates\home.html:819
 msgid "Pillere Painting"
 msgstr "પિલર ચિત્રણ"
 
-#: .\home\templates\home.html:788
+#: .\home\templates\home.html:820
 msgid ""
 "Enhance your home with our detailed and beautiful pillere painting service."
 msgstr "આપણી વિસ્તૃત અને સુંદર પિલર ચિત્રણ સેવા સાથે તમારા ઘરને બહેતર બનાવો।"
 
-#: .\home\templates\home.html:813
+#: .\home\templates\home.html:845
 msgid "Scrap Animal Art"
 msgstr "સ્ક્રેપ પણ્યવર્ગ કલા"
 
-#: .\home\templates\home.html:814
+#: .\home\templates\home.html:846
 msgid ""
 "Where creativity meets sustainability. We transform recycled scrap materials "
 "into stunning animal sculptures that celebrate wildlife while promoting eco-"
@@ -1559,7 +1582,7 @@ msgstr ""
 "રૂપાંતરિત કરીએ છીએ જે જંગલી જીવનમણોને ઉજાગર કરે છે જ્યારે પર્યાવરણ-અનુકૂળ કલાને પ્રોત્સાહિત "
 "કરે છે. અનન્ય, બોલ્ડ, અને વ્યક્તિત્વથી ભરપૂર।"
 
-#: .\home\templates\home.html:826
+#: .\home\templates\home.html:858
 msgid ""
 "We blend the harmony of architecture with the elegance of nature. These "
 "artworks create a balanced and sophisticated ambiance in any space."
@@ -1567,7 +1590,7 @@ msgstr ""
 "આપણે આર્કિટેક્ચરના સમન્વયને પ્રકૃતિની સુંદરતા સાથે મિશ્રિત કરીએ છીએ. આ કલાકર્મો કોઈપણ "
 "જગ્યામાં સંતુલિત અને પરિष્કૃત વાતાવરણ બનાવે છે।"
 
-#: .\home\templates\home.html:838
+#: .\home\templates\home.html:870
 msgid ""
 "Perfect for kids, schools, play areas, and creative corners — our cartoon "
 "and fun-themed designs bring smiles, laughter, and a touch of whimsy to your "
@@ -1576,7 +1599,7 @@ msgstr ""
 "બાળકો, શાળાઓ, રમતના ક્ષેત્રો અને સર્જનાત્મક ખૂણાઓ માટે આદર્શ — આપણી કાર્ટૂન અને મજાદાર-"
 "થીમ્ડ ડિઝાઇનો તમારી દીવાલોમાં હસ્માણુક, હાસ્ય અને સ્વતંત્રતાનો સ્પર્શ આણે છે।"
 
-#: .\home\templates\home.html:850
+#: .\home\templates\home.html:882
 msgid ""
 "Transform your house into a warm and artistic home. Our customized home "
 "painting solutions blend creativity, color, and comfort to reflect your "
@@ -1585,7 +1608,7 @@ msgstr ""
 "તમારા ઘરને ગરમ અને કલાત્મક ઘરમાં રૂપાંતરિત કરો. આપણા કસ્ટમાઇઝ્ડ ઘર ચિત્રણ સમાધાનો "
 "તમારી વ્યક્તિગત શૈલીને પ્રતિબિંબિત કરવા માટે સર્જનાત્મકતા, રંગ અને આરામને મિશ્રિત કરે છે।"
 
-#: .\home\templates\home.html:861 .\home\templates\reviews.html:259
+#: .\home\templates\home.html:893 .\home\templates\reviews.html:259
 msgid "Customer Reviews"
 msgstr "ગ્રાહક પર્યાલોચનો"
 
@@ -1636,3 +1659,6 @@ msgstr "કોઈ ફાઈલ પસંદ કરી નથી"
 #| msgid "Customer Reviews"
 msgid "Submit Review"
 msgstr "સમીક્ષા સબમિટ કરો"
+
+#~ msgid "Statue"
+#~ msgstr "મૂર્તિ"
