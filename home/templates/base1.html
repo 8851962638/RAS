@@ -745,6 +745,38 @@
   </button>
 </div>
 
+<!-- ART SEARCH BAR -->
+<div class="art-search-container">
+  <input
+    type="text"
+    id="artSearchInput"
+    placeholder="{% trans 'Search art type…' %}"
+    list="artServices"
+  />
+  <button onclick="searchArtService()">
+    🔍
+  </button>
+
+  <!-- Suggestions -->
+  <datalist id="artServices">
+    <option value="3D Wall Art">
+    <option value="3D Floor Art">
+    <option value="Mural Art">
+    <option value="Metro Advertisement">
+    <option value="Outdoor Advertisement">
+    <option value="School Painting">
+    <option value="Selfie Painting">
+    <option value="Madhubani Painting">
+    <option value="Texture Painting">
+    <option value="Pillere Painting">
+    <option value="Scrap Animal Art">
+    <option value="Water Tank">
+    <option value="Cartoon Painting">
+    <option value="Home Painting">
+  </datalist>
+</div>
+
+
 <!-- Language Switcher -->
 <div class="language-switcher">
   <form action="{% url 'set_language' %}" method="post" id="languageForm">
@@ -767,7 +799,7 @@
   .language-switcher {
     position: absolute;
     top: 20px;
-    right: 200px;
+    right: 90px;
     z-index: 999;
   }
   
@@ -790,11 +822,55 @@
   }
   
   @media (max-width: 768px) {
-    .language-switcher {
-      top: 70px;
-      right: 10px;
-    }
+  .language-switcher {
+    top: 18px;
+    right: 60px;
   }
+}
+
+
+  /* ===== HEADER SEARCH BAR ===== */
+
+.art-search-container {
+  position: absolute;
+  top: 20px;
+  right: 280px;   /* BETWEEN language & large order */
+  display: flex;
+  gap: 6px;
+  z-index: 999;
+}
+
+.art-search-container input {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  min-width: 200px;
+  outline: none;
+}
+
+.art-search-container button {
+  border: none;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .art-search-container {
+    top: 120px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .art-search-container input {
+    width: 100%;
+  }
+}
+
 </style>
 
 <script>
@@ -1111,6 +1187,41 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
       }
     });
+
+
+    function searchArtService() {
+  const input = document.getElementById("artSearchInput").value.trim().toLowerCase();
+
+  const serviceMap = {
+    "3d wall art": "3d-wall-art",
+    "3d floor art": "3d-floor-art",
+    "mural art": "mural",
+    "metro advertisement": "metro-advertisement",
+    "outdoor advertisement": "outdoor-advertisement",
+    "school painting": "school-painting",
+    "selfie painting": "selfie-painting",
+    "madhubani painting": "madhubani-painting",
+    "texture painting": "texture-painting",
+    "pillere painting": "pillere-painting",
+    "scrap animal art": "scrap-animal-art",
+    "water tank": "nature-fountain",
+    "cartoon painting": "cartoon-painting",
+    "home painting": "home-painting"
+  };
+
+  if (serviceMap[input]) {
+    window.location.href = `/explore/${serviceMap[input]}/`;
+  } else {
+    alert("{% trans 'Service not found. Try selecting from the list.' %}");
+  }
+}
+
+/* ENTER key support */
+document.getElementById("artSearchInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    searchArtService();
+  }
+});
   </script>
   
 </body>
