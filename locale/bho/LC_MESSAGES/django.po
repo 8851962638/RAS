@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 23:53+0530\n"
+"POT-Creation-Date: 2026-01-30 00:56+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1247,7 +1247,7 @@ msgstr ""
 msgid "RColorcraft"
 msgstr ""
 
-#: .\home\templates\base1.html:709 .\home\templates\base1.html:959
+#: .\home\templates\base1.html:709 .\home\templates\base1.html:1035
 msgid "Home"
 msgstr ""
 
@@ -1259,11 +1259,11 @@ msgstr ""
 msgid "Artists"
 msgstr ""
 
-#: .\home\templates\base1.html:716 .\home\templates\base1.html:960
+#: .\home\templates\base1.html:716 .\home\templates\base1.html:1036
 msgid "Reviews & Feedback"
 msgstr ""
 
-#: .\home\templates\base1.html:717 .\home\templates\base1.html:961
+#: .\home\templates\base1.html:717 .\home\templates\base1.html:1037
 msgid "Shop"
 msgstr ""
 
@@ -1287,59 +1287,180 @@ msgstr ""
 msgid "My Assignments"
 msgstr ""
 
-#: .\home\templates\base1.html:836
+#: .\home\templates\base1.html:753
+msgid "Search art type…"
+msgstr ""
+
+#: .\home\templates\base1.html:912
 msgid "Bulk Orders Welcome!"
 msgstr ""
 
-#: .\home\templates\base1.html:837
+#: .\home\templates\base1.html:913
 msgid "We're here to help with your large orders"
 msgstr ""
 
-#: .\home\templates\base1.html:946
+#: .\home\templates\base1.html:1022
 msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
 "solutions."
 msgstr ""
 
-#: .\home\templates\base1.html:957
+#: .\home\templates\base1.html:1033
 msgid "Quick Links"
 msgstr ""
 
-#: .\home\templates\base1.html:962
+#: .\home\templates\base1.html:1038
 msgid "Contact Us"
 msgstr ""
 
-#: .\home\templates\base1.html:968
+#: .\home\templates\base1.html:1044
 msgid "Trending Services"
 msgstr ""
 
-#: .\home\templates\base1.html:970 .\home\templates\home.html:454
+#: .\home\templates\base1.html:1046 .\home\templates\home.html:454
 #: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr ""
 
-#: .\home\templates\base1.html:971 .\home\templates\home.html:526
+#: .\home\templates\base1.html:1047 .\home\templates\home.html:526
 #: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr ""
 
-#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+#: .\home\templates\base1.html:1048 .\home\templates\home.html:502
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr ""
 
-#: .\home\templates\base1.html:973 .\home\templates\home.html:869
+#: .\home\templates\base1.html:1049 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr ""
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "© 2025 RColorcraft. All Rights Reserved. | Made with"
 msgstr ""
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "in India"
 msgstr ""
+
+#: .\home\templates\base1.html:1215
+msgid "Service not found. Try selecting from the list."
+msgstr ""
+
+#: .\home\templates\book_service.html:477
+msgid "Booking"
+msgstr "बुकिंग"
+
+#: .\home\templates\book_service.html:487
+#, python-format
+msgid "Book %(service_name)s"
+msgstr ""
+
+#: .\home\templates\book_service.html:489
+msgid "Service"
+msgstr "सेवा"
+
+#: .\home\templates\book_service.html:494
+msgid "Contact Number"
+msgstr "संपर्क नंबर"
+
+#: .\home\templates\book_service.html:498
+msgid "Email"
+msgstr "ईमेल"
+
+#: .\home\templates\book_service.html:503
+msgid "Address"
+msgstr "पता"
+
+#: .\home\templates\book_service.html:508
+msgid "Pin Code"
+msgstr "पिन कोड"
+
+#: .\home\templates\book_service.html:512
+msgid "State"
+msgstr "राज्य"
+
+#: .\home\templates\book_service.html:516
+msgid "City"
+msgstr "शहर"
+
+#: .\home\templates\book_service.html:520
+msgid "Choose Your Design"
+msgstr "अपना डिजाइन चुनऽ"
+
+#: .\home\templates\book_service.html:521
+msgid "Select Design"
+msgstr "डिजाइन चुनऽ"
+
+#: .\home\templates\book_service.html:530
+msgid "Selected Design Name"
+msgstr "चुनल डिजाइन नाम"
+
+#: .\home\templates\book_service.html:534
+msgid "Design Price (₹)"
+msgstr "डिजाइन कीमत (₹)"
+
+#: .\home\templates\book_service.html:539
+msgid "Or Upload Your Own Design"
+msgstr "या अपना डिजाइन अपलोड करऽ"
+
+#: .\home\templates\book_service.html:543
+msgid "Total Walls"
+msgstr "कुल दीवार"
+
+#: .\home\templates\book_service.html:549
+msgid "Square Ft"
+msgstr "वर्ग फुट"
+
+#: .\home\templates\book_service.html:581
+msgid "Estimated Price:"
+msgstr "अनुमानित कीमत:"
+
+#: .\home\templates\book_service.html:583
+msgid "per sqft"
+msgstr "प्रति वर्ग फुट"
+
+#: .\home\templates\book_service.html:587
+msgid "Appointment Date"
+msgstr "नियुक्ति के तारीख"
+
+#: .\home\templates\book_service.html:592
+msgid "Book Now"
+msgstr "अभी बुक करऽ"
+
+#: .\home\templates\book_service.html:632
+msgid "🎉 Booking Confirmed!"
+msgstr ""
+
+#: .\home\templates\book_service.html:634
+#, python-format
+msgid ""
+"Your booking for <strong>%(service_name)s</strong> is successful.<br>\n"
+"          ✅ Our team will get in touch with you within 24 hrs."
+msgstr ""
+
+#: .\home\templates\book_service.html:637
+msgid "Go to Home"
+msgstr "घर जाऽ"
+
+#: .\home\templates\book_service.html:645
+#, python-format
+msgid "Select a Design for %(service_name)s"
+msgstr ""
+
+#: .\home\templates\book_service.html:653
+msgid "Price:"
+msgstr "कीमत:"
+
+#: .\home\templates\book_service.html:654
+msgid "Min Size:"
+msgstr "कम से कम आकार:"
+
+#: .\home\templates\book_service.html:654
+msgid "sqft"
+msgstr "वर्ग फुट"
 
 #: .\home\templates\edit_customers_profile.html:4
 #: .\home\templates\edit_customers_profile.html:232

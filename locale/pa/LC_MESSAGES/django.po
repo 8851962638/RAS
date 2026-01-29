@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 23:53+0530\n"
+"POT-Creation-Date: 2026-01-30 00:56+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "RColorcraft"
 msgstr "ਆਰਕਲਰਕ੍ਰਾਫਟ"
 
-#: .\home\templates\base1.html:709 .\home\templates\base1.html:959
+#: .\home\templates\base1.html:709 .\home\templates\base1.html:1035
 msgid "Home"
 msgstr "ਘਰ"
 
@@ -1266,11 +1266,11 @@ msgstr "ਬੁਕਿੰਗ"
 msgid "Artists"
 msgstr "ਕਲਾਕਾਰ"
 
-#: .\home\templates\base1.html:716 .\home\templates\base1.html:960
+#: .\home\templates\base1.html:716 .\home\templates\base1.html:1036
 msgid "Reviews & Feedback"
 msgstr "ਜਾਂਚ ਅਤੇ ਪ੍ਰਤੀਕਿਰਿਆ"
 
-#: .\home\templates\base1.html:717 .\home\templates\base1.html:961
+#: .\home\templates\base1.html:717 .\home\templates\base1.html:1037
 msgid "Shop"
 msgstr "ਦੁਕਾਨ"
 
@@ -1294,15 +1294,19 @@ msgstr "ਜਾਂਟਾ ਆਰਡਰ? 📦"
 msgid "My Assignments"
 msgstr "ਮਿਜ਼ਾਜੀਆਂ"
 
-#: .\home\templates\base1.html:836
+#: .\home\templates\base1.html:753
+msgid "Search art type…"
+msgstr ""
+
+#: .\home\templates\base1.html:912
 msgid "Bulk Orders Welcome!"
 msgstr "ਬਲਕ ਆਰਡਰ ਸਵਾਗਤ!"
 
-#: .\home\templates\base1.html:837
+#: .\home\templates\base1.html:913
 msgid "We're here to help with your large orders"
 msgstr "ਅਸੀਂ ਤੁਹਾਡੇ ਵੱਡੇ ਆਰਡਰ ਵਿੱਚ ਮਦਦ ਕਰਨ ਲਈ ਇੱਥੇ ਹਾਂ"
 
-#: .\home\templates\base1.html:946
+#: .\home\templates\base1.html:1022
 msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
@@ -1311,46 +1315,162 @@ msgstr ""
 "ਕਲਾਤਮਕ ਉਤਕਰਸ਼ਤਾ ਨਾਲ ਸਥਾਨਾਂ ਦਾ ਰੂਪਾਂਤਰਨ। ਅਸੀਂ 3D ਦੀਵਾਰ ਕਲਾ ਤੋਂ ਪੂਰੀ ਘਰ ਪੇਂਟਿੰਗ ਹੱਲ ਤੱਕ ਹਰ "
 "ਪ੍ਰਕਲਪ ਵਿੱਚ ਰਚਨਾਤਮਕਤਾ ਅਤੇ ਵੇਖਪਣ ਲਿਆਉਂਦੇ ਹਾਂ।"
 
-#: .\home\templates\base1.html:957
+#: .\home\templates\base1.html:1033
 msgid "Quick Links"
 msgstr "ਤਿਵਰ ਲਿੰਕ"
 
-#: .\home\templates\base1.html:962
+#: .\home\templates\base1.html:1038
 msgid "Contact Us"
 msgstr "ਸਾਨੂੰ ਸੰਪਰਕ ਕਰੋ"
 
-#: .\home\templates\base1.html:968
-#, fuzzy
-#| msgid "Our Services"
+#: .\home\templates\base1.html:1044
 msgid "Trending Services"
 msgstr "ਟ੍ਰੈਂਡਿੰਗ ਸੇਵਾਵਾਂ"
 
-#: .\home\templates\base1.html:970 .\home\templates\home.html:454
+#: .\home\templates\base1.html:1046 .\home\templates\home.html:454
 #: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr "3D ਦੀਵਾਰ ਕਲਾ"
 
-#: .\home\templates\base1.html:971 .\home\templates\home.html:526
+#: .\home\templates\base1.html:1047 .\home\templates\home.html:526
 #: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr "ਘਰ ਪੇਂਟਿੰਗ"
 
-#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+#: .\home\templates\base1.html:1048 .\home\templates\home.html:502
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr "ਮਿਊਰਲ ਕਲਾ"
 
-#: .\home\templates\base1.html:973 .\home\templates\home.html:869
+#: .\home\templates\base1.html:1049 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr "ਕਾਰਟੂਨ ਪੇਂਟਿੰਗ"
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "© 2025 RColorcraft. All Rights Reserved. | Made with"
 msgstr "© 2025 ਆਰਕਾਲਰਕਾਫ਼ਟ। ਸਾਰੇ ਅਧਿਕਾਰ ਸੁਰੱਖਿਆ ਪ੍ਰਾਪਤ। | ਬਣਾਇਆ ਗਿਆ"
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "in India"
 msgstr "ਭਾਰਤ ਵਿੱਚ"
+
+#: .\home\templates\base1.html:1215
+msgid "Service not found. Try selecting from the list."
+msgstr ""
+
+#: .\home\templates\book_service.html:477
+#, fuzzy
+#| msgid "Bookings"
+msgid "Booking"
+msgstr "ਬੁਕਿੰਗ"
+
+#: .\home\templates\book_service.html:487
+msgid "Book %(service_name)s"
+msgstr "ਇਸ ਸੇਵਾ ਨੂੰ ਬੁੱਕ ਕਰੋ"
+
+#: .\home\templates\book_service.html:489
+msgid "Service"
+msgstr "ਸੇਵਾ"
+
+#: .\home\templates\book_service.html:494
+msgid "Contact Number"
+msgstr "ਸੰਪਰਕ ਨੰਬਰ"
+
+#: .\home\templates\book_service.html:498
+msgid "Email"
+msgstr "ਈਮੇਲ"
+
+#: .\home\templates\book_service.html:503
+msgid "Address"
+msgstr "ਪਤਾ"
+
+#: .\home\templates\book_service.html:508
+msgid "Pin Code"
+msgstr "ਪਿਨ ਕੋਡ"
+
+#: .\home\templates\book_service.html:512
+msgid "State"
+msgstr "ਰਾਜ"
+
+#: .\home\templates\book_service.html:516
+msgid "City"
+msgstr "ਸ਼ਹਿਰ"
+
+#: .\home\templates\book_service.html:520
+msgid "Choose Your Design"
+msgstr "ਆਪਣਾ ਡਿਜ਼ਾਇਨ ਚੁਣੋ"
+
+#: .\home\templates\book_service.html:521
+msgid "Select Design"
+msgstr "ਡਿਜ਼ਾਇਨ ਚੁਣੋ"
+
+#: .\home\templates\book_service.html:530
+msgid "Selected Design Name"
+msgstr "ਚੁਣਿਆ ਗਿਆ ਡਿਜ਼ਾਇਨ ਨਾਮ"
+
+#: .\home\templates\book_service.html:534
+msgid "Design Price (₹)"
+msgstr "ਡਿਜ਼ਾਇਨ ਕੀਮਤ (₹)"
+
+#: .\home\templates\book_service.html:539
+msgid "Or Upload Your Own Design"
+msgstr "ਜਾਂ ਆਪਣਾ ਡਿਜ਼ਾਇਨ ਅਪਲੋਡ ਕਰੋ"
+
+#: .\home\templates\book_service.html:543
+msgid "Total Walls"
+msgstr "ਕੁਲ ਦੀਵਾਰਾਂ"
+
+#: .\home\templates\book_service.html:549
+msgid "Square Ft"
+msgstr "ਵਰਗ ਫੁੱਟ"
+
+#: .\home\templates\book_service.html:581
+msgid "Estimated Price:"
+msgstr "ਅਨੁਮਾਨਿਤ ਕੀਮਤ:"
+
+#: .\home\templates\book_service.html:583
+msgid "per sqft"
+msgstr "ਪ್ਰਤੀ ਵਰਗ ਫੁੱਟ"
+
+#: .\home\templates\book_service.html:587
+msgid "Appointment Date"
+msgstr "ਮੁਲਾਕਾਤ ਦੀ ਤਾਰੀਖ"
+
+#: .\home\templates\book_service.html:592
+msgid "Book Now"
+msgstr "ਹੁਣ ਬੁਕ ਕਰੋ"
+
+#: .\home\templates\book_service.html:632
+msgid "🎉 Booking Confirmed!"
+msgstr ""
+
+#: .\home\templates\book_service.html:634
+#, python-format
+msgid ""
+"Your booking for <strong>%(service_name)s</strong> is successful.<br>\n"
+"          ✅ Our team will get in touch with you within 24 hrs."
+msgstr ""
+
+#: .\home\templates\book_service.html:637
+msgid "Go to Home"
+msgstr "ਘਰ ਨੂੰ ਜਾਓ"
+
+#: .\home\templates\book_service.html:645
+#, python-format
+msgid "Select a Design for %(service_name)s"
+msgstr ""
+
+#: .\home\templates\book_service.html:653
+msgid "Price:"
+msgstr "ਕੀਮਤ:"
+
+#: .\home\templates\book_service.html:654
+msgid "Min Size:"
+msgstr "ਘੱਟੋ ਘੱਟ ਆਕਾਰ:"
+
+#: .\home\templates\book_service.html:654
+msgid "sqft"
+msgstr "ਵਰਗ ਫੁੱਟ"
 
 #: .\home\templates\edit_customers_profile.html:4
 #: .\home\templates\edit_customers_profile.html:232

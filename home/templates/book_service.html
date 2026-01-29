@@ -1,5 +1,6 @@
 {% extends "base1.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}Book {{ service_name }}{% endblock %}
 
@@ -473,7 +474,7 @@
 <div class="steps">
   <div class="step active" id="step1">
     <div class="circle">1</div>
-    Booking
+    {% trans "Booking" %}
   </div>
 </div>
 
@@ -483,41 +484,41 @@
         <div class="booking-container">
             <form class="booking-form" id="bookingForm" method="POST">
                 {% csrf_token %}
-                <h2>Book {{ service_name }}</h2>
+                <h2>{% blocktrans %}Book {{ service_name }}{% endblocktrans %}</h2>
 
-                <label>Service</label>
+                <label>{% trans "Service" %}</label>
                 <input type="text" name="service_name" value="{{ service_name }}" readonly>
 
                 <div class="contact-row">
                     <div class="contact-field">
-                        <label>Contact Number</label>
+                        <label>{% trans "Contact Number" %}</label>
                         <input type="text" name="contact_number" required>
                     </div>
                     <div class="contact-field">
-                        <label>Email</label>
+                        <label>{% trans "Email" %}</label>
                         <input type="email" name="email" required>
                     </div>
                 </div>
 
-                <label>Address</label>
+                <label>{% trans "Address" %}</label>
                 <textarea name="address" required></textarea>
 
                 <div class="address-row">
                     <div class="address-field">
-                        <label>Pin Code</label>
+                        <label>{% trans "Pin Code" %}</label>
                         <input type="text" name="pin_code" required>
                     </div>
                     <div class="address-field">
-                        <label>State</label>
+                        <label>{% trans "State" %}</label>
                         <input type="text" name="state" required>
                     </div>
                     <div class="address-field">
-                        <label>City</label>
+                        <label>{% trans "City" %}</label>
                         <input type="text" name="city" required>
                     </div>
                 </div>
-                <label>Choose Your Design</label>
-<button type="button" class="design-btn" onclick="openDesignPopup()">Select Design</button>
+                <label>{% trans "Choose Your Design" %}</label>
+<button type="button" class="design-btn" onclick="openDesignPopup()">{% trans "Select Design" %}</button>
 <small><button type="button" id="clearDesignBtn" onclick="clearDesignSelection()" style="display:none;">✖ Clear Design</button></small>
 
 <input type="hidden" name="selected_design_name" id="selected_design_name_input">
@@ -526,26 +527,26 @@
 
 <div id="selected-design-info" class="address-row" style="display: none; margin-top: 1rem;">
   <div class="address-field">
-      <label>Selected Design Name</label>
+      <label>{% trans "Selected Design Name" %}</label>
       <input type="text" id="design_name_display" readonly disabled>
   </div>
   <div class="address-field">
-      <label>Design Price (₹)</label>
+      <label>{% trans "Design Price (₹)" %}</label>
       <input type="text" id="design_price_display" readonly disabled>
   </div>
 </div>
 
-<label>Or Upload Your Own Design</label>
+<label>{% trans "Or Upload Your Own Design" %}</label>
 <input type="file" id="custom_design_input" name="custom_design" accept="image/*">
 
 
-                <label>Total Walls</label>
+                <label>{% trans "Total Walls" %}</label>
                 <input type="number" min="1" 
   step="1"  name="total_walls" required>
 
                 <div class="square-appointment-row">
                     <div class="square-ft">
-                        <label>Square Ft</label>
+                        <label>{% trans "Square Ft" %}</label>
                         <div class="square-ft-inputs">
                             <input 
   type="number" 
@@ -577,18 +578,18 @@
 
                 <!-- Price Display -->
                 <div class="price-display" id="price-display" style="display: none;">
-                    <div>Estimated Price:</div>
+                    <div>{% trans "Estimated Price:" %}</div>
                     <div class="price" id="calculated-price">₹0</div>
-                    <small>(₹50 per sqft)</small>
+                    <small>(₹50 {% trans "per sqft" %})</small>
                 </div>
 
                 <div class="appointment-date">
-                    <label>Appointment Date</label>
+                    <label>{% trans "Appointment Date" %}</label>
                     <input type="date" id="appointment_date" name="appointment_date" required>
                 </div>
                 <input type="hidden" name="total_amount" id="total_amount_input">
 
-                <button type="button" onclick="saveBooking()">Book Now</button>
+                <button type="button" onclick="saveBooking()">{% trans "Book Now" %}</button>
 
             </form>
         </div>
@@ -628,12 +629,12 @@
 
     <div class="slide" id="confirmation-slide">
   <div class="confirmation-box">
-      <h3>🎉 Booking Confirmed!</h3>
+      <h3>{% trans "🎉 Booking Confirmed!" %}</h3>
       <p>
-          Your booking for <strong>{{ service_name }}</strong> is successful.<br>
-          ✅ Our team will get in touch with you within 24 hrs.
+          {% blocktrans %}Your booking for <strong>{{ service_name }}</strong> is successful.<br>
+          ✅ Our team will get in touch with you within 24 hrs.{% endblocktrans %}
       </p>
-      <button onclick="goHome()">Go to Home</button>
+      <button onclick="goHome()">{% trans "Go to Home" %}</button>
   </div>
 </div>
 
@@ -641,7 +642,7 @@
 <div id="designPopup" class="design-popup">
   <div class="design-popup-content">
     <span class="close-btn" onclick="closeDesignPopup()">&times;</span>
-    <h3>Select a Design for {{ service_name }}</h3>
+    <h3>{% blocktrans %}Select a Design for {{ service_name }}{% endblocktrans %}</h3>
     <div class="design-gallery">
       {% for img in db_images %}
       <div class="design-card" onclick="selectDesign('{{ img.id }}','{{ img.image_name }}','{{ img.price }}')">
@@ -649,8 +650,8 @@
         
         <div class="design-card-details">
             <h4>{{ img.image_name }}</h4>
-            <p>Price: <strong class="price">₹{{ img.price }}</strong></p>
-            <p>Min Size: <strong>{{ img.min_size }} sqft</strong></p>
+            <p>{% trans "Price:" %} <strong class="price">₹{{ img.price }}</strong></p>
+            <p>{% trans "Min Size:" %} <strong>{{ img.min_size }} {% trans "sqft" %}</strong></p>
         </div>
               </div>
       {% endfor %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 23:53+0530\n"
+"POT-Creation-Date: 2026-01-30 00:56+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1247,7 +1247,7 @@ msgstr ""
 msgid "RColorcraft"
 msgstr ""
 
-#: .\home\templates\base1.html:709 .\home\templates\base1.html:959
+#: .\home\templates\base1.html:709 .\home\templates\base1.html:1035
 msgid "Home"
 msgstr "ઘર"
 
@@ -1259,11 +1259,11 @@ msgstr "બુકિંગ્સ"
 msgid "Artists"
 msgstr "કલાકારો"
 
-#: .\home\templates\base1.html:716 .\home\templates\base1.html:960
+#: .\home\templates\base1.html:716 .\home\templates\base1.html:1036
 msgid "Reviews & Feedback"
 msgstr "સમીક્ષાઓ અને પ્રતિક્રિયા"
 
-#: .\home\templates\base1.html:717 .\home\templates\base1.html:961
+#: .\home\templates\base1.html:717 .\home\templates\base1.html:1037
 msgid "Shop"
 msgstr ""
 
@@ -1287,15 +1287,19 @@ msgstr "મોટો ઓર્ડર? 📦"
 msgid "My Assignments"
 msgstr "મારી સોંપણીઓ"
 
-#: .\home\templates\base1.html:836
+#: .\home\templates\base1.html:753
+msgid "Search art type…"
+msgstr ""
+
+#: .\home\templates\base1.html:912
 msgid "Bulk Orders Welcome!"
 msgstr ""
 
-#: .\home\templates\base1.html:837
+#: .\home\templates\base1.html:913
 msgid "We're here to help with your large orders"
 msgstr ""
 
-#: .\home\templates\base1.html:946
+#: .\home\templates\base1.html:1022
 msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
@@ -1304,46 +1308,162 @@ msgstr ""
 "કલાત્મક શ્રેષ્ઠતા સાથે જગ્યાઓનું રૂપાંતરણ કરો। આપણે 3D દીવાલ કલા થી સંપૂર્ણ ઘર પેઇન્ટિંગ "
 "સમાધાન સુધી પ્રતિટી પ્રોજેક્ટમાં સર્જનશીલતા અને વ્યાવસાયિકતા લાવીએ છીએ।"
 
-#: .\home\templates\base1.html:957
+#: .\home\templates\base1.html:1033
 msgid "Quick Links"
 msgstr "ઝડપી લિંક્સ"
 
-#: .\home\templates\base1.html:962
+#: .\home\templates\base1.html:1038
 msgid "Contact Us"
 msgstr "અમારો સંપર્ક કરો"
 
-#: .\home\templates\base1.html:968
-#, fuzzy
-#| msgid "Our Services"
+#: .\home\templates\base1.html:1044
 msgid "Trending Services"
 msgstr "આપણી સેવાઓ"
 
-#: .\home\templates\base1.html:970 .\home\templates\home.html:454
+#: .\home\templates\base1.html:1046 .\home\templates\home.html:454
 #: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr "3D દીવાલ કલા"
 
-#: .\home\templates\base1.html:971 .\home\templates\home.html:526
+#: .\home\templates\base1.html:1047 .\home\templates\home.html:526
 #: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr "ઘર ચિત્રણ"
 
-#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+#: .\home\templates\base1.html:1048 .\home\templates\home.html:502
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr "મુરલ કલા"
 
-#: .\home\templates\base1.html:973 .\home\templates\home.html:869
+#: .\home\templates\base1.html:1049 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr "કાર્ટૂન ચિત્રણ"
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "© 2025 RColorcraft. All Rights Reserved. | Made with"
 msgstr "© 2025 RColorcraft। બધા અધિકારો આરક્ષિત છે। | બનાવેલું છે"
 
-#: .\home\templates\base1.html:1042
+#: .\home\templates\base1.html:1118
 msgid "in India"
 msgstr "ભારતમાં"
+
+#: .\home\templates\base1.html:1215
+msgid "Service not found. Try selecting from the list."
+msgstr ""
+
+#: .\home\templates\book_service.html:477
+#, fuzzy
+#| msgid "Bookings"
+msgid "Booking"
+msgstr "બુકિંગ્સ"
+
+#: .\home\templates\book_service.html:487
+msgid "Book %(service_name)s"
+msgstr "આ સેવા બુક કરો"
+
+#: .\home\templates\book_service.html:489
+msgid "Service"
+msgstr "સેવા"
+
+#: .\home\templates\book_service.html:494
+msgid "Contact Number"
+msgstr "સંપર્ક નંબર"
+
+#: .\home\templates\book_service.html:498
+msgid "Email"
+msgstr "ઈમેલ"
+
+#: .\home\templates\book_service.html:503
+msgid "Address"
+msgstr "ઠિકાણું"
+
+#: .\home\templates\book_service.html:508
+msgid "Pin Code"
+msgstr "પિન કોડ"
+
+#: .\home\templates\book_service.html:512
+msgid "State"
+msgstr "રાજ્ય"
+
+#: .\home\templates\book_service.html:516
+msgid "City"
+msgstr "શહેર"
+
+#: .\home\templates\book_service.html:520
+msgid "Choose Your Design"
+msgstr "તમારો ડિઝાઈન પસંદ કરો"
+
+#: .\home\templates\book_service.html:521
+msgid "Select Design"
+msgstr "ડિઝાઈન પસંદ કરો"
+
+#: .\home\templates\book_service.html:530
+msgid "Selected Design Name"
+msgstr "પસંદ કરેલ ડિઝાઈન નામ"
+
+#: .\home\templates\book_service.html:534
+msgid "Design Price (₹)"
+msgstr "ડિઝાઈન કિંમત (₹)"
+
+#: .\home\templates\book_service.html:539
+msgid "Or Upload Your Own Design"
+msgstr "અથવા તમારો પોતાનો ડિઝાઈન અપલોડ કરો"
+
+#: .\home\templates\book_service.html:543
+msgid "Total Walls"
+msgstr "કુલ દીવાલો"
+
+#: .\home\templates\book_service.html:549
+msgid "Square Ft"
+msgstr "ચોરસ ફુટ"
+
+#: .\home\templates\book_service.html:581
+msgid "Estimated Price:"
+msgstr "અંદાજિત કિંમત:"
+
+#: .\home\templates\book_service.html:583
+msgid "per sqft"
+msgstr "પ્રતિ ચોરસ ફુટ"
+
+#: .\home\templates\book_service.html:587
+msgid "Appointment Date"
+msgstr "નિયુક્તી તારીખ"
+
+#: .\home\templates\book_service.html:592
+msgid "Book Now"
+msgstr "હવે બુક કરો"
+
+#: .\home\templates\book_service.html:632
+msgid "🎉 Booking Confirmed!"
+msgstr ""
+
+#: .\home\templates\book_service.html:634
+#, python-format
+msgid ""
+"Your booking for <strong>%(service_name)s</strong> is successful.<br>\n"
+"          ✅ Our team will get in touch with you within 24 hrs."
+msgstr ""
+
+#: .\home\templates\book_service.html:637
+msgid "Go to Home"
+msgstr "હોમ પર જાઓ"
+
+#: .\home\templates\book_service.html:645
+#, python-format
+msgid "Select a Design for %(service_name)s"
+msgstr ""
+
+#: .\home\templates\book_service.html:653
+msgid "Price:"
+msgstr "કિંમત:"
+
+#: .\home\templates\book_service.html:654
+msgid "Min Size:"
+msgstr "ન્યૂનતમ કદ:"
+
+#: .\home\templates\book_service.html:654
+msgid "sqft"
+msgstr "ચોરસ ફુટ"
 
 #: .\home\templates\edit_customers_profile.html:4
 #: .\home\templates\edit_customers_profile.html:232
@@ -1659,6 +1779,3 @@ msgstr "કોઈ ફાઈલ પસંદ કરી નથી"
 #| msgid "Customer Reviews"
 msgid "Submit Review"
 msgstr "સમીક્ષા સબમિટ કરો"
-
-#~ msgid "Statue"
-#~ msgstr "મૂર્તિ"
