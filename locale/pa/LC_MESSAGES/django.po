@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 00:29+0530\n"
+"POT-Creation-Date: 2026-01-18 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,8 +88,8 @@ msgid ""
 "professionalism to every project, from 3D wall art to complete home painting "
 "solutions."
 msgstr ""
-"ਕਲਾਤਮਕ ਉਤਕਰਸ਼ਤਾ ਨਾਲ ਸਥਾਨਾਂ ਦਾ ਰੂਪਾਂਤਰਨ। ਅਸੀਂ 3D ਦੀਵਾਰ ਕਲਾ ਤੋਂ ਪੂਰੀ ਘਰ ਪੇਂਟਿੰਗ "
-"ਹੱਲ ਤੱਕ ਹਰ ਪ੍ਰਕਲਪ ਵਿੱਚ ਰਚਨਾਤਮਕਤਾ ਅਤੇ ਵੇਖਪਣ ਲਿਆਉਂਦੇ ਹਾਂ।"
+"ਕਲਾਤਮਕ ਉਤਕਰਸ਼ਤਾ ਨਾਲ ਸਥਾਨਾਂ ਦਾ ਰੂਪਾਂਤਰਨ। ਅਸੀਂ 3D ਦੀਵਾਰ ਕਲਾ ਤੋਂ ਪੂਰੀ ਘਰ ਪੇਂਟਿੰਗ ਹੱਲ ਤੱਕ ਹਰ "
+"ਪ੍ਰਕਲਪ ਵਿੱਚ ਰਚਨਾਤਮਕਤਾ ਅਤੇ ਵੇਖਪਣ ਲਿਆਉਂਦੇ ਹਾਂ।"
 
 #: .\home\templates\base1.html:957
 msgid "Quick Links"
@@ -115,8 +115,8 @@ msgstr "3D ਦੀਵਾਰ ਕਲਾ"
 msgid "Home Painting"
 msgstr "ਘਰ ਪੇਂਟਿੰਗ"
 
-#: .\home\templates\base1.html:972 .\home\templates\home.html:594
-#: .\home\templates\home.html:723
+#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+#: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr "ਮਿਊਰਲ ਕਲਾ"
 
@@ -131,6 +131,18 @@ msgstr "© 2025 ਆਰਕਾਲਰਕਾਫ਼ਟ। ਸਾਰੇ ਅਧਿਕ�
 #: .\home\templates\base1.html:1042
 msgid "in India"
 msgstr "ਭਾਰਤ ਵਿੱਚ"
+
+#: .\home\templates\book_service.html:487
+#, fuzzy
+#| msgid "Bookings"
+msgid "Book"
+msgstr "ਬੁਕਿੰਗ"
+
+#: .\home\templates\book_service.html:489
+#, fuzzy
+#| msgid "Our Services"
+msgid "Service"
+msgstr "ਸਾਡੀਆਂ ਸੇਵਾਵਾਂ"
 
 #: .\home\templates\home.html:5
 msgid "Home - RColourcraft"
@@ -173,10 +185,6 @@ msgstr "ਮੈਟਰੋ ਜਾਹਰ ਕਰਨਾ"
 #: .\home\templates\home.html:486 .\home\templates\home.html:759
 msgid "School Painting"
 msgstr "ਸਕੂਲ ਪੇਂਟਿੰਗ"
-
-#: .\home\templates\home.html:502
-msgid "Statue"
-msgstr "ਮੂਰਤਿ"
 
 #: .\home\templates\home.html:518 .\home\templates\home.html:857
 msgid "Water Tank"
@@ -425,3 +433,6 @@ msgstr "ਕੋਈ ਛ੉ਙੀ ਉਏਈ ਨੀਁਂ"
 #| msgid "Customer Reviews"
 msgid "Submit Review"
 msgstr "ਗ੍ਰਾਹਕ ਸਮਾਲੋਚਨਾਅ"
+
+#~ msgid "Statue"
+#~ msgstr "ਮੂਰਤਿ"
