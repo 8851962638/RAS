@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-01-30 00:56+0530\n"
+=======
+"POT-Creation-Date: 2026-01-18 11:26+0530\n"
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +33,7 @@ msgstr ""
 msgid "Login to continue exploring amazing artists"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\env\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
 msgstr ""
@@ -1243,11 +1248,17 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
+=======
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\base1.html:8
 msgid "RColorcraft"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:709 .\home\templates\base1.html:1035
+=======
+#: .\home\templates\base1.html:709 .\home\templates\base1.html:959
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid "Home"
 msgstr ""
 
@@ -1259,11 +1270,19 @@ msgstr ""
 msgid "Artists"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:716 .\home\templates\base1.html:1036
 msgid "Reviews & Feedback"
 msgstr ""
 
 #: .\home\templates\base1.html:717 .\home\templates\base1.html:1037
+=======
+#: .\home\templates\base1.html:716 .\home\templates\base1.html:960
+msgid "Reviews & Feedback"
+msgstr ""
+
+#: .\home\templates\base1.html:717 .\home\templates\base1.html:961
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid "Shop"
 msgstr ""
 
@@ -1287,6 +1306,7 @@ msgstr ""
 msgid "My Assignments"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:753
 msgid "Search art type…"
 msgstr ""
@@ -1300,12 +1320,24 @@ msgid "We're here to help with your large orders"
 msgstr ""
 
 #: .\home\templates\base1.html:1022
+=======
+#: .\home\templates\base1.html:836
+msgid "Bulk Orders Welcome!"
+msgstr ""
+
+#: .\home\templates\base1.html:837
+msgid "We're here to help with your large orders"
+msgstr ""
+
+#: .\home\templates\base1.html:946
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
 "solutions."
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1033
 msgid "Quick Links"
 msgstr ""
@@ -1319,20 +1351,44 @@ msgid "Trending Services"
 msgstr ""
 
 #: .\home\templates\base1.html:1046 .\home\templates\home.html:454
+=======
+#: .\home\templates\base1.html:957
+msgid "Quick Links"
+msgstr ""
+
+#: .\home\templates\base1.html:962
+msgid "Contact Us"
+msgstr ""
+
+#: .\home\templates\base1.html:968
+msgid "Trending Services"
+msgstr ""
+
+#: .\home\templates\base1.html:970 .\home\templates\home.html:454
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1047 .\home\templates\home.html:526
+=======
+#: .\home\templates\base1.html:971 .\home\templates\home.html:526
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1048 .\home\templates\home.html:502
+=======
+#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr ""
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1049 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr ""
@@ -1356,10 +1412,27 @@ msgstr "बुकिंग"
 #: .\home\templates\book_service.html:487
 #, python-format
 msgid "Book %(service_name)s"
+=======
+#: .\home\templates\base1.html:973 .\home\templates\home.html:869
+msgid "Cartoon Painting"
+msgstr ""
+
+#: .\home\templates\base1.html:1042
+msgid "© 2025 RColorcraft. All Rights Reserved. | Made with"
+msgstr ""
+
+#: .\home\templates\base1.html:1042
+msgid "in India"
+msgstr ""
+
+#: .\home\templates\book_service.html:487
+msgid "Book"
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgstr ""
 
 #: .\home\templates\book_service.html:489
 msgid "Service"
+<<<<<<< HEAD
 msgstr "सेवा"
 
 #: .\home\templates\book_service.html:494
@@ -1485,6 +1558,8 @@ msgstr ""
 
 #: .\home\templates\edit_customers_profile.html:258
 msgid "Save Profile"
+=======
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgstr ""
 
 #: .\home\templates\home.html:5

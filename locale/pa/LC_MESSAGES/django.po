@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-01-30 00:56+0530\n"
+=======
+"POT-Creation-Date: 2026-01-18 11:26+0530\n"
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1337,7 +1341,11 @@ msgstr "3D ਦੀਵਾਰ ਕਲਾ"
 msgid "Home Painting"
 msgstr "ਘਰ ਪੇਂਟਿੰਗ"
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1048 .\home\templates\home.html:502
+=======
+#: .\home\templates\base1.html:972 .\home\templates\home.html:502
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr "ਮਿਊਰਲ ਕਲਾ"
@@ -1354,6 +1362,7 @@ msgstr "© 2025 ਆਰਕਾਲਰਕਾਫ਼ਟ। ਸਾਰੇ ਅਧਿਕ�
 msgid "in India"
 msgstr "ਭਾਰਤ ਵਿੱਚ"
 
+<<<<<<< HEAD
 #: .\home\templates\base1.html:1215
 msgid "Service not found. Try selecting from the list."
 msgstr ""
@@ -1496,6 +1505,19 @@ msgstr "ਨਵਾਂ ਅਪਲੋਡ ਕਰੋ"
 #: .\home\templates\edit_customers_profile.html:258
 msgid "Save Profile"
 msgstr "ਪ੍ਰੋਫਾਈਲ ਬਚਾਓ"
+=======
+#: .\home\templates\book_service.html:487
+#, fuzzy
+#| msgid "Bookings"
+msgid "Book"
+msgstr "ਬੁਕਿੰਗ"
+
+#: .\home\templates\book_service.html:489
+#, fuzzy
+#| msgid "Our Services"
+msgid "Service"
+msgstr "ਸਾਡੀਆਂ ਸੇਵਾਵਾਂ"
+>>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 
 #: .\home\templates\home.html:5
 msgid "Home - RColourcraft"
@@ -1786,3 +1808,6 @@ msgstr "ਕੋਈ ਛ੉ਙੀ ਉਏਈ ਨੀਁਂ"
 #| msgid "Customer Reviews"
 msgid "Submit Review"
 msgstr "ਗ੍ਰਾਹਕ ਸਮਾਲੋਚਨਾਅ"
+
+#~ msgid "Statue"
+#~ msgstr "ਮੂਰਤਿ"
