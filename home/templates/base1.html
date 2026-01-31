@@ -749,23 +749,30 @@
         visibility: hidden !important;
       }
 
-      /* Hide Google Translate top notification bar - AGGRESSIVE */
+      /* Reposition Google Translate top notification bar to bottom */
       .goog-te-top-frame {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        top: auto !important;
+        right: auto !important;
+        z-index: 500 !important;
+        width: 100% !important;
+        height: auto !important;
         margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
-        position: absolute !important;
-        overflow: hidden !important;
+        padding: 8px !important;
+        border-top: 1px solid #ddd !important;
+        background-color: #f8f9fa !important;
+        visibility: visible !important;
+        display: block !important;
+        overflow: visible !important;
       }
 
       /* Ensure body stays at top */
       body {
         top: 0 !important;
         margin-top: 0 !important;
-        padding-top: 0 !important;
+        padding-bottom: 60px !important;
       }
 
       html {
@@ -1375,18 +1382,17 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
       }, 'google_translate_element');
       console.log('Google Translate initialized');
       
-      // Hide Google Translate notification bar
+      // Reposition Google Translate notification bar to bottom
       setTimeout(function() {
         const topFrame = document.querySelector('.goog-te-top-frame');
         if (topFrame) {
-          topFrame.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
-          topFrame.setAttribute('style', 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;');
+          topFrame.style.cssText = 'position: fixed !important; bottom: 0 !important; left: 0 !important; top: auto !important; right: auto !important; z-index: 500 !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 8px !important;';
         }
-        // Also reset body position
         document.body.style.top = '0 !important';
         document.body.style.marginTop = '0 !important';
+        document.body.style.paddingBottom = '60px !important';
         document.documentElement.style.top = '0 !important';
-        console.log('Hiding Google Translate top bar');
+        console.log('Repositioned Google Translate bar to bottom');
       }, 100);
     }
   </script>
@@ -1593,17 +1599,17 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
       }, 2000);
     });
 
-    // Observer to continuously hide Google Translate top bar
+    // Observer to reposition Google Translate top bar to bottom
     const observerConfig = { childList: true, subtree: true, attributes: true };
     const observer = new MutationObserver(function() {
       const topFrame = document.querySelector('.goog-te-top-frame');
       if (topFrame) {
-        topFrame.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
-        topFrame.setAttribute('style', 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;');
+        topFrame.style.cssText = 'position: fixed !important; bottom: 0 !important; left: 0 !important; top: auto !important; right: auto !important; z-index: 500 !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 8px !important;';
       }
-      // Ensure body stays at top
+      // Ensure body stays at top and has bottom padding
       document.body.style.top = '0 !important';
       document.body.style.marginTop = '0 !important';
+      document.body.style.paddingBottom = '60px !important';
       document.documentElement.style.top = '0 !important';
     });
     observer.observe(document.documentElement, observerConfig);
