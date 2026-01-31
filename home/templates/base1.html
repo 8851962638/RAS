@@ -725,12 +725,19 @@ body.gt-active header {
         cursor: pointer;
       }
 
-      /* Prevent layout shift and make space for Google Translate bar */
+      /* Allow space for Google Translate bar when it appears */
       body {
-        margin-top: 50px;
+        margin: 0 !important;
+        padding: 0 !important;
+        transition: margin-top 0.3s ease;
       }
 
       html {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      header {
         margin-top: 0 !important;
       }
     </style>
@@ -1288,26 +1295,29 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
         includedLanguages: 'hi,mr,pa,bn,gu,en',
         autoDisplay: false
       }, 'google_translate_element');
-    }
-
-    /* Adjust margin based on Google Translate bar visibility */
-    function adjustBodyMargin() {
-      const googleBar = document.querySelector('.goog-te-banner-frame');
       
-      if (googleBar && googleBar.offsetHeight > 0) {
-        // Bar is visible - keep the margin
-        document.body.style.marginTop = '50px';
-      } else {
-        // Bar is hidden/closed - remove the margin
-        document.body.style.marginTop = '0px';
-      }
+      // Monitor for Google Translate bar and adjust spacing
+      monitorGoogleTranslateBar();
     }
-
-    // Check on load and then periodically
-    window.addEventListener('load', adjustBodyMargin);
     
-    // Check every 500ms for visibility changes
-    setInterval(adjustBodyMargin, 500);
+    function monitorGoogleTranslateBar() {
+      // Ensure body starts with 0 margin using !important
+      document.body.style.setProperty('margin-top', '0px', 'important');
+      
+      // Check every 300ms if the bar exists and adjust body margin
+      const checkBar = setInterval(() => {
+        const bar = document.querySelector('.goog-te-banner-frame');
+        
+        // Check if bar exists AND is visible (not just in DOM)
+        if (bar && bar.offsetParent !== null && bar.offsetHeight > 0 && window.getComputedStyle(bar).display !== 'none') {
+          const barHeight = bar.offsetHeight + 5; // Add 5px extra for spacing
+          document.body.style.setProperty('margin-top', barHeight + 'px', 'important');
+        } else {
+          // Always remove margin when bar is not visible
+          document.body.style.setProperty('margin-top', '0px', 'important');
+        }
+      }, 300);
+    }
   </script>
 
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
