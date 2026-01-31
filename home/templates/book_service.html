@@ -484,11 +484,8 @@
         <div class="booking-container">
             <form class="booking-form" id="bookingForm" method="POST">
                 {% csrf_token %}
-<<<<<<< HEAD
                 <h2>{% blocktrans %}Book {{ service_name }}{% endblocktrans %}</h2>
-=======
-                <h2>{% trans "Book" %} {{ service_name }}</h2>
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
+                <!-- <h2>{% trans "Book" %} {{ service_name }}</h2> -->
 
                 <label>{% trans "Service" %}</label>
                 <input type="text" name="service_name" value="{{ service_name }}" readonly>

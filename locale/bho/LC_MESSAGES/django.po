@@ -3,23 +3,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2026-01-30 00:56+0530\n"
-=======
-"POT-Creation-Date: 2026-01-18 11:26+0530\n"
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
+"POT-Creation-Date: 2026-01-31 16:02+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: bho\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: .\accounts\templates\accounts\login.html:4
 msgid "Login - Painting"
@@ -33,7 +30,6 @@ msgstr ""
 msgid "Login to continue exploring amazing artists"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\env\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
 msgstr ""
@@ -1248,17 +1244,11 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-=======
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\base1.html:8
 msgid "RColorcraft"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:709 .\home\templates\base1.html:1035
-=======
-#: .\home\templates\base1.html:709 .\home\templates\base1.html:959
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid "Home"
 msgstr ""
 
@@ -1270,19 +1260,11 @@ msgstr ""
 msgid "Artists"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:716 .\home\templates\base1.html:1036
 msgid "Reviews & Feedback"
 msgstr ""
 
 #: .\home\templates\base1.html:717 .\home\templates\base1.html:1037
-=======
-#: .\home\templates\base1.html:716 .\home\templates\base1.html:960
-msgid "Reviews & Feedback"
-msgstr ""
-
-#: .\home\templates\base1.html:717 .\home\templates\base1.html:961
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid "Shop"
 msgstr ""
 
@@ -1306,7 +1288,6 @@ msgstr ""
 msgid "My Assignments"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:753
 msgid "Search art type…"
 msgstr ""
@@ -1320,24 +1301,12 @@ msgid "We're here to help with your large orders"
 msgstr ""
 
 #: .\home\templates\base1.html:1022
-=======
-#: .\home\templates\base1.html:836
-msgid "Bulk Orders Welcome!"
-msgstr ""
-
-#: .\home\templates\base1.html:837
-msgid "We're here to help with your large orders"
-msgstr ""
-
-#: .\home\templates\base1.html:946
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgid ""
 "Transforming spaces with artistic excellence. We bring creativity and "
 "professionalism to every project, from 3D wall art to complete home painting "
 "solutions."
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:1033
 msgid "Quick Links"
 msgstr ""
@@ -1351,44 +1320,20 @@ msgid "Trending Services"
 msgstr ""
 
 #: .\home\templates\base1.html:1046 .\home\templates\home.html:454
-=======
-#: .\home\templates\base1.html:957
-msgid "Quick Links"
-msgstr ""
-
-#: .\home\templates\base1.html:962
-msgid "Contact Us"
-msgstr ""
-
-#: .\home\templates\base1.html:968
-msgid "Trending Services"
-msgstr ""
-
-#: .\home\templates\base1.html:970 .\home\templates\home.html:454
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:699
 msgid "3D Wall Art"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:1047 .\home\templates\home.html:526
-=======
-#: .\home\templates\base1.html:971 .\home\templates\home.html:526
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:881
 msgid "Home Painting"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:1048 .\home\templates\home.html:502
-=======
-#: .\home\templates\base1.html:972 .\home\templates\home.html:502
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 #: .\home\templates\home.html:594 .\home\templates\home.html:723
 msgid "Mural Art"
 msgstr ""
 
-<<<<<<< HEAD
 #: .\home\templates\base1.html:1049 .\home\templates\home.html:869
 msgid "Cartoon Painting"
 msgstr ""
@@ -1407,133 +1352,281 @@ msgstr ""
 
 #: .\home\templates\book_service.html:477
 msgid "Booking"
-msgstr "बुकिंग"
+msgstr ""
 
 #: .\home\templates\book_service.html:487
 #, python-format
 msgid "Book %(service_name)s"
-=======
-#: .\home\templates\base1.html:973 .\home\templates\home.html:869
-msgid "Cartoon Painting"
 msgstr ""
 
-#: .\home\templates\base1.html:1042
-msgid "© 2025 RColorcraft. All Rights Reserved. | Made with"
-msgstr ""
-
-#: .\home\templates\base1.html:1042
-msgid "in India"
-msgstr ""
-
-#: .\home\templates\book_service.html:487
+#: .\home\templates\book_service.html:488
 msgid "Book"
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgstr ""
 
-#: .\home\templates\book_service.html:489
+#: .\home\templates\book_service.html:490
 msgid "Service"
-<<<<<<< HEAD
-msgstr "सेवा"
+msgstr ""
 
-#: .\home\templates\book_service.html:494
+#: .\home\templates\book_service.html:495
 msgid "Contact Number"
-msgstr "संपर्क नंबर"
+msgstr ""
 
-#: .\home\templates\book_service.html:498
+#: .\home\templates\book_service.html:499
 msgid "Email"
-msgstr "ईमेल"
+msgstr ""
 
-#: .\home\templates\book_service.html:503
+#: .\home\templates\book_service.html:504
 msgid "Address"
-msgstr "पता"
+msgstr ""
 
-#: .\home\templates\book_service.html:508
+#: .\home\templates\book_service.html:509
 msgid "Pin Code"
-msgstr "पिन कोड"
+msgstr ""
 
-#: .\home\templates\book_service.html:512
+#: .\home\templates\book_service.html:513
 msgid "State"
-msgstr "राज्य"
+msgstr ""
 
-#: .\home\templates\book_service.html:516
+#: .\home\templates\book_service.html:517
 msgid "City"
-msgstr "शहर"
-
-#: .\home\templates\book_service.html:520
-msgid "Choose Your Design"
-msgstr "अपना डिजाइन चुनऽ"
+msgstr ""
 
 #: .\home\templates\book_service.html:521
+msgid "Choose Your Design"
+msgstr ""
+
+#: .\home\templates\book_service.html:522
 msgid "Select Design"
-msgstr "डिजाइन चुनऽ"
+msgstr ""
 
-#: .\home\templates\book_service.html:530
+#: .\home\templates\book_service.html:531
 msgid "Selected Design Name"
-msgstr "चुनल डिजाइन नाम"
+msgstr ""
 
-#: .\home\templates\book_service.html:534
+#: .\home\templates\book_service.html:535
 msgid "Design Price (₹)"
-msgstr "डिजाइन कीमत (₹)"
+msgstr ""
 
-#: .\home\templates\book_service.html:539
+#: .\home\templates\book_service.html:540
 msgid "Or Upload Your Own Design"
-msgstr "या अपना डिजाइन अपलोड करऽ"
+msgstr ""
 
-#: .\home\templates\book_service.html:543
+#: .\home\templates\book_service.html:544
 msgid "Total Walls"
-msgstr "कुल दीवार"
+msgstr ""
 
-#: .\home\templates\book_service.html:549
+#: .\home\templates\book_service.html:550
 msgid "Square Ft"
-msgstr "वर्ग फुट"
+msgstr ""
 
-#: .\home\templates\book_service.html:581
+#: .\home\templates\book_service.html:582
 msgid "Estimated Price:"
-msgstr "अनुमानित कीमत:"
+msgstr ""
 
-#: .\home\templates\book_service.html:583
+#: .\home\templates\book_service.html:584
 msgid "per sqft"
-msgstr "प्रति वर्ग फुट"
+msgstr ""
 
-#: .\home\templates\book_service.html:587
+#: .\home\templates\book_service.html:588
 msgid "Appointment Date"
-msgstr "नियुक्ति के तारीख"
+msgstr ""
 
-#: .\home\templates\book_service.html:592
+#: .\home\templates\book_service.html:593
 msgid "Book Now"
-msgstr "अभी बुक करऽ"
+msgstr ""
 
-#: .\home\templates\book_service.html:632
+#: .\home\templates\book_service.html:633
 msgid "🎉 Booking Confirmed!"
 msgstr ""
 
-#: .\home\templates\book_service.html:634
+#: .\home\templates\book_service.html:635
 #, python-format
 msgid ""
 "Your booking for <strong>%(service_name)s</strong> is successful.<br>\n"
 "          ✅ Our team will get in touch with you within 24 hrs."
 msgstr ""
 
-#: .\home\templates\book_service.html:637
+#: .\home\templates\book_service.html:638
 msgid "Go to Home"
-msgstr "घर जाऽ"
+msgstr ""
 
-#: .\home\templates\book_service.html:645
+#: .\home\templates\book_service.html:646
 #, python-format
 msgid "Select a Design for %(service_name)s"
 msgstr ""
 
-#: .\home\templates\book_service.html:653
+#: .\home\templates\book_service.html:654
 msgid "Price:"
-msgstr "कीमत:"
+msgstr ""
 
-#: .\home\templates\book_service.html:654
+#: .\home\templates\book_service.html:655
 msgid "Min Size:"
-msgstr "कम से कम आकार:"
+msgstr ""
 
-#: .\home\templates\book_service.html:654
+#: .\home\templates\book_service.html:655
 msgid "sqft"
-msgstr "वर्ग फुट"
+msgstr ""
+
+#: .\home\templates\contact_us.html:426
+msgid "Get in Touch"
+msgstr ""
+
+#: .\home\templates\contact_us.html:427
+msgid ""
+"Want to get in touch? We'd love to hear from you. Here's how you can reach "
+"us."
+msgstr ""
+
+#: .\home\templates\contact_us.html:440
+msgid "Email Us"
+msgstr ""
+
+#: .\home\templates\contact_us.html:441
+msgid "Send us an email and we'll get back to you within 24 hours"
+msgstr ""
+
+#: .\home\templates\contact_us.html:455
+msgid "Call Us"
+msgstr ""
+
+#: .\home\templates\contact_us.html:456
+msgid "Available Mon-Sat, 9 AM to 6 PM IST"
+msgstr ""
+
+#: .\home\templates\contact_us.html:469
+msgid "Customer Support"
+msgstr ""
+
+#: .\home\templates\contact_us.html:470
+msgid "Get help with your orders and inquiries"
+msgstr ""
+
+#: .\home\templates\contact_us.html:472
+msgid "Contact Support"
+msgstr ""
+
+#: .\home\templates\contact_us.html:487
+msgid "Visit Our Studio"
+msgstr ""
+
+#: .\home\templates\contact_us.html:490
+msgid "RColourcraft Studio"
+msgstr ""
+
+#: .\home\templates\contact_us.html:491
+msgid "Plot No. 2, Ground Floor, Sanjay Gram"
+msgstr ""
+
+#: .\home\templates\contact_us.html:492
+msgid "New Mata Road, Rajiv Nagar"
+msgstr ""
+
+#: .\home\templates\contact_us.html:493
+msgid "Near Chaudhary Tent House"
+msgstr ""
+
+#: .\home\templates\contact_us.html:494
+msgid "Gurgaon, Haryana - 122001"
+msgstr ""
+
+#: .\home\templates\contact_us.html:495
+msgid "India"
+msgstr ""
+
+#: .\home\templates\contact_us.html:497
+msgid "Business Hours:"
+msgstr ""
+
+#: .\home\templates\contact_us.html:498
+msgid "Monday - Saturday: 9:00 AM - 6:00 PM"
+msgstr ""
+
+#: .\home\templates\contact_us.html:499
+msgid "Sunday: Closed"
+msgstr ""
+
+#: .\home\templates\contact_us.html:519
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: .\home\templates\contact_us.html:520
+msgid "Find answers to common questions about our services"
+msgstr ""
+
+#: .\home\templates\contact_us.html:525
+msgid "What services do you offer?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:533
+msgid ""
+"We offer a wide range of artistic services including custom paintings, "
+"murals, digital art, portraits, and art workshops. We also provide bulk "
+"orders for corporate and event needs with special pricing."
+msgstr ""
+
+#: .\home\templates\contact_us.html:539
+msgid "How long does it take to complete a project?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:547
+msgid ""
+"Project timelines vary depending on the complexity and size. Typically, "
+"custom paintings take 2-4 weeks, murals 1-2 weeks, and portraits 1-3 weeks. "
+"We'll provide a detailed timeline during consultation."
+msgstr ""
+
+#: .\home\templates\contact_us.html:553
+msgid "Do you offer bulk discounts?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:561
+msgid ""
+"Yes! We offer special pricing for bulk orders. Whether you need multiple "
+"pieces for an event, corporate gifting, or large-scale projects, contact us "
+"for a custom quote."
+msgstr ""
+
+#: .\home\templates\contact_us.html:567
+msgid "What payment methods do you accept?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:575
+msgid ""
+"We accept various payment methods including credit/debit cards, UPI, net "
+"banking, and digital wallets. For large orders, we also offer flexible "
+"payment plans."
+msgstr ""
+
+#: .\home\templates\contact_us.html:581
+msgid "Can I visit your studio?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:589
+msgid ""
+"Absolutely! We welcome studio visits. Please schedule an appointment in "
+"advance so we can give you our full attention and show you our portfolio and "
+"ongoing projects."
+msgstr ""
+
+#: .\home\templates\contact_us.html:595
+msgid "Do you ship artwork internationally?"
+msgstr ""
+
+#: .\home\templates\contact_us.html:603
+msgid ""
+"Yes, we ship worldwide! We use professional art packaging and reliable "
+"shipping partners to ensure your artwork arrives safely. Shipping costs vary "
+"based on destination and artwork size."
+msgstr ""
+
+#: .\home\templates\contact_us.html:611
+msgid "Connect With Us"
+msgstr ""
+
+#: .\home\templates\contact_us.html:612
+msgid ""
+"Follow us on social media to stay updated with our latest work and offers"
+msgstr ""
 
 #: .\home\templates\edit_customers_profile.html:4
 #: .\home\templates\edit_customers_profile.html:232
@@ -1558,8 +1651,6 @@ msgstr ""
 
 #: .\home\templates\edit_customers_profile.html:258
 msgid "Save Profile"
-=======
->>>>>>> 9408f58a187c48244f1d85799eb9f3dbcc8ca055
 msgstr ""
 
 #: .\home\templates\home.html:5
