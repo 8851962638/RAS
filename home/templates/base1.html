@@ -686,28 +686,13 @@
 
     </style>
 
-    <!-- ========== GOOGLE TRANSLATE CSS (CLEAN) ========== -->
     <style>
-      /* Kill Google Translate top bar completely */
-      .goog-te-banner-frame,
-      .goog-te-gadget span,
+      /* Google Translate cleanup - style the select dropdown only */
       .goog-logo-link,
-      .goog-tooltip {
+      .goog-te-gadget span {
         display: none !important;
       }
 
-      /* Stop Google Translate from pushing page down */
-      body {
-        top: 0 !important;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-      }
-
-      html {
-        margin-top: 0 !important;
-      }
-
-      /* Style the select dropdown */
       .goog-te-gadget {
         font-size: 0 !important;
       }
@@ -719,6 +704,17 @@
         border: 1px solid #ddd;
         background: white;
         cursor: pointer;
+      }
+
+      /* Prevent layout shift */
+      body {
+        top: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+
+      html {
+        margin-top: 0 !important;
       }
     </style>
 
@@ -1267,38 +1263,15 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
 });
   </script>
 
-  <!-- ========== GOOGLE TRANSLATE (CLEAN & SIMPLE) ========== -->
+  <!-- Google Translate -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          includedLanguages: 'hi,mr,pa,bn,gu,en',
-          autoDisplay: false
-        },
-        'google_translate_element'
-      );
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'hi,mr,pa,bn,gu,en',
+        autoDisplay: false
+      }, 'google_translate_element');
     }
-
-    /* HARD FORCE REMOVE TOP BAR */
-    function removeGoogleTranslateBar() {
-      const iframe = document.querySelector('.goog-te-banner-frame');
-      if (iframe) {
-        iframe.remove();
-      }
-
-      document.body.style.top = '0px';
-      document.body.style.marginTop = '0px';
-      document.documentElement.style.marginTop = '0px';
-    }
-
-    /* Run multiple times because Google reinjects it */
-    window.addEventListener('load', () => {
-      removeGoogleTranslateBar();
-      setTimeout(removeGoogleTranslateBar, 100);
-      setTimeout(removeGoogleTranslateBar, 500);
-      setTimeout(removeGoogleTranslateBar, 1000);
-    });
   </script>
 
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
