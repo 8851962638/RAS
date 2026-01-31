@@ -1,11 +1,10 @@
 {% load static %}
-{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% trans "RColorcraft" %}{% endblock %}</title>
+  <title>{% block title %}RColorcraft{% endblock %}</title>
   
   <!-- CSS link -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -16,6 +15,8 @@
   <link rel="stylesheet" href="{% static 'css/review_page.css' %}">
   
 <style>
+
+  
   /* Popup box */
   .popup-menu {
     display: none;
@@ -685,126 +686,39 @@
 
     </style>
 
-    <!-- ========== GOOGLE TRANSLATE LANGUAGE SELECTOR CSS ========== -->
+    <!-- ========== GOOGLE TRANSLATE CSS (CLEAN) ========== -->
     <style>
-      /* Google Translate Language Selector Container */
-      .gt-language-selector {
-        display: flex;
-        align-items: center;
-        position: relative;
-        z-index: 999;
-        margin-right: 15px;
-      }
-
-      /* Language Selector Button */
-      .gt-language-dropdown {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        min-width: 120px;
-      }
-
-      .gt-language-dropdown:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
-      }
-
-      .gt-language-dropdown:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-      }
-
-      /* Language icon */
-      .gt-language-icon {
-        font-size: 1rem;
-      }
-
-      /* Hide Google Translate branding safely using CSS */
-      .goog-te-banner-frame {
+      /* Kill Google Translate top bar completely */
+      .goog-te-banner-frame,
+      .goog-te-gadget span,
+      .goog-logo-link,
+      .goog-tooltip {
         display: none !important;
       }
 
-      .goog-te-gadget {
-        color: transparent;
-      }
-
-      .goog-te-gadget .goog-te-combo {
-        color: #333;
-      }
-
-      /* Hide Google footer/watermark */
-      .goog-te-bottom-frame {
-        display: none !important;
-        visibility: hidden !important;
-      }
-
-      /* Reposition Google Translate top notification bar to bottom */
-      .goog-te-top-frame {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        top: auto !important;
-        right: auto !important;
-        z-index: 500 !important;
-        width: 100% !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 8px !important;
-        border-top: 1px solid #ddd !important;
-        background-color: #f8f9fa !important;
-        visibility: visible !important;
-        display: block !important;
-        overflow: visible !important;
-      }
-
-      /* Ensure body stays at top */
+      /* Stop Google Translate from pushing page down */
       body {
         top: 0 !important;
         margin-top: 0 !important;
-        padding-bottom: 60px !important;
+        padding-top: 0 !important;
       }
 
       html {
-        top: 0 !important;
         margin-top: 0 !important;
       }
 
-      .goog-te-gadget-simple {
-        background-color: transparent !important;
-        border: none !important;
+      /* Style the select dropdown */
+      .goog-te-gadget {
+        font-size: 0 !important;
       }
 
-      /* Mobile responsiveness */
-      @media (max-width: 768px) {
-        .gt-language-selector {
-          margin-right: 10px;
-        }
-
-        .gt-language-dropdown {
-          padding: 6px 8px;
-          font-size: 0.75rem;
-          min-width: auto;
-        }
-
-        .gt-language-dropdown span {
-          display: none;
-        }
-
-        .gt-language-dropdown::before {
-          content: "🌐";
-          font-size: 1rem;
-        }
+      #google_translate_element select {
+        font-size: 13px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
       }
     </style>
 
@@ -830,34 +744,34 @@
       <!-- NAVIGATION MENU -->
       <nav class="nav-left" id="navMenu">
         <ul>
-          <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
           {# Only visible to admin #}
 {% if user.is_authenticated and user.role == 'admin' %}
-    <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">{% trans "Bookings" %}</a></li>
-    <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">{% trans "Artists" %}</a></li>
+    <li><a href="{% url 'bookings' %}" class="{% if request.path == '/bookings/' %}active{% endif %}">Bookings</a></li>
+    <li><a href="{% url 'artists' %}" class="{% if request.path == '/artists/' %}active{% endif %}">Artists</a></li>
 {% endif %}
 
-          <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">{% trans "Reviews & Feedback" %}</a></li>
-          <!-- <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">{% trans "Shop" %}</a></li> -->
+          <li><a href="{% url 'reviews' %}" class="{% if request.path == '/reviews/' %}active{% endif %}">Reviews & Feedback</a></li>
+          <!-- <li><a href="{% url 'shop' %}" class="{% if request.path == '/shop/' %}active{% endif %}">Shop</a></li> -->
 {% if user.is_authenticated and user.role == 'admin' or user.is_authenticated and user.role == 'employee' %}
-    <li><a href="{% url 'service_images' %}">{% trans "Art Images" %}</a></li>
+    <li><a href="{% url 'service_images' %}">Art Images</a></li>
 {% endif %}
 
 
           {% if request.user.is_authenticated and request.user.role == "customer" %}
-          <li><a href="{% url 'my_orders' %}">{% trans "My Orders" %}</a></li>
+          <li><a href="{% url 'my_orders' %}">My Orders</a></li>
           {% if user.is_authenticated and user.role == 'customer' or user.is_authenticated and user.role == 'employee' %}
-            <li><a href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
+            <li><a href="{% url 'contact_us' %}">Contact us</a></li>
         {% endif %}
 
           <li>
           <button class="large-order-btn" onclick="openPopup()">
-                {% trans "Large Order? 📦" %}
+                Large Order? 📦
             </button>
             </li>
           {% endif %}
           {% if request.user.is_authenticated and request.user.role == "employee" %}
-                    <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">{% trans "My Assignments" %}</a></li>
+                    <li><a href="{% url 'employee_bookings' %}" class="{% if 'assignments' in request.path %}active{% endif %}">My Assignments</a></li>
                     {% endif %}
         </ul>
       </nav>
@@ -874,7 +788,7 @@
   <input
     type="text"
     id="artSearchInput"
-    placeholder="{% trans 'Search art type…' %}"
+    placeholder="Search art type…"
     list="artServices"
   />
   <button onclick="searchArtService()">
@@ -1033,8 +947,8 @@
                     <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-6 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l-1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
                 </svg>
             </div>
-            <h2>{% trans "Bulk Orders Welcome!" %}</h2>
-            <p class="popup-subtitle">{% trans "We're here to help with your large orders" %}</p>
+            <h2>Bulk Orders Welcome!</h2>
+            <p class="popup-subtitle">We're here to help with your large orders</p>
         </div>
 
         <div class="popup-content">
@@ -1108,26 +1022,9 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 
     <!-- ========== GOOGLE TRANSLATE LANGUAGE SELECTOR ========== -->
-    <div class="gt-language-selector" data-tooltip="Change Language">
-      <button class="gt-language-dropdown" id="gtLanguageBtn" title="Select Language">
-        <span class="gt-language-icon">🌐</span>
-        <span id="gtLangDisplay">English</span>
-      </button>
+    <div class="language-switcher">
+      <div id="google_translate_element"></div>
     </div>
-
-    <!-- Quick test script for button -->
-    <script type="text/javascript">
-      console.log('✓ Page loaded - checking language button...');
-      const testBtn = document.getElementById('gtLanguageBtn');
-      if (testBtn) {
-        console.log('✓ Language button found in DOM');
-        testBtn.addEventListener('click', function(e) {
-          console.log('✓ Language button clicked!');
-        });
-      } else {
-        console.error('✗ Language button NOT found in DOM');
-      }
-    </script>
 
     <!-- USER ICON (stays on the right) -->
     <nav class="nav-right">
@@ -1165,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <!-- About Section -->
                 <div class="footer-section">
                     <h3>RColorcraft</h3>
-                    <p>{% trans "Transforming spaces with artistic excellence. We bring creativity and professionalism to every project, from 3D wall art to complete home painting solutions." %}</p>
+                    <p>Transforming spaces with artistic excellence. We bring creativity and professionalism to every project, from 3D wall art to complete home painting solutions.</p>
                     <!-- <div class="social-links">
                         <a href="#" aria-label="Facebook">ⓕ</a>
                         <a href="#" aria-label="Instagram">🅾</a>
@@ -1176,23 +1073,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <!-- Quick Links -->
                 <div class="footer-section">
-                    <h3>{% trans "Quick Links" %}</h3>
+                    <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="/">{% trans "Home" %}</a></li>
-                        <li><a href="/reviews">{% trans "Reviews & Feedback" %}</a></li>
-                        <!-- <li><a href="/shop">{% trans "Shop" %}</a></li> -->
-                        <li><a href="/contact_us">{% trans "Contact Us" %}</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/reviews">Reviews & Feedback</a></li>
+                        <!-- <li><a href="/shop">Shop</a></li> -->
+                        <li><a href="/contact_us">Contact Us</a></li>
                     </ul>
                 </div>
 
                 <!-- Services -->
                 <div class="footer-section">
-                    <h3>{% trans "Trending Services" %}</h3>
+                    <h3>Trending Services</h3>
                     <ul>
-                        <li><a href="/explore/3d-wall-art/">{% trans "3D Wall Art" %}</a></li>
-                        <li><a href="/explore/home-painting/">{% trans "Home Painting" %}</a></li>
-                        <li><a href="/explore/mural-art/">{% trans "Mural Art" %}</a></li>
-                        <li><a href="/explore/cartoon-painting/">{% trans "Cartoon Painting" %}</a></li>
+                        <li><a href="/explore/3d-wall-art/">3D Wall Art</a></li>
+                        <li><a href="/explore/home-painting/">Home Painting</a></li>
+                        <li><a href="/explore/mural-art/">Mural Art</a></li>
+                        <li><a href="/explore/cartoon-painting/">Cartoon Painting</a></li>
                     </ul>
                 </div>
 
@@ -1261,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             </div>
             <br></br>
-                <p>{% trans "© 2025 RColorcraft. All Rights Reserved. | Made with" %} <span class="heart">♥</span> {% trans "in India" %}</p>
+                <p>© 2025 RColorcraft. All Rights Reserved. | Made with <span class="heart">♥</span> in India</p>
             </div>
         </div>
     </footer>
@@ -1358,7 +1255,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (serviceMap[input]) {
     window.location.href = `/explore/${serviceMap[input]}/`;
   } else {
-    alert("{% trans 'Service not found. Try selecting from the list.' %}");
+    alert("Service not found. Try selecting from the list.");
   }
 }
 
@@ -1370,250 +1267,41 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
 });
   </script>
 
-  <!-- ========== GOOGLE TRANSLATE WIDGET AND INITIALIZATION ========== -->
+  <!-- ========== GOOGLE TRANSLATE (CLEAN & SIMPLE) ========== -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
-      console.log('Initializing Google Translate...');
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'hi,mr,pa,bn,gu,en',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-      console.log('Google Translate initialized');
-      
-      // Reposition Google Translate notification bar to bottom
-      setTimeout(function() {
-        const topFrame = document.querySelector('.goog-te-top-frame');
-        if (topFrame) {
-          topFrame.style.cssText = 'position: fixed !important; bottom: 0 !important; left: 0 !important; top: auto !important; right: auto !important; z-index: 500 !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 8px !important;';
-        }
-        document.body.style.top = '0 !important';
-        document.body.style.marginTop = '0 !important';
-        document.body.style.paddingBottom = '60px !important';
-        document.documentElement.style.top = '0 !important';
-        console.log('Repositioned Google Translate bar to bottom');
-      }, 100);
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: 'en',
+          includedLanguages: 'hi,mr,pa,bn,gu,en',
+          autoDisplay: false
+        },
+        'google_translate_element'
+      );
     }
+
+    /* HARD FORCE REMOVE TOP BAR */
+    function removeGoogleTranslateBar() {
+      const iframe = document.querySelector('.goog-te-banner-frame');
+      if (iframe) {
+        iframe.remove();
+      }
+
+      document.body.style.top = '0px';
+      document.body.style.marginTop = '0px';
+      document.documentElement.style.marginTop = '0px';
+    }
+
+    /* Run multiple times because Google reinjects it */
+    window.addEventListener('load', () => {
+      removeGoogleTranslateBar();
+      setTimeout(removeGoogleTranslateBar, 100);
+      setTimeout(removeGoogleTranslateBar, 500);
+      setTimeout(removeGoogleTranslateBar, 1000);
+    });
   </script>
-  
-  <!-- Load Google Translate API -->
+
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <!-- Hidden div for Google Translate to work - must NOT be display:none during init -->
-  <div id="google_translate_element" style="visibility: hidden; height: 0; overflow: hidden; position: absolute;"></div>
-
-  <!-- ========== GOOGLE TRANSLATE CUSTOM BUTTON HANDLER ========== -->
-  <script type="text/javascript">
-    // Store language display names
-    const languageDisplayNames = {
-      'en': 'English',
-      'hi': 'Hindi',
-      'mr': 'Marathi',
-      'pa': 'Punjabi',
-      'bn': 'Bengali',
-      'gu': 'Gujarati'
-    };
-
-    let gtButtonInitialized = false;
-
-    // Get current language from cookie or localStorage
-    function getCurrentLanguage() {
-      // Check Google Translate cookie
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        if (cookie.includes('googtrans')) {
-          const match = cookie.match(/\/\/(.+?)(?:\s|$)/);
-          if (match) return match[1];
-        }
-      }
-      return localStorage.getItem('gtLanguage') || 'en';
-    }
-
-    // Change language using Google Translate API
-    function changeLanguageGT(lang) {
-      console.log('Attempting to change language to:', lang);
-      
-      // Method 1: Try to find and use the select element (works if visible)
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        console.log('Found .goog-te-combo, changing value to:', lang);
-        select.value = lang;
-        select.dispatchEvent(new Event('change'));
-        localStorage.setItem('gtLanguage', lang);
-        setTimeout(updateLanguageDisplay, 500);
-        return true;
-      }
-
-      // Method 2: Use Google Translate's built-in function if available
-      if (typeof google !== 'undefined' && google.translate && google.translate.TranslateService) {
-        console.log('Using Google Translate service API');
-        try {
-          google.translate.TranslateService.getInstance().translate('en', lang, document.body);
-          localStorage.setItem('gtLanguage', lang);
-          setTimeout(updateLanguageDisplay, 500);
-          return true;
-        } catch (e) {
-          console.log('TranslateService error:', e);
-        }
-      }
-
-      // Method 3: Simulate click on the translate element to open dropdown, then select language
-      console.log('Trying alternative method...');
-      const frames = document.querySelectorAll('iframe');
-      for (let frame of frames) {
-        try {
-          const doc = frame.contentDocument;
-          if (doc) {
-            const select = doc.querySelector('select');
-            if (select) {
-              console.log('Found select in iframe');
-              select.value = lang;
-              select.dispatchEvent(new Event('change'));
-              localStorage.setItem('gtLanguage', lang);
-              setTimeout(updateLanguageDisplay, 500);
-              return true;
-            }
-          }
-        } catch (e) {
-          // Cross-origin iframe, skip
-        }
-      }
-
-      // Method 4: Use cookie-based approach (most reliable)
-      console.log('Using cookie-based method');
-      const currentLang = getCurrentLanguage();
-      const newCookie = `googtrans=/en/${lang}`;
-      document.cookie = newCookie + '; path=/';
-      localStorage.setItem('gtLanguage', lang);
-      
-      // Reload page to apply translation
-      window.location.reload();
-      return false;
-    }
-
-    // Update button display
-    function updateLanguageDisplay() {
-      const langDisplay = document.getElementById('gtLangDisplay');
-      if (langDisplay) {
-        const currentLang = getCurrentLanguage();
-        langDisplay.textContent = languageDisplayNames[currentLang] || 'English';
-        console.log('Updated display to:', languageDisplayNames[currentLang]);
-      }
-    }
-
-    // Show language menu
-    function showLanguageMenu() {
-      const languages = [
-        { code: 'en', name: 'English 🇬🇧' },
-        { code: 'hi', name: 'हिन्दी (Hindi) 🇮🇳' },
-        { code: 'mr', name: 'मराठी (Marathi) 🇮🇳' },
-        { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi) 🇮🇳' },
-        { code: 'bn', name: 'বাংলা (Bengali) 🇧🇩' },
-        { code: 'gu', name: 'ગુજરાતી (Gujarati) 🇮🇳' }
-      ];
-
-      const currentLang = getCurrentLanguage();
-      let message = 'Select a language:\n\n';
-      languages.forEach((lang, index) => {
-        const marker = lang.code === currentLang ? '✓ ' : '';
-        message += `${index + 1}. ${marker}${lang.name}\n`;
-      });
-
-      const input = prompt(message);
-      if (input) {
-        const index = parseInt(input) - 1;
-        if (index >= 0 && index < languages.length) {
-          changeLanguageGT(languages[index].code);
-        }
-      }
-    }
-
-    // Initialize the language button
-    function initializeLanguageButton() {
-      if (gtButtonInitialized) return;
-      
-      const gtBtn = document.getElementById('gtLanguageBtn');
-      if (!gtBtn) {
-        console.log('✗ Language button not found in DOM');
-        return;
-      }
-
-      console.log('✓ Initializing language button...');
-
-      // Single click to cycle through languages
-      gtBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const currentLang = getCurrentLanguage();
-        const languages = ['en', 'hi', 'mr', 'pa', 'bn', 'gu'];
-        const currentIndex = languages.indexOf(currentLang);
-        const nextIndex = (currentIndex + 1) % languages.length;
-        const nextLang = languages[nextIndex];
-
-        console.log(`Current: ${currentLang} → Next: ${nextLang}`);
-        changeLanguageGT(nextLang);
-      });
-
-      // Right-click for language menu
-      gtBtn.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        showLanguageMenu();
-      });
-
-      gtButtonInitialized = true;
-      updateLanguageDisplay();
-      console.log('✓ Language button initialized successfully');
-    }
-
-    // Simple initialization - just set up the button
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log('✓ DOM loaded');
-        setTimeout(initializeLanguageButton, 500);
-      });
-    } else {
-      setTimeout(initializeLanguageButton, 500);
-    }
-
-    // Update display on page load
-    window.addEventListener('load', function() {
-      console.log('✓ Window loaded');
-      setTimeout(updateLanguageDisplay, 500);
-    });
-
-    // Apply stored language preference on load (ONLY if it differs from current)
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        const savedLang = localStorage.getItem('gtLanguage');
-        const currentLang = getCurrentLanguage();
-        if (savedLang && savedLang !== 'en' && savedLang !== currentLang) {
-          console.log('✓ Applying saved language:', savedLang);
-          changeLanguageGT(savedLang);
-        } else if (!savedLang || savedLang === 'en') {
-          console.log('✓ Language is English, no reload needed');
-          updateLanguageDisplay();
-        }
-      }, 2000);
-    });
-
-    // Observer to reposition Google Translate top bar to bottom
-    const observerConfig = { childList: true, subtree: true, attributes: true };
-    const observer = new MutationObserver(function() {
-      const topFrame = document.querySelector('.goog-te-top-frame');
-      if (topFrame) {
-        topFrame.style.cssText = 'position: fixed !important; bottom: 0 !important; left: 0 !important; top: auto !important; right: auto !important; z-index: 500 !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 8px !important;';
-      }
-      // Ensure body stays at top and has bottom padding
-      document.body.style.top = '0 !important';
-      document.body.style.marginTop = '0 !important';
-      document.body.style.paddingBottom = '60px !important';
-      document.documentElement.style.top = '0 !important';
-    });
-    observer.observe(document.documentElement, observerConfig);
-  </script>
   
 </body>
 </html>
