@@ -749,15 +749,28 @@
         visibility: hidden !important;
       }
 
-      /* Hide Google Translate top notification bar */
+      /* Hide Google Translate top notification bar - AGGRESSIVE */
       .goog-te-top-frame {
         display: none !important;
         visibility: hidden !important;
         height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        position: absolute !important;
+        overflow: hidden !important;
       }
 
+      /* Ensure body stays at top */
       body {
         top: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+
+      html {
+        top: 0 !important;
+        margin-top: 0 !important;
       }
 
       .goog-te-gadget-simple {
@@ -882,7 +895,7 @@
 
 
 <!-- Language Switcher -->
-<div class="language-switcher">
+<!-- <div class="language-switcher">
   <form action="{% url 'set_language' %}" method="post" id="languageForm">
     {% csrf_token %}
     <input type="hidden" name="next" id="nextInput" value="">
@@ -897,7 +910,7 @@
       <!-- <option value="bho" {% if LANGUAGE_CODE == 'bho' %}selected{% endif %}>भोजपुरी (Bhojpuri)</option> -->
     </select>
   </form>
-</div>
+</div> -->
 
 <style>
   .language-switcher {
@@ -1366,11 +1379,15 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
       setTimeout(function() {
         const topFrame = document.querySelector('.goog-te-top-frame');
         if (topFrame) {
-          topFrame.style.display = 'none !important';
-          topFrame.style.visibility = 'hidden';
-          topFrame.style.height = '0';
+          topFrame.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+          topFrame.setAttribute('style', 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;');
         }
-      }, 500);
+        // Also reset body position
+        document.body.style.top = '0 !important';
+        document.body.style.marginTop = '0 !important';
+        document.documentElement.style.top = '0 !important';
+        console.log('Hiding Google Translate top bar');
+      }, 100);
     }
   </script>
   
@@ -1577,17 +1594,19 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
     });
 
     // Observer to continuously hide Google Translate top bar
-    const observerConfig = { childList: true, subtree: true };
+    const observerConfig = { childList: true, subtree: true, attributes: true };
     const observer = new MutationObserver(function() {
       const topFrame = document.querySelector('.goog-te-top-frame');
-      if (topFrame && topFrame.offsetParent !== null) { // Only if visible
-        topFrame.style.display = 'none !important';
-        topFrame.style.visibility = 'hidden';
-        topFrame.style.height = '0';
-        console.log('Hidden Google Translate notification bar');
+      if (topFrame) {
+        topFrame.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+        topFrame.setAttribute('style', 'display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important;');
       }
+      // Ensure body stays at top
+      document.body.style.top = '0 !important';
+      document.body.style.marginTop = '0 !important';
+      document.documentElement.style.top = '0 !important';
     });
-    observer.observe(document.body, observerConfig);
+    observer.observe(document.documentElement, observerConfig);
   </script>
   
 </body>
