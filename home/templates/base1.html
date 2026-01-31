@@ -13,7 +13,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD5Vn0gT8nNq0UdwQ3N3cQ4A8b6rC8L9Tz1Jb1S9/7g56b0lX6T8z8x8x8x8w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{% static 'css/common.css' %}">
   <link rel="stylesheet" href="{% static 'css/review_page.css' %}">
-  
+  <style>
+/* Default header position */
+header {
+  position: relative;
+  z-index: 100;
+  transition: margin-top 0.2s ease;
+}
+
+/* Space for Google Translate bar */
+body.gt-active header {
+  margin-top: 40px; /* Google bar height */
+}
+
+/* Hide logo text clutter */
+.goog-logo-link,
+.goog-te-gadget span {
+  display: none !important;
+}
+</style>
+
 <style>
 
   
@@ -706,11 +725,9 @@
         cursor: pointer;
       }
 
-      /* Prevent layout shift */
+      /* Prevent layout shift and make space for Google Translate bar */
       body {
-        top: 0 !important;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
+        margin-top: 50px;
       }
 
       html {
