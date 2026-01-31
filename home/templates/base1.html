@@ -749,6 +749,13 @@
         visibility: hidden !important;
       }
 
+      /* Hide Google Translate top notification bar */
+      .goog-te-top-frame {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+      }
+
       body {
         top: 0 !important;
       }
@@ -1354,6 +1361,16 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
         autoDisplay: false
       }, 'google_translate_element');
       console.log('Google Translate initialized');
+      
+      // Hide Google Translate notification bar
+      setTimeout(function() {
+        const topFrame = document.querySelector('.goog-te-top-frame');
+        if (topFrame) {
+          topFrame.style.display = 'none !important';
+          topFrame.style.visibility = 'hidden';
+          topFrame.style.height = '0';
+        }
+      }, 500);
     }
   </script>
   
@@ -1558,6 +1575,19 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
         }
       }, 2000);
     });
+
+    // Observer to continuously hide Google Translate top bar
+    const observerConfig = { childList: true, subtree: true };
+    const observer = new MutationObserver(function() {
+      const topFrame = document.querySelector('.goog-te-top-frame');
+      if (topFrame && topFrame.offsetParent !== null) { // Only if visible
+        topFrame.style.display = 'none !important';
+        topFrame.style.visibility = 'hidden';
+        topFrame.style.height = '0';
+        console.log('Hidden Google Translate notification bar');
+      }
+    });
+    observer.observe(document.body, observerConfig);
   </script>
   
 </body>
