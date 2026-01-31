@@ -725,6 +725,37 @@ body.gt-active header {
         cursor: pointer;
       }
 
+      /* Style Google Translate bar to match header */
+      .goog-te-banner-frame {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+        border-bottom: 2px solid rgba(255,255,255,0.1) !important;
+      }
+
+      /* Style banner content */
+      .goog-te-banner-frame:not(body) {
+        font-family: inherit !important;
+      }
+
+      .goog-te-banner-frame div {
+        background: transparent !important;
+      }
+
+      /* Style text in banner */
+      .goog-te-banner-frame .goog-te-gadget {
+        color: #fff !important;
+      }
+
+      .goog-te-banner-frame .goog-te-combo {
+        background: rgba(255,255,255,0.2) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+      }
+
+      .goog-te-banner-frame .goog-te-combo option {
+        background: #2a5298 !important;
+        color: #fff !important;
+      }
+
       /* Allow space for Google Translate bar when it appears */
       body {
         margin: 0 !important;
