@@ -684,6 +684,103 @@
         }
 
     </style>
+
+    <!-- ========== GOOGLE TRANSLATE LANGUAGE SELECTOR CSS ========== -->
+    <style>
+      /* Google Translate Language Selector Container */
+      .gt-language-selector {
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 999;
+        margin-right: 15px;
+      }
+
+      /* Language Selector Button */
+      .gt-language-dropdown {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 120px;
+      }
+
+      .gt-language-dropdown:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+      }
+
+      .gt-language-dropdown:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+      }
+
+      /* Language icon */
+      .gt-language-icon {
+        font-size: 1rem;
+      }
+
+      /* Hide Google Translate branding safely using CSS */
+      .goog-te-banner-frame {
+        display: none !important;
+      }
+
+      .goog-te-gadget {
+        color: transparent;
+      }
+
+      .goog-te-gadget .goog-te-combo {
+        color: #333;
+      }
+
+      /* Hide Google footer/watermark */
+      .goog-te-bottom-frame {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      body {
+        top: 0 !important;
+      }
+
+      .goog-te-gadget-simple {
+        background-color: transparent !important;
+        border: none !important;
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        .gt-language-selector {
+          margin-right: 10px;
+        }
+
+        .gt-language-dropdown {
+          padding: 6px 8px;
+          font-size: 0.75rem;
+          min-width: auto;
+        }
+
+        .gt-language-dropdown span {
+          display: none;
+        }
+
+        .gt-language-dropdown::before {
+          content: "🌐";
+          font-size: 1rem;
+        }
+      }
+    </style>
+
 </head>
 <body>
   <!-- Header -->
@@ -983,6 +1080,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
     </script>
 
+    <!-- ========== GOOGLE TRANSLATE LANGUAGE SELECTOR ========== -->
+    <div class="gt-language-selector" data-tooltip="Change Language">
+      <button class="gt-language-dropdown" id="gtLanguageBtn" title="Select Language">
+        <span class="gt-language-icon">🌐</span>
+        <span id="gtLangDisplay">English</span>
+      </button>
+    </div>
+
+    <!-- Quick test script for button -->
+    <script type="text/javascript">
+      console.log('✓ Page loaded - checking language button...');
+      const testBtn = document.getElementById('gtLanguageBtn');
+      if (testBtn) {
+        console.log('✓ Language button found in DOM');
+        testBtn.addEventListener('click', function(e) {
+          console.log('✓ Language button clicked!');
+        });
+      } else {
+        console.error('✗ Language button NOT found in DOM');
+      }
+    </script>
+
     <!-- USER ICON (stays on the right) -->
     <nav class="nav-right">
       <ul>
@@ -1222,6 +1341,223 @@ document.getElementById("artSearchInput").addEventListener("keydown", function(e
     searchArtService();
   }
 });
+  </script>
+
+  <!-- ========== GOOGLE TRANSLATE WIDGET AND INITIALIZATION ========== -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      console.log('Initializing Google Translate...');
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'hi,mr,pa,bn,gu,en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+      console.log('Google Translate initialized');
+    }
+  </script>
+  
+  <!-- Load Google Translate API -->
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- Hidden div for Google Translate to work - must NOT be display:none during init -->
+  <div id="google_translate_element" style="visibility: hidden; height: 0; overflow: hidden; position: absolute;"></div>
+
+  <!-- ========== GOOGLE TRANSLATE CUSTOM BUTTON HANDLER ========== -->
+  <script type="text/javascript">
+    // Store language display names
+    const languageDisplayNames = {
+      'en': 'English',
+      'hi': 'Hindi',
+      'mr': 'Marathi',
+      'pa': 'Punjabi',
+      'bn': 'Bengali',
+      'gu': 'Gujarati'
+    };
+
+    let gtButtonInitialized = false;
+
+    // Get current language from cookie or localStorage
+    function getCurrentLanguage() {
+      // Check Google Translate cookie
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        if (cookie.includes('googtrans')) {
+          const match = cookie.match(/\/\/(.+?)(?:\s|$)/);
+          if (match) return match[1];
+        }
+      }
+      return localStorage.getItem('gtLanguage') || 'en';
+    }
+
+    // Change language using Google Translate API
+    function changeLanguageGT(lang) {
+      console.log('Attempting to change language to:', lang);
+      
+      // Method 1: Try to find and use the select element (works if visible)
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        console.log('Found .goog-te-combo, changing value to:', lang);
+        select.value = lang;
+        select.dispatchEvent(new Event('change'));
+        localStorage.setItem('gtLanguage', lang);
+        setTimeout(updateLanguageDisplay, 500);
+        return true;
+      }
+
+      // Method 2: Use Google Translate's built-in function if available
+      if (typeof google !== 'undefined' && google.translate && google.translate.TranslateService) {
+        console.log('Using Google Translate service API');
+        try {
+          google.translate.TranslateService.getInstance().translate('en', lang, document.body);
+          localStorage.setItem('gtLanguage', lang);
+          setTimeout(updateLanguageDisplay, 500);
+          return true;
+        } catch (e) {
+          console.log('TranslateService error:', e);
+        }
+      }
+
+      // Method 3: Simulate click on the translate element to open dropdown, then select language
+      console.log('Trying alternative method...');
+      const frames = document.querySelectorAll('iframe');
+      for (let frame of frames) {
+        try {
+          const doc = frame.contentDocument;
+          if (doc) {
+            const select = doc.querySelector('select');
+            if (select) {
+              console.log('Found select in iframe');
+              select.value = lang;
+              select.dispatchEvent(new Event('change'));
+              localStorage.setItem('gtLanguage', lang);
+              setTimeout(updateLanguageDisplay, 500);
+              return true;
+            }
+          }
+        } catch (e) {
+          // Cross-origin iframe, skip
+        }
+      }
+
+      // Method 4: Use cookie-based approach (most reliable)
+      console.log('Using cookie-based method');
+      const currentLang = getCurrentLanguage();
+      const newCookie = `googtrans=/en/${lang}`;
+      document.cookie = newCookie + '; path=/';
+      localStorage.setItem('gtLanguage', lang);
+      
+      // Reload page to apply translation
+      window.location.reload();
+      return false;
+    }
+
+    // Update button display
+    function updateLanguageDisplay() {
+      const langDisplay = document.getElementById('gtLangDisplay');
+      if (langDisplay) {
+        const currentLang = getCurrentLanguage();
+        langDisplay.textContent = languageDisplayNames[currentLang] || 'English';
+        console.log('Updated display to:', languageDisplayNames[currentLang]);
+      }
+    }
+
+    // Show language menu
+    function showLanguageMenu() {
+      const languages = [
+        { code: 'en', name: 'English 🇬🇧' },
+        { code: 'hi', name: 'हिन्दी (Hindi) 🇮🇳' },
+        { code: 'mr', name: 'मराठी (Marathi) 🇮🇳' },
+        { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi) 🇮🇳' },
+        { code: 'bn', name: 'বাংলা (Bengali) 🇧🇩' },
+        { code: 'gu', name: 'ગુજરાતી (Gujarati) 🇮🇳' }
+      ];
+
+      const currentLang = getCurrentLanguage();
+      let message = 'Select a language:\n\n';
+      languages.forEach((lang, index) => {
+        const marker = lang.code === currentLang ? '✓ ' : '';
+        message += `${index + 1}. ${marker}${lang.name}\n`;
+      });
+
+      const input = prompt(message);
+      if (input) {
+        const index = parseInt(input) - 1;
+        if (index >= 0 && index < languages.length) {
+          changeLanguageGT(languages[index].code);
+        }
+      }
+    }
+
+    // Initialize the language button
+    function initializeLanguageButton() {
+      if (gtButtonInitialized) return;
+      
+      const gtBtn = document.getElementById('gtLanguageBtn');
+      if (!gtBtn) {
+        console.log('✗ Language button not found in DOM');
+        return;
+      }
+
+      console.log('✓ Initializing language button...');
+
+      // Single click to cycle through languages
+      gtBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const currentLang = getCurrentLanguage();
+        const languages = ['en', 'hi', 'mr', 'pa', 'bn', 'gu'];
+        const currentIndex = languages.indexOf(currentLang);
+        const nextIndex = (currentIndex + 1) % languages.length;
+        const nextLang = languages[nextIndex];
+
+        console.log(`Current: ${currentLang} → Next: ${nextLang}`);
+        changeLanguageGT(nextLang);
+      });
+
+      // Right-click for language menu
+      gtBtn.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        showLanguageMenu();
+      });
+
+      gtButtonInitialized = true;
+      updateLanguageDisplay();
+      console.log('✓ Language button initialized successfully');
+    }
+
+    // Simple initialization - just set up the button
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('✓ DOM loaded');
+        setTimeout(initializeLanguageButton, 500);
+      });
+    } else {
+      setTimeout(initializeLanguageButton, 500);
+    }
+
+    // Update display on page load
+    window.addEventListener('load', function() {
+      console.log('✓ Window loaded');
+      setTimeout(updateLanguageDisplay, 500);
+    });
+
+    // Apply stored language preference on load (ONLY if it differs from current)
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const savedLang = localStorage.getItem('gtLanguage');
+        const currentLang = getCurrentLanguage();
+        if (savedLang && savedLang !== 'en' && savedLang !== currentLang) {
+          console.log('✓ Applying saved language:', savedLang);
+          changeLanguageGT(savedLang);
+        } else if (!savedLang || savedLang === 'en') {
+          console.log('✓ Language is English, no reload needed');
+          updateLanguageDisplay();
+        }
+      }, 2000);
+    });
   </script>
   
 </body>
