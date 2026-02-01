@@ -51,6 +51,8 @@ class Booking(models.Model):
     
     assigned_employee = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,blank=True,related_name='assigned_bookings')
     assignment_status = models.CharField(max_length=20,choices=ASSIGNMENT_STATUS_CHOICES,default='assigned')
+    artist_status = models.BooleanField(default=False)
+    customer_status = models.BooleanField(default=False)
 
 
     class Meta:
