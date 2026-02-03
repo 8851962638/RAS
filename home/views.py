@@ -1186,3 +1186,33 @@ def toggle_block_artist(request, artist_id):
     return redirect(request.META.get('HTTP_REFERER', '/artists/'))
 
 
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Booking
+
+@login_required
+def toggle_customer_status(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, customer_user_id=request.user.id)
+
+    if request.method == "POST":
+        booking.customer_status = not booking.customer_status
+        booking.save(update_fields=["customer_status"])
+
+    return redirect("my_orders")
+
+
+@login_required
+def toggle_artist_status(request, booking_id):
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        assigned_employee=request.user,
+        assignment_status="accepted",
+    )
+
+    if request.method == "POST":
+        booking.artist_status = not booking.artist_status
+        booking.save(update_fields=["artist_status"])
+
+    return redirect("employee_assignments")

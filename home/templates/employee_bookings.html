@@ -66,6 +66,30 @@
                             <!-- If accepted, show the current main status -->
                             {% if booking.assignment_status == 'accepted' %}
                                 <p class="timestamp">Main Booking Status: <strong>{{ booking.get_status_display }}</strong></p>
+                                <div class="info-row">
+    <strong>Artist Completion:</strong>
+
+    <form method="post" action="{% url 'toggle_artist_status' booking.id %}" class="inline-form">
+        {% csrf_token %}
+
+        <label class="switch">
+            <input type="checkbox"
+                   name="artist_status"
+                   onchange="this.form.submit()"
+                   {% if booking.artist_status %}checked{% endif %}>
+            <span class="slider"></span>
+        </label>
+
+        <span class="toggle-text">
+            {% if booking.artist_status %}
+                Completed
+            {% else %}
+                Not Completed
+            {% endif %}
+        </span>
+    </form>
+</div>
+
                             {% endif %}
                         {% endif %}
                     </div>
@@ -216,5 +240,52 @@
 .assignment-final-status strong.status-declined { color: #f44336; }
 .assignment-final-status strong.status-pending_assignment { color: #9e9e9e; }
 .assignment-final-status strong.status-assigned { color: #ff9800; }
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    margin-left: 10px;
+}
+
+.switch input {
+    opacity: 0;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 26px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background: #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.toggle-text {
+    margin-left: 8px;
+    font-weight: 600;
+}
+
 </style>
 {% endblock %}
