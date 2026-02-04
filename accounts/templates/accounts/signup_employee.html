@@ -7,32 +7,32 @@
 <div class="auth-container">
   <div class="auth-box">
     <h1>Create Account 🖌️</h1>
-    <p class="subtitle">Join us and showcase your art</p>
+    <p class="subtitle" style="color: #fff;">Join us and showcase your art</p>
 
     <form id="signupForm" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
       <!-- Full Name -->
       <div class="input-group">
-        <label for="full_name">Full Name</label>
+        <label for="full_name" style="color: #fff;">Full Name</label>
         <input type="text" id="full_name" name="full_name" required>
       </div>
 
       <!-- Mobile -->
       <div class="input-group">
-        <label for="mobile">Mobile</label>
+        <label for="mobile" style="color: #fff;">Mobile</label>
         <input type="text" id="mobile" name="mobile" required>
       </div>
 
       <!-- Email -->
       <div class="input-group">
-        <label for="email_address">Email</label>
+        <label for="email_address" style="color: #fff;">Email</label>
         <input type="email" id="email_address" name="email_address" required>
       </div>
 
       <!-- Password -->
       <div class="input-group" style="position: relative;">
-        <label for="password">Password</label>
+        <label for="password" style="color: #fff;">Password</label>
         <input type="password" id="password" name="password" required>
         <img id="togglePassword" src="{% static 'gallery/hide.png' %}" 
              alt="Toggle Password"
@@ -94,6 +94,103 @@
 </div>
 
 <style>
+/* Full Page Background */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url('{% static 'gallery/logohome.png' %}');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(12px) brightness(0.9);
+}
+
+/* Auth Container with Background */
+.auth-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+}
+
+/* Glassmorphism Auth Box */
+.auth-box {
+  position: relative;
+  z-index: 2;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  animation: slideUp 0.6s ease-out;
+  max-width: 450px;
+  width: 90%;
+}
+
+/* Heading Styles */
+.auth-box h1 {
+  color: #fff;
+  font-size: 28px;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtitle */
+.subtitle {
+  color: #fff;
+  font-size: 16px;
+  margin: 10px 0 20px 0;
+  font-weight: 500;
+}
+
+/* Switch Text */
+.switch-text {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.switch-text a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.switch-text a:hover {
+  text-decoration: underline;
+}
+
 /* Loading Overlay */
 .loading-overlay {
   display: none;
@@ -250,7 +347,7 @@
 .terms-section {
   margin: 15px 0;
   padding: 12px;
-  background: #f8f9fa;
+  background: transparent;
   border-radius: 8px;
 }
 
@@ -270,7 +367,7 @@
 
 .checkbox-label {
   font-size: 14px;
-  color: #333;
+  color: #fff;
   cursor: pointer;
   line-height: 1.5;
 }
