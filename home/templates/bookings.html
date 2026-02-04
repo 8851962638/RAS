@@ -48,6 +48,25 @@
                         <p><strong>Appointment Date:</strong> {{ booking.appointment_date }}</p>
                         <p class="timestamp">📅 Booked on {{ booking.created_at|date:"d M Y, H:i A" }}</p>
                     </div>
+                    <div class="row">
+    <p>
+        <strong>Artist Status:</strong>
+        {% if booking.artist_status %}
+            <span class="status-completed">✅ Completed</span>
+        {% else %}
+            <span class="status-pending">❌ Not Completed</span>
+        {% endif %}
+    </p>
+
+    <p>
+        <strong>Customer Status:</strong>
+        {% if booking.customer_status %}
+            <span class="status-completed">✅ Completed</span>
+        {% else %}
+            <span class="status-pending">❌ Not Completed</span>
+        {% endif %}
+    </p>
+</div>
 
                     <!-- Employee Assignment Form (NEW) -->
                     <div class="assignment-container">
@@ -365,6 +384,16 @@
     to {
         box-shadow: 0 0 22px rgba(231, 76, 60, 0.6);
     }
+}
+
+.status-completed {
+    color: green;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #cc0000;
+    font-weight: 600;
 }
 
 </style>
