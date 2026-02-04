@@ -32,6 +32,27 @@
         <input type="password" id="customer_password" name="customer_password" required>
       </div>
 
+      <!-- Terms and Conditions -->
+      <div class="terms-section">
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms_agreement" name="terms_agreement" required>
+          <label for="terms_agreement" class="checkbox-label">
+            I agree to the 
+            <a href="#" onclick="viewCustomerTerms(event)">Terms & Conditions</a>
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="privacy_agreement" name="privacy_agreement" required>
+          <label for="privacy_agreement" class="checkbox-label">
+            I agree to the 
+            <a href="#" onclick="viewCustomerPrivacy(event)">Privacy Policy</a>
+          </label>
+        </div>
+
+        <div id="termsError" class="terms-error" style="display: none;">Please accept the Terms & Conditions and Privacy Policy to proceed</div>
+      </div>
+
       <button type="button" class="btn" onclick="sendOTP()">Register</button>
       <p class="switch-text">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
     </form>
@@ -184,6 +205,52 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+/* Terms Section */
+.terms-section {
+  margin: 15px 0;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.checkbox-label a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkbox-label a:hover {
+  text-decoration: underline;
+}
+
+.terms-error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
 /* Alert Styles */
 .custom-alert {
   display: none;
@@ -222,6 +289,18 @@
 let currentCustomerId = null;
 
 function sendOTP() {
+    const termsCheckbox = document.getElementById('terms_agreement');
+    const privacyCheckbox = document.getElementById('privacy_agreement');
+    const termsError = document.getElementById('termsError');
+
+    // Validate terms and privacy checkboxes
+    if (!termsCheckbox.checked || !privacyCheckbox.checked) {
+      termsError.style.display = 'block';
+      showAlert('Please accept both Terms & Conditions and Privacy Policy', 'warning');
+      return;
+    }
+    termsError.style.display = 'none';
+
     const form = $('#customerSignupForm')[0];
     const formData = new FormData(form);
     const email = $('#email').val();
@@ -298,6 +377,18 @@ function verifyOTP() {
 
 function closeOtpModal() {
     $('#otpModal').hide();
+}
+
+function viewCustomerTerms(event) {
+    event.preventDefault();
+    const termsUrl = '{% static "documents/Customer T & C.pdf" %}';
+    window.open(termsUrl, '_blank');
+}
+
+function viewCustomerPrivacy(event) {
+    event.preventDefault();
+    const privacyUrl = '{% static "documents/PRIVACY POLICY.pdf" %}';
+    window.open(privacyUrl, '_blank');
 }
 
 function showAlert(message, type="info") {
