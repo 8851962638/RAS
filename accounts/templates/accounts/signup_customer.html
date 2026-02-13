@@ -7,28 +7,28 @@
 <div class="auth-container">
   <div class="auth-box">
     <h1>Customer Registration 🏠</h1>
-    <p class="subtitle">Register and book painting services</p>
+    <p style="color: #fff;"  class="subtitle">Register and book painting services</p>
 
     <form id="customerSignupForm" method="POST">
       {% csrf_token %}
 
       <div class="input-group">
-        <label for="customer_full_name">Full Name of Customer</label>
+        <label style="color: #fff;" for="customer_full_name">Full Name of Customer</label>
         <input type="text" id="customer_full_name" name="customer_full_name" required>
       </div>
 
       <div class="input-group">
-        <label for="mobile">Mobile Number</label>
+        <label style="color: #fff;" for="mobile">Mobile Number</label>
         <input type="text" id="mobile" name="mobile" required>
       </div>
 
       <div class="input-group">
-        <label for="email">Email Address (if any)</label>
+        <label style="color: #fff;" for="email">Email Address (if any)</label>
         <input type="text" id="email" name="email">
       </div>
 
       <div class="input-group">
-        <label for="customer_password">Create Password</label>
+        <label style="color: #fff;" for="customer_password">Create Password</label>
         <input type="password" id="customer_password" name="customer_password" required>
       </div>
 
@@ -100,9 +100,11 @@ body::before {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: url('{% static 'gallery/logoHD.png' %}') center/cover no-repeat fixed, #000;
+  background: url('{% static 'gallery/logoHD.png' %}') center -100px / cover no-repeat fixed, #000;
   z-index: 0;
   pointer-events: none;
+  top: 0;
+  left: 0;
 }
 
 /* Auth Container with Background */
