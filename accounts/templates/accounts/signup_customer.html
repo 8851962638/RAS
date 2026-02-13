@@ -408,7 +408,7 @@ function sendOTP() {
     $('#loadingOverlay').css("display", "flex");
 
     $.ajax({
-        url: '/accounts/save_customer_signup/',
+        url: '{% url "accounts:save_customer_signup" %}',
         type: 'POST',
         data: formData,
         processData: false,
@@ -441,7 +441,7 @@ function verifyOTP() {
     $('.loader-text').text('Verifying OTP...');
 
     $.ajax({
-        url: '/accounts/verify_customer_otp/',
+        url: '{% url "accounts:verify_customer_otp" %}',
         type: 'POST',
         data: {otp: otp},
         success: function(response) {

@@ -254,10 +254,17 @@ def save_employee_signup(request):
             email = request.POST.get('email_address')
             full_name = request.POST.get('full_name')
 
+            print(f"[DEBUG] Employee Signup - Email: {email}")
+            print(f"[DEBUG] Employee Signup - Full Name: {full_name}")
+            print(f"[DEBUG] Employee Signup - POST data: {request.POST.dict()}")
+
             if email:
                 email_regex = r'^[^@\s]+@[^\s@]+\.[^@\s]+$'
+                print(f"[DEBUG] Validating email: '{email}' with regex: {email_regex}")
                 if not re.match(email_regex, email):
+                    print(f"[DEBUG] Email validation FAILED for: {email}")
                     return JsonResponse({'success': False, 'error': 'Invalid email format'})
+                print(f"[DEBUG] Email validation PASSED for: {email}")
 
             # Generate OTP
             otp = str(random.randint(100000, 999999))

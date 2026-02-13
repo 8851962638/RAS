@@ -14,6 +14,10 @@ class ProfileCompletionMiddleware:
             '/wallet/',
             '/accounts/logout/',
             '/accounts/login/',
+            '/accounts/save_employee_signup/',
+            '/accounts/verify_employee_otp/',
+            '/accounts/save_customer_signup/',
+            '/accounts/verify_customer_otp/',
             '/logout/',  # Added this
             '/login/',   # Added this for safety
             '/media/',
