@@ -418,11 +418,17 @@ function sendEmployeeOTP() {
   const formData = new FormData(form);
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+  // Debug: Log form data
+  console.log('[DEBUG] Form submission started');
+  for (let [key, value] of formData.entries()) {
+    console.log(`[DEBUG] FormData - ${key}:`, value);
+  }
+
   // Show loader
   $('#loadingOverlay').css("display", "flex");
 
   $.ajax({
-    url: '/accounts/save_employee_signup/',
+    url: '{% url "accounts:save_employee_signup" %}',
     type: 'POST',
     data: formData,
     processData: false,
@@ -430,6 +436,7 @@ function sendEmployeeOTP() {
     headers: { "X-CSRFToken": csrftoken },
     xhrFields: { withCredentials: true },
     success: function(response) {
+      console.log('[DEBUG] AJAX Success response:', response);
       // Hide loader
       $('#loadingOverlay').hide();
 
@@ -437,10 +444,13 @@ function sendEmployeeOTP() {
         showAlert(response.message, 'success');
         $('#employeeOtpModal').css("display", "flex");
       } else {
+        console.error('[DEBUG] Response error:', response.error);
         showAlert('Error: ' + response.error, 'error');
       }
     },
     error: function(xhr) {
+      console.error('[DEBUG] AJAX Error:', xhr.status, xhr.statusText);
+      console.error('[DEBUG] Response text:', xhr.responseText);
       // Hide loader
       $('#loadingOverlay').hide();
       showAlert('Something went wrong!', 'error');
@@ -452,17 +462,20 @@ function verifyEmployeeOTP() {
   const otp = $('#employeeOtpInput').val();
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+  console.log('[DEBUG] OTP Verification - OTP entered:', otp);
+
   // Show loader
   $('#loadingOverlay').css("display", "flex");
   $('.loader-text').text('Verifying OTP...');
 
   $.ajax({
-    url: '/accounts/verify_employee_otp/',
+    url: '{% url "accounts:verify_employee_otp" %}',
     type: 'POST',
     data: { otp: otp },
     headers: { "X-CSRFToken": csrftoken },
     xhrFields: { withCredentials: true },
     success: function(response) {
+      console.log('[DEBUG] OTP Verification Success:', response);
       // Hide loader
       $('#loadingOverlay').hide();
 
@@ -473,11 +486,14 @@ function verifyEmployeeOTP() {
           window.location.href = '/accounts/login/';
         }, 1000);
       } else {
+        console.error('[DEBUG] OTP Verification Error:', response.error);
         showAlert('Error: ' + response.error, 'error');
         $('.loader-text').text('Sending OTP...');
       }
     },
     error: function(xhr) {
+      console.error('[DEBUG] OTP Verification AJAX Error:', xhr.status, xhr.statusText);
+      console.error('[DEBUG] Response text:', xhr.responseText);
       // Hide loader
       $('#loadingOverlay').hide();
       showAlert('Something went wrong!', 'error');
