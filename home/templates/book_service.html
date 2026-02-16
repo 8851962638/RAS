@@ -182,42 +182,49 @@
 }
 
 /* ======================================================
-   DESIGN POPUP STYLES - MODERN & DECENT LOOK
+   DESIGN POPUP STYLES - MODERN & CLEAN UI (scoped)
    ====================================================== */
 
-.design-popup {
-    /* Full screen overlay */
-    display: none;
+#designPopup.design-popup {
     position: fixed;
-    z-index: 1050; /* Higher z-index for modals */
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    /* Subtle blur effect on background */
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px); 
-    -webkit-backdrop-filter: blur(4px);
-    overflow-y: auto; /* Enable scrolling for the whole popup container */
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow-y: auto;
+    padding: 2rem;
+    box-sizing: border-box;
+    align-items: flex-start;
+    justify-content: center;
+    display: none;
 }
 
-.design-popup-content {
-    background: #ffffff;
-    width: 90%;
-    max-width: 1100px; /* Increased max width for more gallery space */
-    /* Centered with margin and responsive adjustments */
-    margin: 40px auto; 
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-    position: relative; 
-    z-index: 1060; 
-    animation: fadeInScale 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Added animation */
+#designPopup.design-popup[style*="block"] {
+    display: flex !important;
 }
 
-/* Modal Entry Animation */
-@keyframes fadeInScale {
+#designPopup .design-popup-content {
+    background: #fff;
+    width: 100%;
+    max-width: 960px;
+    margin: 2rem auto 3rem;
+    padding: 2rem 2.5rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1060;
+    animation: designPopupIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes designPopupIn {
     from {
         opacity: 0;
-        transform: scale(0.95) translateY(20px);
+        transform: scale(0.96) translateY(24px);
     }
     to {
         opacity: 1;
@@ -225,130 +232,154 @@
     }
 }
 
-/* Header Styling */
-.design-popup-content h3 {
-    font-size: 2.2em;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 25px;
-    border-bottom: 3px solid #6c5ce7; /* Accent line */
-    padding-bottom: 10px;
+#designPopup .design-popup-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 2.5rem 1.5rem 0;
+    padding-bottom: 1rem;
     text-align: center;
+    letter-spacing: -0.02em;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-/* Close Button Styling */
-.close-btn {
+#designPopup .design-popup-content .close-btn {
     position: absolute;
-    top: 15px;
-    right: 25px;
-    font-size: 36px;
-    color: #aaa;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #64748b;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
     font-weight: 300;
     line-height: 1;
+    border-radius: 10px;
 }
 
-.close-btn:hover,
-.close-btn:focus {
-    color: #6c5ce7; /* Hover color accent */
+#designPopup .design-popup-content .close-btn:hover,
+#designPopup .design-popup-content .close-btn:focus {
+    color: #7b2ff7;
+    background: #f1f5f9;
 }
 
 /* ======================================================
-   DESIGN GALLERY & CARD STYLES
+   DESIGN GALLERY - MULTI-COLUMN GRID (scoped to popup)
    ====================================================== */
 
-.design-gallery {
+#designPopup .design-gallery {
     display: grid;
-    /* Grid layout for 4 columns max, minimum card size 220px */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px; /* Increased gap */
-    margin-top: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    width: 100%;
 }
 
-.design-card {
-    background: #fdfdfd;
-    padding: 0; /* Removed padding from card body to use for image container */
-    border-radius: 12px;
+#designPopup .design-card {
+    background: #fff;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border-radius: 16px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid #eee;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.design-card:hover {
-    transform: translateY(-5px); /* Lift effect */
-    box-shadow: 0 12px 25px rgba(108, 92, 231, 0.2); /* Enhanced shadow with accent color */
-    border-color: #6c5ce7;
+#designPopup .design-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -15px rgba(123, 47, 247, 0.25);
+    border-color: rgba(123, 47, 247, 0.3);
 }
 
-.design-card img {
+#designPopup .design-card img {
     width: 100%;
-    height: 180px; /* Slightly taller image */
+    height: 240px;
     object-fit: cover;
-    border-radius: 0; /* Image fills the top edge */
-    transition: transform 0.4s ease-out;
+    display: block;
+    transition: transform 0.4s ease;
 }
 
-.design-card:hover img {
-    transform: scale(1.05); /* Zoom effect on image hover */
+#designPopup .design-card:hover img {
+    transform: scale(1.03);
 }
 
-/* Card Body Content (Details) */
-.design-card-details {
-    padding: 15px;
+#designPopup .design-card-details {
+    padding: 1.25rem 1rem;
 }
 
-.design-card h4 {
-    font-size: 1.1em;
-    color: #333;
-    margin: 10px 0 5px 0;
+#designPopup .design-card h4 {
+    font-size: 1rem;
     font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
 }
 
-/* Price and Size Details */
-.design-card p {
-    font-size: 0.9em;
-    color: #666;
-    margin: 3px 0;
+#designPopup .design-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0.25rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 5px;
+    padding: 0 2px;
 }
 
-.design-card p strong {
-    color: #6c5ce7; /* Accent color for values */
-    font-weight: 700;
-    margin-left: 5px;
+#designPopup .design-card p strong {
+    color: #334155;
+    font-weight: 600;
+    margin-left: 4px;
 }
 
-.design-card .price {
-    font-size: 1.1em;
+#designPopup .design-card .price {
+    font-size: 1rem;
     font-weight: 700;
-    color: #2ecc71; /* Green for price */
+    color: #059669;
 }
 
 /* ======================================================
-   RESPONSIVE ADJUSTMENTS
+   DESIGN POPUP RESPONSIVE
    ====================================================== */
-@media (max-width: 768px) {
-    .design-popup-content {
-        width: 95%;
-        margin: 20px auto;
-        padding: 20px;
+@media (min-width: 769px) and (max-width: 1024px) {
+    #designPopup .design-gallery {
+        grid-template-columns: repeat(2, 1fr);
     }
-    
-    .design-gallery {
-        /* Switch to max 2 columns on smaller screens */
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 20px;
+    #designPopup .design-card img {
+        height: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    #designPopup.design-popup {
+        padding: 1rem;
     }
 
-    .design-popup-content h3 {
-        font-size: 1.8em;
+    #designPopup .design-popup-content {
+        margin: 1rem auto 2rem;
+        padding: 1.5rem 1.25rem;
+        border-radius: 16px;
+    }
+
+    #designPopup .design-popup-content h3 {
+        font-size: 1.25rem;
+        margin-right: 0;
+    }
+
+    #designPopup .design-gallery {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    #designPopup .design-card img {
+        height: 220px;
     }
 }
 #clearDesignBtn {
