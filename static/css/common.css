@@ -1430,10 +1430,7 @@ footer {
 /* ============================================
    HORIZONTAL SCROLL FIX
    ============================================ */
-* {
-  max-width: 100%;
-}
-
+/* Removed aggressive * { max-width: 100% } - it broke flex layouts and header */
 body {
   overflow-x: hidden;
 }
