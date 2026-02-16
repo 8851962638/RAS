@@ -1012,10 +1012,16 @@ body.gt-active header {
   .nav-left {
     top: 120px !important;
     height: calc(100vh - 120px) !important;
+    z-index: 10010 !important; /* Above overlay so menu items are tappable */
   }
+  /* Overlay only covers the dimmed area to the RIGHT of the menu - not over the menu itself.
+     This allows tapping menu items without the overlay closing the menu. */
   .menu-overlay {
     top: 120px !important;
+    left: 280px !important; /* Start after the 280px-wide nav menu */
+    width: calc(100% - 280px) !important;
     height: calc(100vh - 120px) !important;
+    z-index: 10009 !important;
   }
 }
 
