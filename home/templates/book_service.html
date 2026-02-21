@@ -211,7 +211,7 @@
 #designPopup .design-popup-content {
     background: #fff;
     width: 100%;
-    max-width: 960px;
+    max-width: 900px;
     margin: 2rem auto 3rem;
     padding: 2rem 2.5rem 2.5rem;
     border-radius: 20px;
@@ -268,13 +268,13 @@
 }
 
 /* ======================================================
-   DESIGN GALLERY - MULTI-COLUMN GRID (scoped to popup)
+   DESIGN GALLERY - ONE CARD PER LINE, BROAD CARDS, BIG IMAGE
    ====================================================== */
 
 #designPopup .design-gallery {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     margin-top: 1.5rem;
     width: 100%;
 }
@@ -301,7 +301,7 @@
 
 #designPopup .design-card img {
     width: 100%;
-    height: 240px;
+    height: 400px;
     object-fit: cover;
     display: block;
     transition: transform 0.4s ease;
@@ -312,11 +312,11 @@
 }
 
 #designPopup .design-card-details {
-    padding: 1.25rem 1rem;
+    padding: 1.5rem 1.25rem;
 }
 
 #designPopup .design-card h4 {
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
@@ -348,15 +348,6 @@
 /* ======================================================
    DESIGN POPUP RESPONSIVE
    ====================================================== */
-@media (min-width: 769px) and (max-width: 1024px) {
-    #designPopup .design-gallery {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    #designPopup .design-card img {
-        height: 220px;
-    }
-}
-
 @media (max-width: 768px) {
     #designPopup.design-popup {
         padding: 1rem;
@@ -365,6 +356,7 @@
     #designPopup .design-popup-content {
         margin: 1rem auto 2rem;
         padding: 1.5rem 1.25rem;
+        max-width: 100%;
         border-radius: 16px;
     }
 
@@ -374,12 +366,11 @@
     }
 
     #designPopup .design-gallery {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
+        gap: 1.5rem;
     }
 
     #designPopup .design-card img {
-        height: 220px;
+        height: 280px;
     }
 }
 #clearDesignBtn {
